@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>C115E9C2-F8F8-47BD-8583-EE3498269AAA</string>
+	<key>IDESourceControlProjectName</key>
+	<string>rackyview</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>63EFE4E62ABF899F335EAD8C1903618A78B7D09A</key>
+		<string>github.com:racker/rackyview-ios-swift.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>rackyview.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>63EFE4E62ABF899F335EAD8C1903618A78B7D09A</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>github.com:racker/rackyview-ios-swift.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>63EFE4E62ABF899F335EAD8C1903618A78B7D09A</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>63EFE4E62ABF899F335EAD8C1903618A78B7D09A</string>
+			<key>IDESourceControlWCCName</key>
+			<string>rackyview</string>
+		</dict>
+	</array>
+</dict>
+</plist>

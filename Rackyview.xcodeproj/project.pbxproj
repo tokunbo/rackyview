@@ -1,0 +1,954 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		7A0CBCCD1B4CB067006DEF70 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A65AF0319F4A4F800D899DE /* Media.xcassets */; };
+		7A0FAD971B09C88B00B7DC83 /* newmessageicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FAD961B09C88B00B7DC83 /* newmessageicon.png */; };
+		7A0FAD991B0ABE6900B7DC83 /* chainhourglass.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FAD981B0ABE6900B7DC83 /* chainhourglass.png */; };
+		7A18C4481ACCD0F800781CB0 /* TicketsTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */; };
+		7A18C44A1ACDDC3D00781CB0 /* TicketsSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4491ACDDC3D00781CB0 /* TicketsSummaryViewController.swift */; };
+		7A18C44C1ACF189500781CB0 /* TicketListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */; };
+		7A18C44E1ACFC13500781CB0 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */; };
+		7A18C4501ACFC13E00781CB0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A18C44F1ACFC13E00781CB0 /* Security.framework */; };
+		7A18C4521AD04DFB00781CB0 /* TicketDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */; };
+		7A20B20C19A2CAE600CA692F /* AlarmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */; };
+		7A2D55C5198728F2000F1716 /* raxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D55C31987185F000F1716 /* raxAPI.swift */; };
+		7A2E0C6319CCFEAC008B1FB0 /* AlarmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */; };
+		7A3ED4C91AF9868A00723B32 /* CreateTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3ED4C81AF9868A00723B32 /* CreateTicketViewController.swift */; };
+		7A3ED4CB1AFC408D00723B32 /* CloseTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3ED4CA1AFC408D00723B32 /* CloseTicketViewController.swift */; };
+		7A45D57A1AC63AD500F5F196 /* RackyviewBanner.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A45D5791AC63AD500F5F196 /* RackyviewBanner.png */; };
+		7A4661D21B367DF600A5BBF4 /* AlarmChangelogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4661D11B367DF600A5BBF4 /* AlarmChangelogListViewController.swift */; };
+		7A4679C71AE3E968003E763F /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7A4679C61AE3E968003E763F /* Info.plist */; };
+		7A46CB691990568F00BCA7FD /* yellowdot.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB681990568F00BCA7FD /* yellowdot.png */; };
+		7A46CB6B199189B600BCA7FD /* GlobalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A46CB6A199189B600BCA7FD /* GlobalState.swift */; };
+		7A46CB721992DCC800BCA7FD /* bellicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB6E1992DCC800BCA7FD /* bellicon.png */; };
+		7A46CB731992DCC800BCA7FD /* cautionicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB6F1992DCC800BCA7FD /* cautionicon.png */; };
+		7A46CB741992DCC800BCA7FD /* clockicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB701992DCC800BCA7FD /* clockicon.png */; };
+		7A46CB791992FF1B00BCA7FD /* EntityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A46CB781992FF1B00BCA7FD /* EntityListViewController.swift */; };
+		7A54AD4D19A006030021AC80 /* blackbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A54AD4C19A006030021AC80 /* blackbar.png */; };
+		7A54AD5119A00F290021AC80 /* whiteTriangle.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A54AD5019A00F290021AC80 /* whiteTriangle.png */; };
+		7A54AD5319A1B1AF0021AC80 /* MiscViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */; };
+		7A65AF0419F4A4F800D899DE /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A65AF0319F4A4F800D899DE /* Media.xcassets */; };
+		7A6D665B1B4ADD6F00D9E5E5 /* MainInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A6D66571B4AD89100D9E5E5 /* MainInterfaceController.swift */; };
+		7A7326371B32DD09001278FA /* ProcessListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7326361B32DD09001278FA /* ProcessListViewController.swift */; };
+		7A7B76891AD75F830013EED3 /* ServerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7B76881AD75F830013EED3 /* ServerDetailViewController.swift */; };
+		7A87F85B1B4B8EB400BB4D5B /* bellicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB6E1992DCC800BCA7FD /* bellicon.png */; };
+		7A87F85C1B4B932A00BB4D5B /* bellicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB6E1992DCC800BCA7FD /* bellicon.png */; };
+		7A8C3BF11B4471910091D797 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF01B4471910091D797 /* NotificationController.swift */; };
+		7A8C3BF31B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF21B4471910091D797 /* Images.xcassets */; };
+		7A8C3BF71B4471910091D797 /* Rackyview WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */; };
+		7A8C3BFF1B4471910091D797 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BFD1B4471910091D797 /* Interface.storyboard */; };
+		7A8C3C011B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3C001B4471910091D797 /* Images.xcassets */; };
+		7A8C3C041B4471910091D797 /* Rackyview WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7A8D424B1AC497A500C7F8AD /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D424A1AC497A500C7F8AD /* diamond.png */; };
+		7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F21AD96AFB004453E6 /* rngCrypt.c */; };
+		7A9CB8721B211A93006D2FC6 /* rngCrypt.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F31AD96AFB004453E6 /* rngCrypt.h */; };
+		7A9CB8731B211A93006D2FC6 /* Rackyview-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */; };
+		7A9CB88E1B30FC32006D2FC6 /* AgentInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */; };
+		7AA207BD19AC124400D78430 /* refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AA207BC19AC124400D78430 /* refresh.png */; };
+		7AA207BF19AC133300D78430 /* cloudserver2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AA207BE19AC133300D78430 /* cloudserver2.png */; };
+		7AAB11F41AD96AFB004453E6 /* rngCrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F21AD96AFB004453E6 /* rngCrypt.c */; };
+		7AAF200C19897E8C00737CDA /* raxutils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAF200B19897E8C00737CDA /* raxutils.swift */; };
+		7AAF2010198B18AA00737CDA /* OverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAF200F198B18AA00737CDA /* OverviewViewController.swift */; };
+		7AAF20171990265D00737CDA /* greendot.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AAF20141990265D00737CDA /* greendot.png */; };
+		7AAF20181990265D00737CDA /* reddot.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AAF20151990265D00737CDA /* reddot.png */; };
+		7ABF7F841B018946003A3679 /* NoAlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABF7F831B018946003A3679 /* NoAlarmsViewController.swift */; };
+		7ABF7F861B069F19003A3679 /* smallhearticon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ABF7F851B069F19003A3679 /* smallhearticon.png */; };
+		7AC3D21B1ADC5C7D006D5B47 /* greendot_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AC3D2181ADC5C7D006D5B47 /* greendot_small.png */; };
+		7AC3D21C1ADC5C7D006D5B47 /* reddot_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AC3D2191ADC5C7D006D5B47 /* reddot_small.png */; };
+		7AC3D21D1ADC5C7D006D5B47 /* yellowdot_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AC3D21A1ADC5C7D006D5B47 /* yellowdot_small.png */; };
+		7ADAA88F198710A4008B17FA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADAA88E198710A4008B17FA /* LoginViewController.swift */; };
+		7ADCD70D1ADCA6B200E02DA6 /* rackyviewICON_29x29.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD7051ADCA6B200E02DA6 /* rackyviewICON_29x29.png */; };
+		7ADCD70E1ADCA6B200E02DA6 /* rackyviewICON_40x40.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD7061ADCA6B200E02DA6 /* rackyviewICON_40x40.png */; };
+		7ADCD70F1ADCA6B200E02DA6 /* rackyviewICON_58x58.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD7071ADCA6B200E02DA6 /* rackyviewICON_58x58.png */; };
+		7ADCD7111ADCA6B200E02DA6 /* rackyviewICON_80x80.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD7091ADCA6B200E02DA6 /* rackyviewICON_80x80.png */; };
+		7ADCD7121ADCA6B200E02DA6 /* rackyviewICON_120x120.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD70A1ADCA6B200E02DA6 /* rackyviewICON_120x120.png */; };
+		7ADCD7131ADCA6B200E02DA6 /* rackyviewICON_152x152.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD70B1ADCA6B200E02DA6 /* rackyviewICON_152x152.png */; };
+		7ADCD7141ADCA6B200E02DA6 /* rackyviewICON_180x180.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD70C1ADCA6B200E02DA6 /* rackyviewICON_180x180.png */; };
+		7ADCD7161ADD9BE700E02DA6 /* rackyviewICON_76x76.png in Resources */ = {isa = PBXBuildFile; fileRef = 7ADCD7151ADD9BE700E02DA6 /* rackyviewICON_76x76.png */; };
+		7AE03A5919A72AB70034D7D6 /* ServerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE03A5819A72AB70034D7D6 /* ServerListViewController.swift */; };
+		7AE5A0901AEE2E38009249FA /* NewTicketCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5A08F1AEE2E38009249FA /* NewTicketCommentViewController.swift */; };
+		7AE5C0BC1979C8E400E0C1C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */; };
+		7AE5C0BF1979C8E400E0C1C4 /* rackyview.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BD1979C8E400E0C1C4 /* rackyview.xcdatamodeld */; };
+		7AE5C0C41979C8E400E0C1C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7AE5C0C21979C8E400E0C1C4 /* Main.storyboard */; };
+		7AE5C0D21979C8E400E0C1C4 /* rackyviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7A8C3BF81B4471910091D797 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C3BF51B4471910091D797;
+			remoteInfo = "Rackyview WatchKit App";
+		};
+		7A8C3C021B4471910091D797 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C3BE81B4471910091D797;
+			remoteInfo = "Rackyview WatchKit Extension";
+		};
+		7AE5C0CC1979C8E400E0C1C4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7AE5C0B51979C8E400E0C1C4;
+			remoteInfo = rackyview;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		7A8C3C0B1B4471910091D797 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				7A8C3C041B4471910091D797 /* Rackyview WatchKit Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		7A0FAD961B09C88B00B7DC83 /* newmessageicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newmessageicon.png; sourceTree = "<group>"; };
+		7A0FAD981B0ABE6900B7DC83 /* chainhourglass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chainhourglass.png; sourceTree = "<group>"; };
+		7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketsTabBarController.swift; sourceTree = "<group>"; };
+		7A18C4491ACDDC3D00781CB0 /* TicketsSummaryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketsSummaryViewController.swift; sourceTree = "<group>"; };
+		7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketListViewController.swift; sourceTree = "<group>"; };
+		7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		7A18C44F1ACFC13E00781CB0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketDetailViewController.swift; sourceTree = "<group>"; };
+		7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmListViewController.swift; sourceTree = "<group>"; };
+		7A2D55C31987185F000F1716 /* raxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = raxAPI.swift; sourceTree = "<group>"; };
+		7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmDetailViewController.swift; sourceTree = "<group>"; };
+		7A3ED4C81AF9868A00723B32 /* CreateTicketViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateTicketViewController.swift; sourceTree = "<group>"; };
+		7A3ED4CA1AFC408D00723B32 /* CloseTicketViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloseTicketViewController.swift; sourceTree = "<group>"; };
+		7A45D5791AC63AD500F5F196 /* RackyviewBanner.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = RackyviewBanner.png; sourceTree = "<group>"; };
+		7A4661D11B367DF600A5BBF4 /* AlarmChangelogListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmChangelogListViewController.swift; sourceTree = "<group>"; };
+		7A4679C61AE3E968003E763F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A46CB681990568F00BCA7FD /* yellowdot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellowdot.png; sourceTree = "<group>"; };
+		7A46CB6A199189B600BCA7FD /* GlobalState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalState.swift; sourceTree = "<group>"; };
+		7A46CB6E1992DCC800BCA7FD /* bellicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bellicon.png; sourceTree = "<group>"; };
+		7A46CB6F1992DCC800BCA7FD /* cautionicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cautionicon.png; sourceTree = "<group>"; };
+		7A46CB701992DCC800BCA7FD /* clockicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = clockicon.png; sourceTree = "<group>"; };
+		7A46CB781992FF1B00BCA7FD /* EntityListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityListViewController.swift; sourceTree = "<group>"; };
+		7A54AD4C19A006030021AC80 /* blackbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackbar.png; sourceTree = "<group>"; };
+		7A54AD5019A00F290021AC80 /* whiteTriangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteTriangle.png; sourceTree = "<group>"; };
+		7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiscViewController.swift; sourceTree = "<group>"; };
+		7A65AF0319F4A4F800D899DE /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Media.xcassets; path = rackyview/Media.xcassets; sourceTree = "<group>"; };
+		7A6D66571B4AD89100D9E5E5 /* MainInterfaceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MainInterfaceController.swift; path = "/Users/rackerqa/Documents/rackyview/Rackyview WatchKit Extension/MainInterfaceController.swift"; sourceTree = "<absolute>"; };
+		7A7326361B32DD09001278FA /* ProcessListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProcessListViewController.swift; sourceTree = "<group>"; };
+		7A7B76881AD75F830013EED3 /* ServerDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerDetailViewController.swift; sourceTree = "<group>"; };
+		7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Rackyview WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8C3BEC1B4471910091D797 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A8C3BED1B4471910091D797 /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		7A8C3BF01B4471910091D797 /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		7A8C3BF21B4471910091D797 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Rackyview WatchKit App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7A8C3BFC1B4471910091D797 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7A8C3BFE1B4471910091D797 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		7A8C3C001B4471910091D797 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7A8D424A1AC497A500C7F8AD /* diamond.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diamond.png; sourceTree = "<group>"; };
+		7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgentInfoViewController.swift; sourceTree = "<group>"; };
+		7AA207BC19AC124400D78430 /* refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh.png; sourceTree = "<group>"; };
+		7AA207BE19AC133300D78430 /* cloudserver2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudserver2.png; sourceTree = "<group>"; };
+		7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rackyview-Bridging-Header.h"; sourceTree = "<group>"; };
+		7AAB11F21AD96AFB004453E6 /* rngCrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rngCrypt.c; sourceTree = "<group>"; };
+		7AAB11F31AD96AFB004453E6 /* rngCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rngCrypt.h; sourceTree = "<group>"; };
+		7AAF200B19897E8C00737CDA /* raxutils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = raxutils.swift; sourceTree = "<group>"; };
+		7AAF200F198B18AA00737CDA /* OverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewViewController.swift; sourceTree = "<group>"; };
+		7AAF20141990265D00737CDA /* greendot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greendot.png; sourceTree = "<group>"; };
+		7AAF20151990265D00737CDA /* reddot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reddot.png; sourceTree = "<group>"; };
+		7ABF7F831B018946003A3679 /* NoAlarmsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoAlarmsViewController.swift; sourceTree = "<group>"; };
+		7ABF7F851B069F19003A3679 /* smallhearticon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = smallhearticon.png; sourceTree = "<group>"; };
+		7AC3D2181ADC5C7D006D5B47 /* greendot_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greendot_small.png; sourceTree = "<group>"; };
+		7AC3D2191ADC5C7D006D5B47 /* reddot_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = reddot_small.png; sourceTree = "<group>"; };
+		7AC3D21A1ADC5C7D006D5B47 /* yellowdot_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = yellowdot_small.png; sourceTree = "<group>"; };
+		7ADAA88E198710A4008B17FA /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		7ADCD7051ADCA6B200E02DA6 /* rackyviewICON_29x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_29x29.png; sourceTree = "<group>"; };
+		7ADCD7061ADCA6B200E02DA6 /* rackyviewICON_40x40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_40x40.png; sourceTree = "<group>"; };
+		7ADCD7071ADCA6B200E02DA6 /* rackyviewICON_58x58.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_58x58.png; sourceTree = "<group>"; };
+		7ADCD7091ADCA6B200E02DA6 /* rackyviewICON_80x80.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_80x80.png; sourceTree = "<group>"; };
+		7ADCD70A1ADCA6B200E02DA6 /* rackyviewICON_120x120.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_120x120.png; sourceTree = "<group>"; };
+		7ADCD70B1ADCA6B200E02DA6 /* rackyviewICON_152x152.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_152x152.png; sourceTree = "<group>"; };
+		7ADCD70C1ADCA6B200E02DA6 /* rackyviewICON_180x180.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_180x180.png; sourceTree = "<group>"; };
+		7ADCD7151ADD9BE700E02DA6 /* rackyviewICON_76x76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rackyviewICON_76x76.png; sourceTree = "<group>"; };
+		7AE03A5819A72AB70034D7D6 /* ServerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerListViewController.swift; sourceTree = "<group>"; };
+		7AE5A08F1AEE2E38009249FA /* NewTicketCommentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewTicketCommentViewController.swift; sourceTree = "<group>"; };
+		7AE5C0B61979C8E400E0C1C4 /* Rackyview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Rackyview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AE5C0BA1979C8E400E0C1C4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7AE5C0BE1979C8E400E0C1C4 /* rackyview.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = rackyview.xcdatamodel; sourceTree = "<group>"; };
+		7AE5C0C31979C8E400E0C1C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7AE5C0CB1979C8E400E0C1C4 /* RackyviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RackyviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rackyviewTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		7A8C3BE61B4471910091D797 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0B31979C8E400E0C1C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A18C4501ACFC13E00781CB0 /* Security.framework in Frameworks */,
+				7A18C44E1ACFC13500781CB0 /* MobileCoreServices.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0C81979C8E400E0C1C4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7A8C3BEA1B4471910091D797 /* Rackyview WatchKit Extension */ = {
+			isa = PBXGroup;
+			children = (
+				7A6D66571B4AD89100D9E5E5 /* MainInterfaceController.swift */,
+				7A8C3BF01B4471910091D797 /* NotificationController.swift */,
+				7A8C3BF21B4471910091D797 /* Images.xcassets */,
+				7A8C3BEB1B4471910091D797 /* Supporting Files */,
+			);
+			path = "Rackyview WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		7A8C3BEB1B4471910091D797 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7A8C3BEC1B4471910091D797 /* Info.plist */,
+				7A8C3BED1B4471910091D797 /* PushNotificationPayload.apns */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7A8C3BFA1B4471910091D797 /* Rackyview WatchKit App */ = {
+			isa = PBXGroup;
+			children = (
+				7A8C3BFD1B4471910091D797 /* Interface.storyboard */,
+				7A8C3C001B4471910091D797 /* Images.xcassets */,
+				7A8C3BFB1B4471910091D797 /* Supporting Files */,
+			);
+			path = "Rackyview WatchKit App";
+			sourceTree = "<group>";
+		};
+		7A8C3BFB1B4471910091D797 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7A8C3BFC1B4471910091D797 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7AE5C0AD1979C8E300E0C1C4 = {
+			isa = PBXGroup;
+			children = (
+				7A18C44F1ACFC13E00781CB0 /* Security.framework */,
+				7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */,
+				7A65AF0319F4A4F800D899DE /* Media.xcassets */,
+				7AE5C0B81979C8E400E0C1C4 /* rackyview */,
+				7AE5C0CE1979C8E400E0C1C4 /* rackyviewTests */,
+				7A8C3BEA1B4471910091D797 /* Rackyview WatchKit Extension */,
+				7A8C3BFA1B4471910091D797 /* Rackyview WatchKit App */,
+				7AE5C0B71979C8E400E0C1C4 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7AE5C0B71979C8E400E0C1C4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				7AE5C0B61979C8E400E0C1C4 /* Rackyview.app */,
+				7AE5C0CB1979C8E400E0C1C4 /* RackyviewTests.xctest */,
+				7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */,
+				7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		7AE5C0B81979C8E400E0C1C4 /* rackyview */ = {
+			isa = PBXGroup;
+			children = (
+				7AAB11F21AD96AFB004453E6 /* rngCrypt.c */,
+				7AAB11F31AD96AFB004453E6 /* rngCrypt.h */,
+				7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */,
+				7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */,
+				7A46CB6A199189B600BCA7FD /* GlobalState.swift */,
+				7AAF200B19897E8C00737CDA /* raxutils.swift */,
+				7AE5C0C21979C8E400E0C1C4 /* Main.storyboard */,
+				7A2D55C31987185F000F1716 /* raxAPI.swift */,
+				7ADAA88E198710A4008B17FA /* LoginViewController.swift */,
+				7AAF200F198B18AA00737CDA /* OverviewViewController.swift */,
+				7ABF7F831B018946003A3679 /* NoAlarmsViewController.swift */,
+				7A46CB781992FF1B00BCA7FD /* EntityListViewController.swift */,
+				7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */,
+				7A7326361B32DD09001278FA /* ProcessListViewController.swift */,
+				7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */,
+				7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */,
+				7A18C4491ACDDC3D00781CB0 /* TicketsSummaryViewController.swift */,
+				7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */,
+				7A3ED4C81AF9868A00723B32 /* CreateTicketViewController.swift */,
+				7AE5A08F1AEE2E38009249FA /* NewTicketCommentViewController.swift */,
+				7A3ED4CA1AFC408D00723B32 /* CloseTicketViewController.swift */,
+				7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */,
+				7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */,
+				7A4661D11B367DF600A5BBF4 /* AlarmChangelogListViewController.swift */,
+				7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */,
+				7AE03A5819A72AB70034D7D6 /* ServerListViewController.swift */,
+				7A7B76881AD75F830013EED3 /* ServerDetailViewController.swift */,
+				7AE5C0BD1979C8E400E0C1C4 /* rackyview.xcdatamodeld */,
+				7AE5C0B91979C8E400E0C1C4 /* Supporting Files */,
+			);
+			path = rackyview;
+			sourceTree = "<group>";
+		};
+		7AE5C0B91979C8E400E0C1C4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				7A0FAD981B0ABE6900B7DC83 /* chainhourglass.png */,
+				7A0FAD961B09C88B00B7DC83 /* newmessageicon.png */,
+				7ABF7F851B069F19003A3679 /* smallhearticon.png */,
+				7ADCD7151ADD9BE700E02DA6 /* rackyviewICON_76x76.png */,
+				7ADCD7051ADCA6B200E02DA6 /* rackyviewICON_29x29.png */,
+				7ADCD7061ADCA6B200E02DA6 /* rackyviewICON_40x40.png */,
+				7ADCD7071ADCA6B200E02DA6 /* rackyviewICON_58x58.png */,
+				7ADCD7091ADCA6B200E02DA6 /* rackyviewICON_80x80.png */,
+				7ADCD70A1ADCA6B200E02DA6 /* rackyviewICON_120x120.png */,
+				7ADCD70B1ADCA6B200E02DA6 /* rackyviewICON_152x152.png */,
+				7ADCD70C1ADCA6B200E02DA6 /* rackyviewICON_180x180.png */,
+				7AC3D2181ADC5C7D006D5B47 /* greendot_small.png */,
+				7AC3D2191ADC5C7D006D5B47 /* reddot_small.png */,
+				7AC3D21A1ADC5C7D006D5B47 /* yellowdot_small.png */,
+				7A45D5791AC63AD500F5F196 /* RackyviewBanner.png */,
+				7A8D424A1AC497A500C7F8AD /* diamond.png */,
+				7AA207BE19AC133300D78430 /* cloudserver2.png */,
+				7AA207BC19AC124400D78430 /* refresh.png */,
+				7A54AD5019A00F290021AC80 /* whiteTriangle.png */,
+				7A46CB6E1992DCC800BCA7FD /* bellicon.png */,
+				7A54AD4C19A006030021AC80 /* blackbar.png */,
+				7A46CB6F1992DCC800BCA7FD /* cautionicon.png */,
+				7A46CB701992DCC800BCA7FD /* clockicon.png */,
+				7A46CB681990568F00BCA7FD /* yellowdot.png */,
+				7AAF20141990265D00737CDA /* greendot.png */,
+				7AAF20151990265D00737CDA /* reddot.png */,
+				7AE5C0BA1979C8E400E0C1C4 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		7AE5C0CE1979C8E400E0C1C4 /* rackyviewTests */ = {
+			isa = PBXGroup;
+			children = (
+				7A4679C61AE3E968003E763F /* Info.plist */,
+				7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */,
+				7AE5C0CF1979C8E400E0C1C4 /* Supporting Files */,
+			);
+			path = rackyviewTests;
+			sourceTree = "<group>";
+		};
+		7AE5C0CF1979C8E400E0C1C4 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		7A8C3BE81B4471910091D797 /* Rackyview WatchKit Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A8C3C081B4471910091D797 /* Build configuration list for PBXNativeTarget "Rackyview WatchKit Extension" */;
+			buildPhases = (
+				7A8C3BE51B4471910091D797 /* Sources */,
+				7A8C3BE61B4471910091D797 /* Frameworks */,
+				7A8C3BE71B4471910091D797 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A8C3BF91B4471910091D797 /* PBXTargetDependency */,
+			);
+			name = "Rackyview WatchKit Extension";
+			productName = "Rackyview WatchKit Extension";
+			productReference = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */;
+			productType = "com.apple.product-type.watchkit-extension";
+		};
+		7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7A8C3C051B4471910091D797 /* Build configuration list for PBXNativeTarget "Rackyview WatchKit App" */;
+			buildPhases = (
+				7A8C3BF41B4471910091D797 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Rackyview WatchKit App";
+			productName = "Rackyview WatchKit App";
+			productReference = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */;
+			productType = "com.apple.product-type.application.watchapp";
+		};
+		7AE5C0B51979C8E400E0C1C4 /* Rackyview */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7AE5C0D51979C8E400E0C1C4 /* Build configuration list for PBXNativeTarget "Rackyview" */;
+			buildPhases = (
+				7AE5C0B21979C8E400E0C1C4 /* Sources */,
+				7AE5C0B31979C8E400E0C1C4 /* Frameworks */,
+				7AE5C0B41979C8E400E0C1C4 /* Resources */,
+				7A8C3C0B1B4471910091D797 /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7A8C3C031B4471910091D797 /* PBXTargetDependency */,
+			);
+			name = Rackyview;
+			productName = rackyview;
+			productReference = 7AE5C0B61979C8E400E0C1C4 /* Rackyview.app */;
+			productType = "com.apple.product-type.application";
+		};
+		7AE5C0CA1979C8E400E0C1C4 /* RackyviewTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7AE5C0D81979C8E400E0C1C4 /* Build configuration list for PBXNativeTarget "RackyviewTests" */;
+			buildPhases = (
+				7AE5C0C71979C8E400E0C1C4 /* Sources */,
+				7AE5C0C81979C8E400E0C1C4 /* Frameworks */,
+				7AE5C0C91979C8E400E0C1C4 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7AE5C0CD1979C8E400E0C1C4 /* PBXTargetDependency */,
+			);
+			name = RackyviewTests;
+			productName = rackyviewTests;
+			productReference = 7AE5C0CB1979C8E400E0C1C4 /* RackyviewTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		7AE5C0AE1979C8E300E0C1C4 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0600;
+				ORGANIZATIONNAME = rackyperson;
+				TargetAttributes = {
+					7A8C3BE81B4471910091D797 = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = R9MG8NJR95;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
+					};
+					7A8C3BF51B4471910091D797 = {
+						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = R9MG8NJR95;
+					};
+					7AE5C0B51979C8E400E0C1C4 = {
+						CreatedOnToolsVersion = 6.0;
+						DevelopmentTeam = R9MG8NJR95;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 0;
+							};
+						};
+					};
+					7AE5C0CA1979C8E400E0C1C4 = {
+						CreatedOnToolsVersion = 6.0;
+					};
+				};
+			};
+			buildConfigurationList = 7AE5C0B11979C8E300E0C1C4 /* Build configuration list for PBXProject "Rackyview" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 7AE5C0AD1979C8E300E0C1C4;
+			productRefGroup = 7AE5C0B71979C8E400E0C1C4 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				7AE5C0B51979C8E400E0C1C4 /* Rackyview */,
+				7AE5C0CA1979C8E400E0C1C4 /* RackyviewTests */,
+				7A8C3BE81B4471910091D797 /* Rackyview WatchKit Extension */,
+				7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		7A8C3BE71B4471910091D797 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A87F85B1B4B8EB400BB4D5B /* bellicon.png in Resources */,
+				7A8C3BF71B4471910091D797 /* Rackyview WatchKit App.app in Resources */,
+				7A0CBCCD1B4CB067006DEF70 /* Media.xcassets in Resources */,
+				7A8C3BF31B4471910091D797 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7A8C3BF41B4471910091D797 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A87F85C1B4B932A00BB4D5B /* bellicon.png in Resources */,
+				7A8C3BFF1B4471910091D797 /* Interface.storyboard in Resources */,
+				7A8C3C011B4471910091D797 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0B41979C8E400E0C1C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A0FAD991B0ABE6900B7DC83 /* chainhourglass.png in Resources */,
+				7AC3D21D1ADC5C7D006D5B47 /* yellowdot_small.png in Resources */,
+				7ADCD7111ADCA6B200E02DA6 /* rackyviewICON_80x80.png in Resources */,
+				7AAF20181990265D00737CDA /* reddot.png in Resources */,
+				7A45D57A1AC63AD500F5F196 /* RackyviewBanner.png in Resources */,
+				7AA207BD19AC124400D78430 /* refresh.png in Resources */,
+				7A0FAD971B09C88B00B7DC83 /* newmessageicon.png in Resources */,
+				7ADCD7161ADD9BE700E02DA6 /* rackyviewICON_76x76.png in Resources */,
+				7AE5C0C41979C8E400E0C1C4 /* Main.storyboard in Resources */,
+				7A54AD5119A00F290021AC80 /* whiteTriangle.png in Resources */,
+				7ADCD7121ADCA6B200E02DA6 /* rackyviewICON_120x120.png in Resources */,
+				7AAF20171990265D00737CDA /* greendot.png in Resources */,
+				7A46CB691990568F00BCA7FD /* yellowdot.png in Resources */,
+				7A46CB731992DCC800BCA7FD /* cautionicon.png in Resources */,
+				7ADCD70F1ADCA6B200E02DA6 /* rackyviewICON_58x58.png in Resources */,
+				7A46CB721992DCC800BCA7FD /* bellicon.png in Resources */,
+				7ADCD70E1ADCA6B200E02DA6 /* rackyviewICON_40x40.png in Resources */,
+				7A8D424B1AC497A500C7F8AD /* diamond.png in Resources */,
+				7ADCD7131ADCA6B200E02DA6 /* rackyviewICON_152x152.png in Resources */,
+				7A65AF0419F4A4F800D899DE /* Media.xcassets in Resources */,
+				7ADCD7141ADCA6B200E02DA6 /* rackyviewICON_180x180.png in Resources */,
+				7A4679C71AE3E968003E763F /* Info.plist in Resources */,
+				7AC3D21B1ADC5C7D006D5B47 /* greendot_small.png in Resources */,
+				7A46CB741992DCC800BCA7FD /* clockicon.png in Resources */,
+				7AC3D21C1ADC5C7D006D5B47 /* reddot_small.png in Resources */,
+				7A54AD4D19A006030021AC80 /* blackbar.png in Resources */,
+				7AA207BF19AC133300D78430 /* cloudserver2.png in Resources */,
+				7ADCD70D1ADCA6B200E02DA6 /* rackyviewICON_29x29.png in Resources */,
+				7ABF7F861B069F19003A3679 /* smallhearticon.png in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0C91979C8E400E0C1C4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		7A8C3BE51B4471910091D797 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A6D665B1B4ADD6F00D9E5E5 /* MainInterfaceController.swift in Sources */,
+				7A8C3BF11B4471910091D797 /* NotificationController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0B21979C8E400E0C1C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A46CB6B199189B600BCA7FD /* GlobalState.swift in Sources */,
+				7A3ED4CB1AFC408D00723B32 /* CloseTicketViewController.swift in Sources */,
+				7A46CB791992FF1B00BCA7FD /* EntityListViewController.swift in Sources */,
+				7A18C4521AD04DFB00781CB0 /* TicketDetailViewController.swift in Sources */,
+				7A7326371B32DD09001278FA /* ProcessListViewController.swift in Sources */,
+				7AE5A0901AEE2E38009249FA /* NewTicketCommentViewController.swift in Sources */,
+				7AAF200C19897E8C00737CDA /* raxutils.swift in Sources */,
+				7A2D55C5198728F2000F1716 /* raxAPI.swift in Sources */,
+				7A18C44C1ACF189500781CB0 /* TicketListViewController.swift in Sources */,
+				7A9CB88E1B30FC32006D2FC6 /* AgentInfoViewController.swift in Sources */,
+				7A4661D21B367DF600A5BBF4 /* AlarmChangelogListViewController.swift in Sources */,
+				7A18C4481ACCD0F800781CB0 /* TicketsTabBarController.swift in Sources */,
+				7AAF2010198B18AA00737CDA /* OverviewViewController.swift in Sources */,
+				7AAB11F41AD96AFB004453E6 /* rngCrypt.c in Sources */,
+				7A2E0C6319CCFEAC008B1FB0 /* AlarmDetailViewController.swift in Sources */,
+				7A18C44A1ACDDC3D00781CB0 /* TicketsSummaryViewController.swift in Sources */,
+				7A3ED4C91AF9868A00723B32 /* CreateTicketViewController.swift in Sources */,
+				7ADAA88F198710A4008B17FA /* LoginViewController.swift in Sources */,
+				7A20B20C19A2CAE600CA692F /* AlarmListViewController.swift in Sources */,
+				7AE5C0BC1979C8E400E0C1C4 /* AppDelegate.swift in Sources */,
+				7A7B76891AD75F830013EED3 /* ServerDetailViewController.swift in Sources */,
+				7AE5C0BF1979C8E400E0C1C4 /* rackyview.xcdatamodeld in Sources */,
+				7AE03A5919A72AB70034D7D6 /* ServerListViewController.swift in Sources */,
+				7A54AD5319A1B1AF0021AC80 /* MiscViewController.swift in Sources */,
+				7ABF7F841B018946003A3679 /* NoAlarmsViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7AE5C0C71979C8E400E0C1C4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7A9CB8731B211A93006D2FC6 /* Rackyview-Bridging-Header.h in Sources */,
+				7A9CB8721B211A93006D2FC6 /* rngCrypt.h in Sources */,
+				7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */,
+				7AE5C0D21979C8E400E0C1C4 /* rackyviewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7A8C3BF91B4471910091D797 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */;
+			targetProxy = 7A8C3BF81B4471910091D797 /* PBXContainerItemProxy */;
+		};
+		7A8C3C031B4471910091D797 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C3BE81B4471910091D797 /* Rackyview WatchKit Extension */;
+			targetProxy = 7A8C3C021B4471910091D797 /* PBXContainerItemProxy */;
+		};
+		7AE5C0CD1979C8E400E0C1C4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7AE5C0B51979C8E400E0C1C4 /* Rackyview */;
+			targetProxy = 7AE5C0CC1979C8E400E0C1C4 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		7A8C3BFD1B4471910091D797 /* Interface.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7A8C3BFE1B4471910091D797 /* Base */,
+			);
+			name = Interface.storyboard;
+			sourceTree = "<group>";
+		};
+		7AE5C0C21979C8E400E0C1C4 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7AE5C0C31979C8E400E0C1C4 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		7A8C3C061B4471910091D797 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				IBSC_MODULE = Rackyview_WatchKit_Extension;
+				INFOPLIST_FILE = "Rackyview WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+			};
+			name = Debug;
+		};
+		7A8C3C071B4471910091D797 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				IBSC_MODULE = Rackyview_WatchKit_Extension;
+				INFOPLIST_FILE = "Rackyview WatchKit App/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+			};
+			name = Release;
+		};
+		7A8C3C091B4471910091D797 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		7A8C3C0A1B4471910091D797 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_NAME = "${TARGET_NAME}";
+				PROVISIONING_PROFILE = "";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		7AE5C0D31979C8E400E0C1C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		7AE5C0D41979C8E400E0C1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		7AE5C0D61979C8E400E0C1C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = rackyview/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = Rackyview;
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/rackyview-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		7AE5C0D71979C8E400E0C1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = rackyview/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = Rackyview;
+				PROVISIONING_PROFILE = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/rackyview-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		7AE5C0D91979C8E400E0C1C4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = rackyviewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = RackyviewTests;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+			};
+			name = Debug;
+		};
+		7AE5C0DA1979C8E400E0C1C4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = rackyviewTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = RackyviewTests;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		7A8C3C051B4471910091D797 /* Build configuration list for PBXNativeTarget "Rackyview WatchKit App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A8C3C061B4471910091D797 /* Debug */,
+				7A8C3C071B4471910091D797 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7A8C3C081B4471910091D797 /* Build configuration list for PBXNativeTarget "Rackyview WatchKit Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7A8C3C091B4471910091D797 /* Debug */,
+				7A8C3C0A1B4471910091D797 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7AE5C0B11979C8E300E0C1C4 /* Build configuration list for PBXProject "Rackyview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AE5C0D31979C8E400E0C1C4 /* Debug */,
+				7AE5C0D41979C8E400E0C1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7AE5C0D51979C8E400E0C1C4 /* Build configuration list for PBXNativeTarget "Rackyview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AE5C0D61979C8E400E0C1C4 /* Debug */,
+				7AE5C0D71979C8E400E0C1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7AE5C0D81979C8E400E0C1C4 /* Build configuration list for PBXNativeTarget "RackyviewTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7AE5C0D91979C8E400E0C1C4 /* Debug */,
+				7AE5C0DA1979C8E400E0C1C4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		7AE5C0BD1979C8E400E0C1C4 /* rackyview.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				7AE5C0BE1979C8E400E0C1C4 /* rackyview.xcdatamodel */,
+			);
+			currentVersion = 7AE5C0BE1979C8E400E0C1C4 /* rackyview.xcdatamodel */;
+			path = rackyview.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+}

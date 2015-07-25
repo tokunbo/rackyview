@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
+    </dependencies>
+    <scenes>
+        <!--Ents-->
+        <scene sceneID="aou-V4-d1y">
+            <objects>
+                <controller title="Ents" id="AgC-eL-Hgc" customClass="MainInterfaceController" customModule="Rackyview_WatchKit_Extension">
+                    <items>
+                        <group width="1" height="32" alignment="left" id="OpX-pN-Mqc">
+                            <items>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="y4K-Mv-xEP"/>
+                                <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="7bL-gU-VDx">
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" height="12" alignment="left" id="qHd-G4-EpH"/>
+                        <group width="1" height="32" alignment="left" id="Zum-WQ-kxe">
+                            <items>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="sbO-sv-lg1"/>
+                                <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000004" id="Tp9-aN-qUw">
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                </label>
+                            </items>
+                        </group>
+                        <group width="1" height="12" alignment="left" id="iB6-Vy-cXb"/>
+                        <group width="1" height="32" alignment="left" id="Duk-uy-hwu">
+                            <items>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="NIN-DR-swZ"/>
+                                <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="OSu-rW-3a2">
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                </label>
+                            </items>
+                        </group>
+                    </items>
+                    <connections>
+                        <outlet property="critbell" destination="y4K-Mv-xEP" id="Lac-fY-rlG"/>
+                        <outlet property="critlabel" destination="7bL-gU-VDx" id="T6Y-1E-pry"/>
+                        <outlet property="okbell" destination="NIN-DR-swZ" id="3lZ-OL-p61"/>
+                        <outlet property="oklabel" destination="OSu-rW-3a2" id="DXp-Or-VKa"/>
+                        <outlet property="warnbell" destination="sbO-sv-lg1" id="JwU-yX-N0m"/>
+                        <outlet property="warnlabel" destination="Tp9-aN-qUw" id="8Ns-PR-p8p"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="220" y="349"/>
+        </scene>
+        <!--Static Notification Interface Controller-->
+        <scene sceneID="AEw-b0-oYE">
+            <objects>
+                <notificationController id="YCC-NB-fut">
+                    <items>
+                        <label alignment="left" text="Alert Label" id="IdU-wH-bcW"/>
+                    </items>
+                    <notificationCategory key="notificationCategory" identifier="myCategory" id="JfB-70-Muf"/>
+                    <connections>
+                        <outlet property="notificationAlertLabel" destination="IdU-wH-bcW" id="JKC-fr-R95"/>
+                        <segue destination="4sK-HA-Art" kind="relationship" relationship="dynamicNotificationInterface" id="kXh-Jw-8B1"/>
+                    </connections>
+                </notificationController>
+            </objects>
+            <point key="canvasLocation" x="214" y="697"/>
+        </scene>
+        <!--Notification Controller-->
+        <scene sceneID="ZPc-GJ-vnh">
+            <objects>
+                <controller id="4sK-HA-Art" customClass="NotificationController" customModule="Rackyview_WatchKit_App" customModuleProvider="target"/>
+            </objects>
+            <point key="canvasLocation" x="468" y="643"/>
+        </scene>
+    </scenes>
+</document>
