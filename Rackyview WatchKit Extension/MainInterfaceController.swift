@@ -10,17 +10,15 @@ class MainInterfaceController:WKInterfaceController {
     @IBOutlet var critlabel:WKInterfaceLabel!
     @IBOutlet var warnlabel:WKInterfaceLabel!
     @IBOutlet var oklabel:WKInterfaceLabel!
-    var replydata:[NSObject:AnyObject]!
-    
     
     @IBAction func refresh() {
         var myUserInfo = ["action":"latestAlarmStates"]
+        self.critlabel.setText("loading...")
+        self.warnlabel.setText("loading...")
+        self.oklabel.setText("loading...")
         WKInterfaceController.openParentApplication(myUserInfo, reply: { response, error in
-            self.replydata = response
-            if self.replydata == nil || self.replydata.indexForKey("error") != nil || error != nil {
-                self.critlabel.setText("error")
-                self.warnlabel.setText("error")
-                self.oklabel.setText("error")
+            if response == nil || response.indexForKey("error") != nil || error != nil {
+                self.presentControllerWithName("ErrorPanel", context: response)
             } else {
                 self.critlabel.setText(String(stringInterpolationSegment: response["critCount"] as! NSNumber)+" CRIT")
                 self.warnlabel.setText(String(stringInterpolationSegment: response["warnCount"] as! NSNumber)+" WARN")

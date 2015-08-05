@@ -32,8 +32,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
             var taskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({})
             var replydata = NSMutableDictionary()
-            var las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
-            if las.objectForKey("latestAlarmStates") != nil {
+            var las:NSMutableDictionary!
+            if GlobalState.instance.authtoken != nil {
+                las = NSMutableDictionary()
+                las["latestAlarmStates"] = raxAPI.latestAlarmStates(isStreaming: false, updateGlobal: false)
+            } else {
+                las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
+            }
+            if las != nil && las.objectForKey("latestAlarmStates") != nil {
                 las = las["latestAlarmStates"] as! NSMutableDictionary
                 replydata["critCount"] = (las.objectForKey("criticalEntities") as! NSArray).count
                 replydata["warnCount"] = (las.objectForKey("warningEntities") as! NSArray).count

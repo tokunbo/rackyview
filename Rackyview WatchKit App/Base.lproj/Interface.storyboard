@@ -5,14 +5,18 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
     </dependencies>
     <scenes>
-        <!--Ents-->
+        <!--Entities-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Ents" id="AgC-eL-Hgc" customClass="MainInterfaceController" customModule="Rackyview_WatchKit_Extension">
+                <controller title="Entities" id="AgC-eL-Hgc" customClass="MainInterfaceController" customModule="Rackyview_WatchKit_Extension">
                     <items>
                         <group width="1" height="32" alignment="left" id="OpX-pN-Mqc">
                             <items>
-                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="y4K-Mv-xEP"/>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="y4K-Mv-xEP">
+                                    <connections>
+                                        <action selector="refresh" destination="AgC-eL-Hgc" id="p9Y-Av-KU4"/>
+                                    </connections>
+                                </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="7bL-gU-VDx">
                                     <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
                                 </label>
@@ -21,7 +25,11 @@
                         <group width="1" height="12" alignment="left" id="qHd-G4-EpH"/>
                         <group width="1" height="32" alignment="left" id="Zum-WQ-kxe">
                             <items>
-                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="sbO-sv-lg1"/>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="sbO-sv-lg1">
+                                    <connections>
+                                        <action selector="refresh" destination="AgC-eL-Hgc" id="IAc-jR-dEO"/>
+                                    </connections>
+                                </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000004" id="Tp9-aN-qUw">
                                     <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
                                 </label>
@@ -30,7 +38,11 @@
                         <group width="1" height="12" alignment="left" id="iB6-Vy-cXb"/>
                         <group width="1" height="32" alignment="left" id="Duk-uy-hwu">
                             <items>
-                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="NIN-DR-swZ"/>
+                                <button width="38" alignment="left" backgroundImage="bellicon.png" id="NIN-DR-swZ">
+                                    <connections>
+                                        <action selector="refresh" destination="AgC-eL-Hgc" id="lXB-9h-pyq"/>
+                                    </connections>
+                                </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="OSu-rW-3a2">
                                     <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
                                 </label>
@@ -48,6 +60,22 @@
                 </controller>
             </objects>
             <point key="canvasLocation" x="220" y="349"/>
+        </scene>
+        <!--Error-->
+        <scene sceneID="bCp-uI-fRF">
+            <objects>
+                <controller identifier="ErrorPanel" title="Error" id="zH2-km-nW6" customClass="ErrorPanelInterfaceController" customModule="Rackyview_WatchKit_Extension">
+                    <items>
+                        <label width="130" height="145" alignment="left" text="You must be logged into the app, otherwise the password must be already saved and *NOT* have twoFactorAuth" numberOfLines="10" id="hKq-d3-f7h">
+                            <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                        </label>
+                    </items>
+                    <connections>
+                        <outlet property="errorlabel" destination="hKq-d3-f7h" id="b76-ZB-TgE"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="367" y="350"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">

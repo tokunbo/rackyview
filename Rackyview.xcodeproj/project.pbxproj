@@ -45,6 +45,7 @@
 		7A8C3BFF1B4471910091D797 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BFD1B4471910091D797 /* Interface.storyboard */; };
 		7A8C3C011B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3C001B4471910091D797 /* Images.xcassets */; };
 		7A8C3C041B4471910091D797 /* Rackyview WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		7A8CC1AD1B71A4A400DF0B74 /* ErrorPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8CC1AC1B71A4A400DF0B74 /* ErrorPanel.swift */; };
 		7A8D424B1AC497A500C7F8AD /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D424A1AC497A500C7F8AD /* diamond.png */; };
 		7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F21AD96AFB004453E6 /* rngCrypt.c */; };
 		7A9CB8721B211A93006D2FC6 /* rngCrypt.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F31AD96AFB004453E6 /* rngCrypt.h */; };
@@ -156,6 +157,7 @@
 		7A8C3BFC1B4471910091D797 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7A8C3BFE1B4471910091D797 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
 		7A8C3C001B4471910091D797 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7A8CC1AC1B71A4A400DF0B74 /* ErrorPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorPanel.swift; sourceTree = "<group>"; };
 		7A8D424A1AC497A500C7F8AD /* diamond.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = diamond.png; sourceTree = "<group>"; };
 		7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AgentInfoViewController.swift; sourceTree = "<group>"; };
 		7AA207BC19AC124400D78430 /* refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh.png; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 			children = (
 				7A6D66571B4AD89100D9E5E5 /* MainInterfaceController.swift */,
 				7A8C3BF01B4471910091D797 /* NotificationController.swift */,
+				7A8CC1AC1B71A4A400DF0B74 /* ErrorPanel.swift */,
 				7A8C3BF21B4471910091D797 /* Images.xcassets */,
 				7A8C3BEB1B4471910091D797 /* Supporting Files */,
 			);
@@ -572,6 +575,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A6D665B1B4ADD6F00D9E5E5 /* MainInterfaceController.swift in Sources */,
+				7A8CC1AD1B71A4A400DF0B74 /* ErrorPanel.swift in Sources */,
 				7A8C3BF11B4471910091D797 /* NotificationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
