@@ -3,11 +3,12 @@ import WatchKit
 
 class ErrorPanelInterfaceController:WKInterfaceController {
     
-    @IBOutlet var errorlabel:WKInterfaceLabel!
+    @IBAction func retry() {
+        self.dismissController()
+    }
     
     override func awakeWithContext(context: AnyObject?) {
         super.awakeWithContext(context)
-        println(context)
     }
     
     override func willActivate() {

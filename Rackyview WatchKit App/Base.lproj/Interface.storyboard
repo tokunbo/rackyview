@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="7701"/>
@@ -8,7 +8,7 @@
         <!--Entities-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller title="Entities" id="AgC-eL-Hgc" customClass="MainInterfaceController" customModule="Rackyview_WatchKit_Extension">
+                <controller identifier="MainPanel" title="Entities" id="AgC-eL-Hgc" customClass="MainInterfaceController" customModule="Rackyview_WatchKit_Extension">
                     <items>
                         <group width="1" height="32" alignment="left" id="OpX-pN-Mqc">
                             <items>
@@ -66,16 +66,25 @@
             <objects>
                 <controller identifier="ErrorPanel" title="Error" id="zH2-km-nW6" customClass="ErrorPanelInterfaceController" customModule="Rackyview_WatchKit_Extension">
                     <items>
-                        <label width="130" height="145" alignment="left" text="You must be logged into the app, otherwise the password must be already saved and *NOT* have twoFactorAuth" numberOfLines="10" id="hKq-d3-f7h">
-                            <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
-                        </label>
+                        <button alignment="left" id="7P1-KW-Dyu">
+                            <group key="contentGroup" width="1" height="136" alignment="left" id="YxS-bR-vWt">
+                                <items>
+                                    <label height="139" alignment="left" text="You must be logged into the app, otherwise the password must be already saved and *NOT* have twoFactorAuth" textAlignment="left" numberOfLines="10" id="hKq-d3-f7h">
+                                        <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
+                                    </label>
+                                </items>
+                            </group>
+                            <connections>
+                                <action selector="retry" destination="zH2-km-nW6" id="u2P-k3-4pY"/>
+                            </connections>
+                        </button>
                     </items>
                     <connections>
                         <outlet property="errorlabel" destination="hKq-d3-f7h" id="b76-ZB-TgE"/>
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="367" y="350"/>
+            <point key="canvasLocation" x="369" y="349"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
