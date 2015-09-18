@@ -32,7 +32,7 @@ class TicketsSummaryViewController: UIViewController {
    @IBAction func refresh() {
         raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
         NSOperationQueue().addOperationWithBlock {
-            var nsdata:NSData! = raxAPI.get_tickets_summary()
+            let nsdata:NSData! = raxAPI.get_tickets_summary()
             if(nsdata == nil) {
                 raxutils.alert("Login Error", message: "sessionid has apparently expired", vc: self, onDismiss: { (action:UIAlertAction!) -> Void in
                     self.dismiss()
@@ -40,8 +40,8 @@ class TicketsSummaryViewController: UIViewController {
                 return
             }
             
-            var ticketSummary:NSDictionary! = NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary
-            var stats:NSArray = ticketSummary.valueForKey("summaryOfTickets")?.valueForKey("statistic") as! NSArray
+            let ticketSummary:NSDictionary! = (try! NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary
+            let stats:NSArray = ticketSummary.valueForKey("summaryOfTickets")?.valueForKey("statistic") as! NSArray
             raxutils.setUIBusy(nil, isBusy: false)
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 self.OpenTicketsLabel.text = "Open Tickets: 0"
@@ -50,13 +50,13 @@ class TicketsSummaryViewController: UIViewController {
                 for stat in stats {
                     if((stat.valueForKey("status") as! String) == "CLOSED") {
                         self.ClosedTicketsLabel.text = "Closed Tickets: "
-                        self.ClosedTicketsLabel.text?.extend((stat.valueForKey("number-of-tickets") as! NSNumber).stringValue)
+                        self.ClosedTicketsLabel.text?.appendContentsOf((stat.valueForKey("number-of-tickets") as! NSNumber).stringValue)
                     } else {
                        NotClosedTicketCount += (stat.valueForKey("number-of-tickets") as! NSNumber).integerValue
                     }
                 }
                 self.OpenTicketsLabel.text = "Open Tickets: "
-                self.OpenTicketsLabel.text?.extend(String(NotClosedTicketCount))
+                self.OpenTicketsLabel.text?.appendContentsOf(String(NotClosedTicketCount))
             }
         }
     }

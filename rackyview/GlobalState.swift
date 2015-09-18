@@ -33,7 +33,7 @@ class GlobalState {
         if self.Static.instance.opqueues.valueForKey(name) != nil {
             return
         }
-        var q = NSOperationQueue()
+        let q = NSOperationQueue()
         self.Static.instance.opqueues.setValue(q,forKey: name)
         q.suspended = true
         q.addOperationWithBlock{

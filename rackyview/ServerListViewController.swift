@@ -3,7 +3,7 @@
 import UIKit
 import Foundation
 
-class ServerListViewController: UITableViewController,UITableViewDataSource {
+class ServerListViewController: UITableViewController {
     var servers:NSArray!
 
     func dismiss () {
@@ -75,8 +75,8 @@ class ServerListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("ServerListTableCell") as! UITableViewCell
-        var server:NSDictionary = servers[indexPath.row] as! NSDictionary
+        let cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("ServerListTableCell") as UITableViewCell!
+        let server:NSDictionary = servers[indexPath.row] as! NSDictionary
         (cell.viewWithTag(1) as! UILabel).text = (server.objectForKey("server") as! NSDictionary).objectForKey("name") as? String
         (cell.viewWithTag(2) as! UILabel).text = "status:" + ((server.objectForKey("server") as! NSDictionary).objectForKey("status") as? String)!
         (cell.viewWithTag(3) as! UILabel).text = "region:" + (server.objectForKey("region") as? String)!
@@ -84,9 +84,9 @@ class ServerListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var server:NSDictionary = servers[indexPath.row] as! NSDictionary
-        var status = ((server.objectForKey("server") as! NSDictionary).objectForKey("status") as? String)!
-        var attentionLabel = (cell.viewWithTag(4) as! UILabel)
+        let server:NSDictionary = servers[indexPath.row] as! NSDictionary
+        let status = ((server.objectForKey("server") as! NSDictionary).objectForKey("status") as? String)!
+        let attentionLabel = (cell.viewWithTag(4) as! UILabel)
         if(status != "ACTIVE") {
             attentionLabel.highlighted = true
             attentionLabel.text = "!"
@@ -106,9 +106,7 @@ class ServerListViewController: UITableViewController,UITableViewDataSource {
     
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var selectedCell = tableView.cellForRowAtIndexPath(indexPath)
-        var server:NSDictionary = servers[indexPath.row] as! NSDictionary
-        var serverdetailview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("ServerDetailViewController") as! ServerDetailViewController
+        let serverdetailview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("ServerDetailViewController") as! ServerDetailViewController
         serverdetailview.server = servers[indexPath.row] as! NSMutableDictionary
         self.navigationController!.pushViewController(serverdetailview, animated: true)
     }

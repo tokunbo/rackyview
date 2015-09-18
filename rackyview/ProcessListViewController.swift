@@ -2,7 +2,7 @@
 import UIKit
 import Foundation
 
-class ProcessListViewController: UITableViewController,UITableViewDataSource {
+class ProcessListViewController: UITableViewController {
     var processes:NSArray!
     var agentid:String!
     var sortKey:String = "state_name"
@@ -37,7 +37,7 @@ class ProcessListViewController: UITableViewController,UITableViewDataSource {
     
     func refresh() {
         raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
-        var pidsData:NSDictionary! = raxAPI.getAgentInfoByType(agentid, type: "processes")
+        let pidsData:NSDictionary! = raxAPI.getAgentInfoByType(agentid, type: "processes")
         self.refreshControl?.endRefreshing()
         raxutils.setUIBusy(nil, isBusy: false)
         if pidsData == nil {
@@ -47,7 +47,7 @@ class ProcessListViewController: UITableViewController,UITableViewDataSource {
         if pidsData.objectForKey("info") as? NSArray == nil {
             raxutils.reportGenericError(self, message: "Agent could not handle the request")
         }
-        var tempArray = NSMutableArray()
+        let tempArray = NSMutableArray()
         for p in (pidsData.objectForKey("info") as! NSArray) {
             tempArray.addObject(p as! NSDictionary)
         }
@@ -67,57 +67,57 @@ class ProcessListViewController: UITableViewController,UITableViewDataSource {
         if processes == nil || processes.count == 0 {
             return
         }
-        var doSort:()->() = {
+        let doSort:()->() = {
             self.processes = self.processes.sortedArrayUsingDescriptors([NSSortDescriptor(key: self.sortKey, ascending: self.sortAscend, selector:Selector(self.sortSelector))])
             self.tableView.reloadData()
         }
-        var alert = UIAlertController(title: "Sort "+String(processes.count)+" processes by...", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
-        alert.addAction(UIAlertAction(title: "Name", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+        let alert = UIAlertController(title: "Sort "+String(processes.count)+" processes by...", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        alert.addAction(UIAlertAction(title: "Name", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction) -> Void in
             self.sortKey = "state_name"
             self.sortAscend = true
             self.sortSelector = "localizedCaseInsensitiveCompare:"
             doSort()
         }))
-        alert.addAction(UIAlertAction(title: "RAM", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+        alert.addAction(UIAlertAction(title: "RAM", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction) -> Void in
             self.sortKey = "memory_resident"
             self.sortAscend = false
             self.sortSelector = "compare:"
             doSort()
         }))
-        alert.addAction(UIAlertAction(title: "PID", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction!) -> Void in
+        alert.addAction(UIAlertAction(title: "PID", style: UIAlertActionStyle.Default, handler: { (action:UIAlertAction) -> Void in
             self.sortKey = "pid"
             self.sortAscend = true
             self.sortSelector = "compare:"
             doSort()
         }))
         alert.addAction(UIAlertAction(title:"CANCEL", style: UIAlertActionStyle.Destructive, handler: {
-            (action:UIAlertAction!) -> Void in
+            (action:UIAlertAction) -> Void in
             return
         }))
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = self.tableView.dequeueReusableCellWithIdentifier("ProcessListTableCell") as! UITableViewCell
-        var process:NSDictionary = processes[indexPath.row] as! NSDictionary
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("ProcessListTableCell") as UITableViewCell!
+        let process:NSDictionary = processes[indexPath.row] as! NSDictionary
         (cell.viewWithTag(1) as! UILabel).text = process["state_name"] as! String!
         (cell.viewWithTag(2) as! UILabel).text = "PID "+(process["pid"] as! NSNumber).stringValue
         (cell.viewWithTag(3) as! UILabel).text = "RAM "
         if process["memory_resident"] == nil {
-            (cell.viewWithTag(3) as! UILabel).text?.extend("N/A")
+            (cell.viewWithTag(3) as! UILabel).text?.appendContentsOf("N/A")
         } else {
-            var memusage = (process["memory_resident"] as! NSNumber).integerValue
+            let memusage = (process["memory_resident"] as! NSNumber).integerValue
             if memusage / 1000 > 999 {
-                (cell.viewWithTag(3) as! UILabel).text?.extend(String(stringInterpolationSegment: Float(memusage)/Float(1000000))+" MB")
+                (cell.viewWithTag(3) as! UILabel).text?.appendContentsOf(String(stringInterpolationSegment: Float(memusage)/Float(1000000))+" MB")
             } else {
-                (cell.viewWithTag(3) as! UILabel).text?.extend(String(stringInterpolationSegment: Float(memusage)/Float(1000))+" KB")
+                (cell.viewWithTag(3) as! UILabel).text?.appendContentsOf(String(stringInterpolationSegment: Float(memusage)/Float(1000))+" KB")
             }
         }
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var process:NSDictionary = processes[indexPath.row] as! NSDictionary
+        let process:NSDictionary = processes[indexPath.row] as! NSDictionary
         tableView.cellForRowAtIndexPath(indexPath)?.selected = false
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         raxutils.confirmDialog((process["state_name"] as! String!)+"\n\nCopy this info to clipboard?",

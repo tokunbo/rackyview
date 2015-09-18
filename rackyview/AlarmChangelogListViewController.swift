@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class AlarmChangelogListViewController: UITableViewController,UITableViewDataSource {
+class AlarmChangelogListViewController: UITableViewController {
     var entityID:String!
     var alarmID:String!
     var changelogs:NSArray!
@@ -51,12 +51,12 @@ class AlarmChangelogListViewController: UITableViewController,UITableViewDataSou
         self.refreshControl?.endRefreshing()
         var got1000entries:Bool = false
         raxutils.setUIBusy(self.navigationController?.view, isBusy: true, expectingSignificantLoadTime: true)
-        changelogs = raxAPI.getAlarmChangelogs(entityID: entityID)
+        changelogs = raxAPI.getAlarmChangelogs(entityID)
         raxutils.setUIBusy(nil, isBusy: false)
         if changelogs == nil {
             raxutils.reportGenericError(self)
         } else {
-            var tmpArray = NSMutableArray()
+            let tmpArray = NSMutableArray()
             for cl in changelogs {
                 if cl["alarm_id"] as? String == alarmID {
                     tmpArray.addObject(cl)
@@ -81,10 +81,10 @@ class AlarmChangelogListViewController: UITableViewController,UITableViewDataSou
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("AlarmHistoryListTableCell") as! UITableViewCell
-        var changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
-        var changelogState = (changelog["state"]as! String).lowercaseString
-        var stateColor = raxutils.getColorForState(changelogState)
+        let cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("AlarmHistoryListTableCell") as UITableViewCell!
+        let changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
+        let changelogState = (changelog["state"]as! String).lowercaseString
+        let stateColor = raxutils.getColorForState(changelogState)
         var shortcodeState = "????"
         (cell.viewWithTag(1) as! UIImageView).image = raxutils.createColoredImageFromUIImage(UIImage(named: "bellicon.png")!, myColor: stateColor)
         if(changelogState.rangeOfString("critical") != nil) {
@@ -103,7 +103,7 @@ class AlarmChangelogListViewController: UITableViewController,UITableViewDataSou
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
+        let changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
         tableView.cellForRowAtIndexPath(indexPath)?.selected = false
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         raxutils.confirmDialog("Changelog Details\n\nCopy this info to clipboard?",

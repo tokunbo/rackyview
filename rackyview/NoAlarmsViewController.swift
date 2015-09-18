@@ -24,7 +24,7 @@ class NoAlarmsViewController: UIViewController {
     
     @IBAction func btnPressed(button:UIButton) {
         if button.tag == 1 {
-            var miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
+            let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
             miscviewcontroller.unknownEntities = unknownEntities
             self.presentViewController( UINavigationController(rootViewController: miscviewcontroller),
                 animated: true, completion: nil)

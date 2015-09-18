@@ -11,8 +11,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        var userdata:NSData! = raxutils.getUserdata()
-        var err:NSError? = nil
+        let userdata:NSData! = raxutils.getUserdata()
         if(userdata != nil) {
             GlobalState.instance.userdata = NSKeyedUnarchiver.unarchiveObjectWithData(userdata) as! NSMutableDictionary!
             GlobalState.instance.sessionid = (GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary)["sessionid"] as! NSString as String
@@ -24,10 +23,13 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
         passwordFromKeychain = raxutils.getPasswordFromKeychain()
     }
     
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
+    }
+    
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
-        
+               
         if(passwordFromKeychain != nil && GlobalState.instance.userdata != nil) {
             //If a password is found in the keychain but userdata wasn't found in the appdata area, that means the user
             //must have removed & reinstalled the app without logging out. Because removing an app doesn't automatically
@@ -35,50 +37,47 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
             //end user to resolve it. I don't know how to clear the iOS keychain entry short of a factory-reset if you can't
             //use the original app to do it.
             //UPDATE: Actually, in iOS 8.3 it appears removing the app deletes any keychain stuff it made... I think...I dunno.
-            self.usernamefield.text = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String
+            self.usernamefield.text = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as? String
             self.passwordfield.text = passwordFromKeychain
             self.loginBtnTapped()
         } else if(GlobalState.instance.userdata != nil) {
-            self.usernamefield.text = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String
+            self.usernamefield.text = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as? String
             raxutils.setUIBusy(self.view, isBusy: true)
             raxAPI.refreshUserData(self.getcatalogCallback)
         }
-        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
     }
     
-    func getcatalogCallback(response: NSURLResponse!, returneddata: NSData!, error: NSError!) {
+    func getcatalogCallback( returneddata: NSData?, response: NSURLResponse?,error: NSError?) {
         self.view.setNeedsDisplay()
-        var userid:String! = raxAPI.getUserIdForUsername(self.usernamefield.text)
         NSOperationQueue.mainQueue().addOperationWithBlock {
-            if userid == nil {
-                raxutils.alert("Login Error",message:"The session has expired. You'll need to log back in", vc:self, onDismiss: nil)
-                raxutils.setUIBusy(nil, isBusy: false)
-                return
-            }
             if(error != nil) {
-                raxutils.alert("Login Error",message:"Username or password not correct.\n\n\n"+error.description,vc:self,onDismiss: nil)
+                raxutils.alert("Login Error",message:"Username or password not correct.\n\n\n"+error!.description,vc:self,onDismiss: nil)
                 raxutils.setUIBusy(nil, isBusy: false)
                 return
             }
             if (response as! NSHTTPURLResponse).statusCode != 200 {
-                raxutils.alert("Login Error",message:"Wrong HTTP response code received:\n"+String( (response as! NSHTTPURLResponse).statusCode),vc:self,onDismiss: nil)
+                raxutils.alert("Login Error",message:"Wrong HTTP response code received. Session might have expired:\n"+String( (response as! NSHTTPURLResponse).statusCode),vc:self,onDismiss: nil)
                 raxutils.setUIBusy(nil, isBusy: false)
                 return
             }
-            var jsonerror: NSError? = nil
-            var userdata:NSMutableDictionary! = NSJSONSerialization.JSONObjectWithData(returneddata, options: NSJSONReadingOptions.MutableContainers, error: &jsonerror) as! NSMutableDictionary!
-            if(jsonerror != nil) {
+            
+            var userdata:NSMutableDictionary!
+            do {
+                 try userdata = NSJSONSerialization.JSONObjectWithData(returneddata!, options: NSJSONReadingOptions.MutableContainers) as! NSMutableDictionary
+            } catch {
                 raxutils.alert("Login Error", message: "invalid JSON.", vc: self, onDismiss: nil)
                 raxutils.setUIBusy(nil, isBusy: false)
                 return
             }
+
             if(self.passwordFromKeychain != self.passwordfield.text) {
                 raxutils.deleteDataInKeychain()
             }
             if(GlobalState.instance.userdata != nil && GlobalState.instance.userdata["customSettings"] != nil && (GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String) == self.usernamefield.text) {
                 userdata["customSettings"] = GlobalState.instance.userdata["customSettings"]
             } else {
-                var customSettings = NSMutableDictionary()
+                let customSettings = NSMutableDictionary()
                 customSettings["alarmFavorites"] = NSMutableDictionary()
                 customSettings["entityFavorites"] = NSMutableDictionary()
                 customSettings["openTickets"] = NSMutableDictionary()
@@ -121,7 +120,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
                 }
             }
             raxutils.setUIBusy(nil, isBusy: false)
-            var overviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("Overview") as! OverviewViewController
+            let overviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("Overview") as! OverviewViewController
             if !monitoringRoleOrAdminFound {
                 raxutils.confirmDialog("Permissons don't appear to be high enough", message: "This account doesn't look like it's an admin account or even an account with the 'monitoring' role enabled. This means the app will probably malfunction & crash.\n\nStill wanna try anyway?", vc: self,
                     cancelAction:{ (action:UIAlertAction!) -> Void in
@@ -144,8 +143,8 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
     }
     
     @IBAction func loginBtnTapped() {
-        if(usernamefield.text.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 ||
-            passwordfield.text.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1) {
+        if(usernamefield.text!.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 ||
+            passwordfield.text!.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1) {
                 raxutils.alert("Error",message:"Username & Password cannot be blank", vc: self, onDismiss: nil)
                 return
         }
@@ -153,7 +152,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
         GlobalState.instance.sessionid = nil
         GlobalState.instance.csrftoken = nil
         GlobalState.instance.latestAlarmStates = nil
-        var retval:String! = raxAPI.login(usernamefield.text, p: passwordfield.text)
+        let retval:String! = raxAPI.login(usernamefield.text!, p: passwordfield.text!)
         if retval == "twofactorauth" {
             handleTwoFactorAuth()
             return
@@ -166,8 +165,8 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
     }
     
     func handleTwoFactorAuth() {
-        var alert = UIAlertController(title: "TwoFactorAuth detected", message: "In a moment you should get a numerical code via SMS. Enter it below:", preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
+        let alert = UIAlertController(title: "TwoFactorAuth detected", message: "In a moment you should get a numerical code via SMS. Enter it below:", preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addTextFieldWithConfigurationHandler({(textField: UITextField) in
             textField.placeholder = "Code"
         })
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: { action in
@@ -175,7 +174,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
             return
         }))
         alert.addAction(UIAlertAction(title: "Send", style: UIAlertActionStyle.Destructive, handler: { action in
-            var code:String = (alert.textFields![0] as! UITextField).text
+            let code:String = (alert.textFields![0]).text!
             if(code.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1) {
                 raxutils.setUIBusy(nil, isBusy: false)
                 raxutils.alert("Error", message: "Code cannot be blank", vc: self, onDismiss: nil)
@@ -196,7 +195,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
         //verification pin for TwoAuth users.
         //.....yup, pretty crazy.... but it works.
         //When rackspace decides to make an official Ticketing API, then I won't have these 2 endpoints to login to.
-        var retval:String! = raxAPI.getUserIdForUsername(usernamefield.text)
+        var retval:String! = raxAPI.getUserIdForUsername(usernamefield.text!)
         if retval == nil {
             raxutils.setUIBusy(nil, isBusy: false)
             raxutils.reportGenericError(self, message: "No userid hash?")
@@ -208,11 +207,11 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
             raxutils.reportGenericError(self, message: "No apikey?")
             return
         }
-        raxAPI.getServiceCatalogUsingUsernameAndAPIKey(usernamefield.text, apiKey: retval, funcptr: getcatalogCallback)
+        raxAPI.getServiceCatalogUsingUsernameAndAPIKey(usernamefield.text!, apiKey: retval, funcptr: getcatalogCallback)
     }
     
-    func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest!) -> Void) {
-        var setcookie:String! = response.allHeaderFields["Set-Cookie"] as? String!
+    func URLSession(session: NSURLSession, task: NSURLSessionTask, willPerformHTTPRedirection response: NSHTTPURLResponse, newRequest request: NSURLRequest, completionHandler: (NSURLRequest?) -> Void) {
+        let setcookie:String! = response.allHeaderFields["Set-Cookie"] as? String!
         if setcookie == nil {
             raxutils.setUIBusy(nil, isBusy: false)
             raxutils.alert("Auth Error", message: "Something went wrong. I see no cookies in the response headers", vc: self, onDismiss: nil)

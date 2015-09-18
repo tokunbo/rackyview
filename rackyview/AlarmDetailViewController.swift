@@ -34,7 +34,7 @@ class AlarmDetailViewController: UIViewController {
                 raxutils.reportGenericError(self)
                 return
             }
-            var notificationplanDetails:NSDictionary! = raxAPI.getNotificationPlan(self.alarm["notification_plan_id"] as! NSString as String)
+            let notificationplanDetails:NSDictionary! = raxAPI.getNotificationPlan(self.alarm["notification_plan_id"] as! NSString as String)
             if notificationplanDetails == nil {
                 raxutils.reportGenericError(self)
                 return
@@ -98,7 +98,7 @@ class AlarmDetailViewController: UIViewController {
             var postdata:String!
             if(self.testalarmpostdata != nil) {
                 self.testalarmpostdata["criteria"] = self.alarm["criteria"] as! NSString
-                nsdata = NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions.allZeros, error: nil)
+                nsdata = try? NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions())
                 if nsdata == nil {
                     raxutils.reportGenericError(self)
                     return
@@ -114,7 +114,7 @@ class AlarmDetailViewController: UIViewController {
                     return
                 }
             } else {
-                var check = raxAPI.getCheck(self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String)
+                let check = raxAPI.getCheck(self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String)
                 if check == nil {
                     raxutils.reportGenericError(self)
                     return
@@ -126,14 +126,14 @@ class AlarmDetailViewController: UIViewController {
                     return
                 }
                 self.testalarmpostdata = NSMutableDictionary()
-                var checkdata:NSArray! = NSJSONSerialization.JSONObjectWithData(nsdata, options: nil, error: nil) as! NSArray!
+                let checkdata:NSArray! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: [])) as! NSArray!
                 if checkdata == nil {
                     raxutils.reportGenericError(self)
                     return
                 }
                 self.testalarmpostdata["criteria"] = (self.alarm["criteria"] as! NSString)
                 self.testalarmpostdata["check_data"] = checkdata
-                nsdata = NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions.allZeros, error: nil)
+                nsdata = try? NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions())
                 if nsdata == nil {
                     raxutils.reportGenericError(self)
                     return
@@ -145,19 +145,19 @@ class AlarmDetailViewController: UIViewController {
                     return
                 }
             }
-            var results:NSArray! = NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSArray!
+            let results:NSArray! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSArray!
             if results == nil {
                 raxutils.reportGenericError(self)
                 return
             }
-            var mymessage:String = "state: "+((results[0]["state"] as! NSString) as String)+"\nstatus: "+((results[0]["status"] as! NSString) as String)
+            let mymessage:String = "state: "+((results[0]["state"] as! NSString) as String)+"\nstatus: "+((results[0]["status"] as! NSString) as String)
             raxutils.alert("AlarmTest with Criteria resulted in: ", message: mymessage, vc: self, onDismiss: nil)
             raxutils.setUIBusy(nil, isBusy: false)
         }
     }
     
     func keyboardAppearanceEvent(notification:NSNotification) {
-        var keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
         if(alarmCriteriaTextView.isFirstResponder()) {
             alarmCriteriaTextView.contentInset.bottom += keyboardSize.height
             alarmCriteriaTextView.scrollIndicatorInsets.bottom += keyboardSize.height

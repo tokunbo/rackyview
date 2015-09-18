@@ -3,7 +3,7 @@
 import UIKit
 import Foundation
 
-class TicketListViewController: UITableViewController,UITableViewDataSource {
+class TicketListViewController: UITableViewController {
     var t_status:String = ""
     var tickets:NSMutableArray = NSMutableArray()
     var previouslySelectedIndexPath:NSIndexPath!
@@ -16,14 +16,14 @@ class TicketListViewController: UITableViewController,UITableViewDataSource {
         self.tableView.scrollEnabled = false //Scrolling while loading causes a crash apparently
         raxutils.setUIBusy(self.navigationController!.view, isBusy: true)
         NSOperationQueue().addOperationWithBlock {
-            var nsdata:NSData! = raxAPI.get_tickets_by_status(self.t_status)
+            let nsdata:NSData! = raxAPI.get_tickets_by_status(self.t_status)
             if(nsdata == nil) {
                 raxutils.alert("Auth Error", message: "sessionid has apparently expired", vc: self,onDismiss: { action in
                     self.dismiss()
                 })
                 return
             }
-            var responsedata:NSDictionary! = NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary!
+            let responsedata:NSDictionary! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
             if(responsedata == nil || responsedata.valueForKey("tickets") == nil) {
                 raxutils.alert("Some kind of error", message: "expired websessionid or unexpected data returned", vc: self,onDismiss: { action in
                     self.dismiss()
@@ -59,7 +59,7 @@ class TicketListViewController: UITableViewController,UITableViewDataSource {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         if previouslySelectedIndexPath != nil {
-            var previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
+            let previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
             raxutils.flashView(previouslySelectedCell!.contentView)
             previouslySelectedCell?.reloadInputViews()
             previouslySelectedIndexPath = nil
@@ -76,7 +76,7 @@ class TicketListViewController: UITableViewController,UITableViewDataSource {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if (tickets.count == 0) {
-            var emptyMessage:UILabel = UILabel(frame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height))
+            let emptyMessage:UILabel = UILabel(frame: CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height))
             emptyMessage.backgroundColor = UIColor(red: 0, green: 0.1, blue: 0, alpha: 1)
             emptyMessage.textColor = UIColor.whiteColor()
             emptyMessage.text = "Pull all the way down to refresh"
@@ -98,9 +98,9 @@ class TicketListViewController: UITableViewController,UITableViewDataSource {
         if self.title! as NSString as String != "Open Tickets" {
             return
         }
-        var ticket:NSMutableDictionary = tickets[indexPath.row] as! NSMutableDictionary
+        let ticket:NSMutableDictionary = tickets[indexPath.row] as! NSMutableDictionary
         if ticket["hasUnreadComments"] as! Bool {
-            var uiimageview:UIImageView = UIImageView()
+            let uiimageview:UIImageView = UIImageView()
             uiimageview.image = UIImage(named: "newmessageicon.png")
             uiimageview.tag = 99
             uiimageview.frame = CGRect(x:cell.frame.width-47,y:cell.frame.height-36,width:47,height:36)
@@ -110,36 +110,37 @@ class TicketListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
+        let uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
         if uiimageview != nil {
             uiimageview.removeFromSuperview()
         }
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("TicketListTableCell") as! UITableViewCell
-        var ticket:NSDictionary = tickets[indexPath.row] as! NSDictionary
+        let cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("TicketListTableCell") as UITableViewCell!
+        let ticket:NSDictionary = tickets[indexPath.row] as! NSDictionary
         (cell.viewWithTag(1) as! UILabel).text = (ticket.objectForKey("subject") as! NSString) as String
         (cell.viewWithTag(2) as! UILabel).text = "Updated: "
-        (cell.viewWithTag(2) as! UILabel).text?.extend((ticket.objectForKey("updated-at") as! NSString) as String)
+        (cell.viewWithTag(2) as! UILabel).text?.appendContentsOf((ticket.objectForKey("updated-at") as! NSString) as String)
         (cell.viewWithTag(3) as! UILabel).text = "Status: "
-        (cell.viewWithTag(3) as! UILabel).text?.extend((ticket.objectForKey("ticket-status") as! NSString) as String)
+        (cell.viewWithTag(3) as! UILabel).text?.appendContentsOf((ticket.objectForKey("ticket-status") as! NSString) as String)
         (cell.viewWithTag(4) as! UILabel).text = "ID: "
-        (cell.viewWithTag(4) as! UILabel).text?.extend((ticket.objectForKey("ticket-id") as! NSString) as String)
+        (cell.viewWithTag(4) as! UILabel).text?.appendContentsOf((ticket.objectForKey("ticket-id") as! NSString) as String)
         
         //TODO: The reason this view is hidden is because the API sometimes returns the wrong count and that hasn't been fixed AFAIK. I don't want to show data that's not reiable if I can help it.
         cell.viewWithTag(5)?.hidden = true
         
         (cell.viewWithTag(5) as! UILabel).text = "Comments: "
-        (cell.viewWithTag(5) as! UILabel).text?.extend((ticket.objectForKey("public-comment-count") as! NSNumber).stringValue)
+        (cell.viewWithTag(5) as! UILabel).text?.appendContentsOf((ticket.objectForKey("public-comment-count") as! NSNumber).stringValue)
         return cell
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         previouslySelectedIndexPath = indexPath
-        var selectedCell = tableView.cellForRowAtIndexPath(indexPath)
-        var ticketdetailview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("TicketDetailViewController") as! TicketDetailViewController
-        ticketdetailview.ticket = tickets[indexPath.row] as! NSMutableDictionary
-        self.navigationController!.pushViewController(ticketdetailview, animated: true)
+        tableView.cellForRowAtIndexPath(indexPath)?.selected = false
+        let ticket = tickets[indexPath.row] as! NSMutableDictionary
+        let ticketdetailsview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("TicketDetailsViewController") as! TicketDetailsViewController
+        ticketdetailsview.ticket = ticket
+        self.navigationController!.pushViewController(ticketdetailsview, animated: true)
     }
 }

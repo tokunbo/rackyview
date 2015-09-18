@@ -2,7 +2,7 @@
 import UIKit
 import Foundation
 
-class EntityListViewController: UITableViewController,UITableViewDataSource {
+class EntityListViewController: UITableViewController {
     var viewingstate:String!
     var keyForArrayInResultDictionary:String!
     var entities:NSArray!
@@ -48,7 +48,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         if previouslySelectedIndexPath != nil {
-            var previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
+            let previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
             raxutils.flashView(previouslySelectedCell!.contentView)
             previouslySelectedCell?.reloadInputViews()
             previouslySelectedIndexPath = nil
@@ -68,11 +68,11 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = self.tableView.dequeueReusableCellWithIdentifier("EntityListTableCell") as! UITableViewCell
-        var entity:NSDictionary = entities[indexPath.row] as! NSDictionary
-        var entityState:String = entity.objectForKey("state") as! NSString as String
-        var alarmstatelist = (entity as NSDictionary).objectForKey("latest_alarm_states") as! NSArray
-        var statusColor:UIColor
+        let cell = self.tableView.dequeueReusableCellWithIdentifier("EntityListTableCell") as UITableViewCell!
+        let entity:NSDictionary = entities[indexPath.row] as! NSDictionary
+        let entityState:String = entity.objectForKey("state") as! NSString as String
+        let alarmstatelist = (entity as NSDictionary).objectForKey("latest_alarm_states") as! NSArray
+        var _:UIColor
         var alarmstate:String = ""
         if entityState == "OK" {
             alarmstate = "ok"
@@ -92,9 +92,9 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var entity:NSDictionary = entities[indexPath.row] as! NSDictionary
+        let entity:NSDictionary = entities[indexPath.row] as! NSDictionary
         if(raxutils.entityHasBeenMarkedAsFavorite(entity)) {
-            var uiimageview:UIImageView = UIImageView()
+            let uiimageview:UIImageView = UIImageView()
             uiimageview.image = UIImage(named: "smallhearticon.png")
             uiimageview.tag = 99
             uiimageview.frame = CGRect(x:cell.frame.width-12,y:12,width:12,height:12)
@@ -103,8 +103,8 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
         }
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        var entity:NSDictionary = entities[indexPath.row] as! NSDictionary
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let entity:NSDictionary = entities[indexPath.row] as! NSDictionary
         var myTitle = ""
         var favAction = ""
         var bgColor:UIColor
@@ -117,14 +117,14 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
             favAction = "add"
             bgColor = UIColor.blueColor()
         }
-        var toggleFavorite = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: myTitle, handler:{(action,indexrow) in
+        let toggleFavorite = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: myTitle, handler:{(action,indexrow) in
             raxutils.updateEntityFavorites(entity, action: favAction)
             self.tableView.setEditing(false, animated: true)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         })
-        var showAgentInfo = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Agent\nInfo", handler:{(action,indexrow) in
+        let showAgentInfo = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Agent\nInfo", handler:{(action,indexrow) in
             self.tableView.setEditing(false, animated: true)
-            var agentinfoview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AgentInfoViewController") as! AgentInfoViewController
+            let agentinfoview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AgentInfoViewController") as! AgentInfoViewController
             agentinfoview.entityid = entity["entity_id"] as! String!
             agentinfoview.title = entity["entity_label"] as! String!
             self.presentViewController(UINavigationController(rootViewController: agentinfoview), animated: true, completion: nil)
@@ -135,7 +135,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
+        let uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
         if uiimageview != nil {
             uiimageview.removeFromSuperview()
         }
@@ -147,8 +147,8 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         previouslySelectedIndexPath = indexPath
-        var alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
-        var entity:NSDictionary = entities[indexPath.row] as! NSDictionary
+        let alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
+        let entity:NSDictionary = entities[indexPath.row] as! NSDictionary
         alarmlistview.title = (entity.objectForKey("entity_label") as! String) + " Alarms"
         alarmlistview.alarms = entity["allAlarms"] as! NSArray
         alarmlistview.entityId = entity["entity_id"] as! String
@@ -160,7 +160,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
             tableView.cellForRowAtIndexPath(indexPath)?.selected = false
         } else {
             self.presentViewController(UINavigationController(rootViewController: alarmlistview), animated: true, completion: {
-            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer.enabled = false })
+            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false })
         }
     }
     
@@ -168,7 +168,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
         self.navigationController!.navigationBar.layer.removeAllAnimations()
         raxutils.setUIBusy(self.navigationController!.view, isBusy: true)
         NSOperationQueue().addOperationWithBlock {
-            var results:NSMutableDictionary! = raxAPI.latestAlarmStates(isStreaming: self.isStreaming)
+            let results:NSMutableDictionary! = raxAPI.latestAlarmStates(self.isStreaming)
             raxutils.setUIBusy(nil, isBusy: false)
             if results == nil {
                 raxutils.alert("Session Error",message:"Either the network was down or the websessionID has expired. Gotta go...",vc:self,
@@ -179,8 +179,8 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
                 raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
                 return
             }
-            var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-            var entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
+            let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+            let entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
             if entityFavorites.count == 0 {
                 raxutils.alert("No entity favorites",message:"To add/remove entity from favorites list, swipe an entity's row in the list to reveal more actions.",vc:self,
                     onDismiss: { action in
@@ -188,8 +188,8 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
                 })
                 return
             }
-            var entitiesToSearchThrough = NSMutableArray()
-            var entitiesToBeShown = NSMutableArray()
+            let entitiesToSearchThrough = NSMutableArray()
+            let entitiesToBeShown = NSMutableArray()
             entitiesToSearchThrough.addObjectsFromArray(results["criticalEntities"] as! NSMutableArray as [AnyObject])
             entitiesToSearchThrough.addObjectsFromArray(results["warningEntities"] as! NSMutableArray as [AnyObject])
             entitiesToSearchThrough.addObjectsFromArray(results["okEntities"] as! NSMutableArray as [AnyObject])
@@ -229,7 +229,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
                 if self.isStreaming {
                     raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
                     self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
-                    if raxAPI.extend_session(reason: "favEntities") != "OK" {
+                    if raxAPI.extend_session("favEntities") != "OK" {
                         NSLog("extend_session error, this might a sign of trouble.")
                     }
                 }
@@ -238,12 +238,12 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
     }
     
     func toggleStream() {
-        var navbar:UINavigationBar = self.navigationController!.navigationBar
-        var navctrl:UINavigationController =  self.navigationController!
+        let navbar:UINavigationBar = self.navigationController!.navigationBar
+        let navctrl:UINavigationController =  self.navigationController!
         if( !isStreaming ) {
             isStreaming = true
             UIApplication.sharedApplication().idleTimerDisabled = true
-            var uiview = UIView()
+            let uiview = UIView()
             uiview.frame = navctrl.view.frame
             uiview.backgroundColor = UIColor.clearColor()
             uiview.tag = 99
@@ -293,7 +293,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
             },
             okAction:{ (action:UIAlertAction!) -> Void in
                 raxutils.setUIBusy(self.view, isBusy: true)
-                var retval:String! = raxAPI.extend_session(reason: "favEntities")
+                let retval:String! = raxAPI.extend_session("favEntities")
                 raxutils.setUIBusy(nil, isBusy:false)
                 if  retval == "OK" {
                     self.toggleStream()
@@ -322,7 +322,7 @@ class EntityListViewController: UITableViewController,UITableViewDataSource {
         } else {
             raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
             NSOperationQueue().addOperationWithBlock {
-                var results:NSMutableDictionary! = raxAPI.latestAlarmStates(isStreaming: false)
+                let results:NSMutableDictionary! = raxAPI.latestAlarmStates(false)
                 self.entities = nil
                 raxutils.setUIBusy(nil, isBusy: false)
                 if results == nil {

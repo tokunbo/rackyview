@@ -15,7 +15,7 @@
 		7A18C44C1ACF189500781CB0 /* TicketListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */; };
 		7A18C44E1ACFC13500781CB0 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */; };
 		7A18C4501ACFC13E00781CB0 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A18C44F1ACFC13E00781CB0 /* Security.framework */; };
-		7A18C4521AD04DFB00781CB0 /* TicketDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */; };
+		7A18C4521AD04DFB00781CB0 /* TicketDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4511AD04DFB00781CB0 /* TicketDetailsViewController.swift */; };
 		7A20B20C19A2CAE600CA692F /* AlarmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */; };
 		7A2D55C5198728F2000F1716 /* raxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D55C31987185F000F1716 /* raxAPI.swift */; };
 		7A2E0C6319CCFEAC008B1FB0 /* AlarmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */; };
@@ -41,10 +41,8 @@
 		7A87F85C1B4B932A00BB4D5B /* bellicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A46CB6E1992DCC800BCA7FD /* bellicon.png */; };
 		7A8C3BF11B4471910091D797 /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF01B4471910091D797 /* NotificationController.swift */; };
 		7A8C3BF31B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF21B4471910091D797 /* Images.xcassets */; };
-		7A8C3BF71B4471910091D797 /* Rackyview WatchKit App.app in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */; };
 		7A8C3BFF1B4471910091D797 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3BFD1B4471910091D797 /* Interface.storyboard */; };
 		7A8C3C011B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3C001B4471910091D797 /* Images.xcassets */; };
-		7A8C3C041B4471910091D797 /* Rackyview WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		7A8CC1AD1B71A4A400DF0B74 /* ErrorPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8CC1AC1B71A4A400DF0B74 /* ErrorPanel.swift */; };
 		7A8D424B1AC497A500C7F8AD /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D424A1AC497A500C7F8AD /* diamond.png */; };
 		7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F21AD96AFB004453E6 /* rngCrypt.c */; };
@@ -78,23 +76,12 @@
 		7AE5C0BF1979C8E400E0C1C4 /* rackyview.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BD1979C8E400E0C1C4 /* rackyview.xcdatamodeld */; };
 		7AE5C0C41979C8E400E0C1C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7AE5C0C21979C8E400E0C1C4 /* Main.storyboard */; };
 		7AE5C0D21979C8E400E0C1C4 /* rackyviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */; };
+		CB0931F01BAA28FB0054E348 /* Rackyview WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		CB0931F31BAA28FB0054E348 /* Rackyview WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */; };
+		CB0931F71BAA45960054E348 /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0931F61BAA45960054E348 /* WatchConnectivity.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		7A8C3BF81B4471910091D797 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7A8C3BF51B4471910091D797;
-			remoteInfo = "Rackyview WatchKit App";
-		};
-		7A8C3C021B4471910091D797 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7A8C3BE81B4471910091D797;
-			remoteInfo = "Rackyview WatchKit Extension";
-		};
 		7AE5C0CC1979C8E400E0C1C4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
@@ -102,18 +89,43 @@
 			remoteGlobalIDString = 7AE5C0B51979C8E400E0C1C4;
 			remoteInfo = rackyview;
 		};
+		CB0931EE1BAA28FB0054E348 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C3BE81B4471910091D797;
+			remoteInfo = "Rackyview WatchKit Extension";
+		};
+		CB0931F11BAA28FB0054E348 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7AE5C0AE1979C8E300E0C1C4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7A8C3BF51B4471910091D797;
+			remoteInfo = "Rackyview WatchKit App";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		7A8C3C0B1B4471910091D797 /* Embed App Extensions */ = {
+		CB0931F41BAA28FB0054E348 /* Embed App Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				7A8C3C041B4471910091D797 /* Rackyview WatchKit Extension.appex in Embed App Extensions */,
+				CB0931F01BAA28FB0054E348 /* Rackyview WatchKit Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CB0931F51BAA28FB0054E348 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				CB0931F31BAA28FB0054E348 /* Rackyview WatchKit App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -126,7 +138,7 @@
 		7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketListViewController.swift; sourceTree = "<group>"; };
 		7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		7A18C44F1ACFC13E00781CB0 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketDetailViewController.swift; sourceTree = "<group>"; };
+		7A18C4511AD04DFB00781CB0 /* TicketDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketDetailsViewController.swift; sourceTree = "<group>"; };
 		7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmListViewController.swift; sourceTree = "<group>"; };
 		7A2D55C31987185F000F1716 /* raxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = raxAPI.swift; sourceTree = "<group>"; };
 		7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlarmDetailViewController.swift; sourceTree = "<group>"; };
@@ -192,6 +204,7 @@
 		7AE5C0C31979C8E400E0C1C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7AE5C0CB1979C8E400E0C1C4 /* RackyviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RackyviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rackyviewTests.swift; sourceTree = "<group>"; };
+		CB0931F61BAA45960054E348 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +212,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB0931F71BAA45960054E348 /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +277,7 @@
 		7AE5C0AD1979C8E300E0C1C4 = {
 			isa = PBXGroup;
 			children = (
+				CB0931F61BAA45960054E348 /* WatchConnectivity.framework */,
 				7A18C44F1ACFC13E00781CB0 /* Security.framework */,
 				7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */,
 				7A65AF0319F4A4F800D899DE /* Media.xcassets */,
@@ -302,14 +317,14 @@
 				7A46CB781992FF1B00BCA7FD /* EntityListViewController.swift */,
 				7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */,
 				7A7326361B32DD09001278FA /* ProcessListViewController.swift */,
-				7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */,
 				7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */,
+				7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */,
 				7A18C4491ACDDC3D00781CB0 /* TicketsSummaryViewController.swift */,
 				7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */,
+				7A18C4511AD04DFB00781CB0 /* TicketDetailsViewController.swift */,
 				7A3ED4C81AF9868A00723B32 /* CreateTicketViewController.swift */,
 				7AE5A08F1AEE2E38009249FA /* NewTicketCommentViewController.swift */,
 				7A3ED4CA1AFC408D00723B32 /* CloseTicketViewController.swift */,
-				7A18C4511AD04DFB00781CB0 /* TicketDetailViewController.swift */,
 				7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */,
 				7A4661D11B367DF600A5BBF4 /* AlarmChangelogListViewController.swift */,
 				7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */,
@@ -386,27 +401,28 @@
 			buildRules = (
 			);
 			dependencies = (
-				7A8C3BF91B4471910091D797 /* PBXTargetDependency */,
 			);
 			name = "Rackyview WatchKit Extension";
 			productName = "Rackyview WatchKit Extension";
 			productReference = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */;
-			productType = "com.apple.product-type.watchkit-extension";
+			productType = "com.apple.product-type.watchkit2-extension";
 		};
 		7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7A8C3C051B4471910091D797 /* Build configuration list for PBXNativeTarget "Rackyview WatchKit App" */;
 			buildPhases = (
 				7A8C3BF41B4471910091D797 /* Resources */,
+				CB0931F41BAA28FB0054E348 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CB0931EF1BAA28FB0054E348 /* PBXTargetDependency */,
 			);
 			name = "Rackyview WatchKit App";
 			productName = "Rackyview WatchKit App";
 			productReference = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */;
-			productType = "com.apple.product-type.application.watchapp";
+			productType = "com.apple.product-type.application.watchapp2";
 		};
 		7AE5C0B51979C8E400E0C1C4 /* Rackyview */ = {
 			isa = PBXNativeTarget;
@@ -415,12 +431,12 @@
 				7AE5C0B21979C8E400E0C1C4 /* Sources */,
 				7AE5C0B31979C8E400E0C1C4 /* Frameworks */,
 				7AE5C0B41979C8E400E0C1C4 /* Resources */,
-				7A8C3C0B1B4471910091D797 /* Embed App Extensions */,
+				CB0931F51BAA28FB0054E348 /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				7A8C3C031B4471910091D797 /* PBXTargetDependency */,
+				CB0931F21BAA28FB0054E348 /* PBXTargetDependency */,
 			);
 			name = Rackyview;
 			productName = rackyview;
@@ -451,7 +467,9 @@
 		7AE5C0AE1979C8E300E0C1C4 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0600;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = rackyperson;
 				TargetAttributes = {
 					7A8C3BE81B4471910091D797 = {
@@ -508,7 +526,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				7A87F85B1B4B8EB400BB4D5B /* bellicon.png in Resources */,
-				7A8C3BF71B4471910091D797 /* Rackyview WatchKit App.app in Resources */,
 				7A0CBCCD1B4CB067006DEF70 /* Media.xcassets in Resources */,
 				7A8C3BF31B4471910091D797 /* Images.xcassets in Resources */,
 			);
@@ -587,7 +604,7 @@
 				7A46CB6B199189B600BCA7FD /* GlobalState.swift in Sources */,
 				7A3ED4CB1AFC408D00723B32 /* CloseTicketViewController.swift in Sources */,
 				7A46CB791992FF1B00BCA7FD /* EntityListViewController.swift in Sources */,
-				7A18C4521AD04DFB00781CB0 /* TicketDetailViewController.swift in Sources */,
+				7A18C4521AD04DFB00781CB0 /* TicketDetailsViewController.swift in Sources */,
 				7A7326371B32DD09001278FA /* ProcessListViewController.swift in Sources */,
 				7AE5A0901AEE2E38009249FA /* NewTicketCommentViewController.swift in Sources */,
 				7AAF200C19897E8C00737CDA /* raxutils.swift in Sources */,
@@ -626,20 +643,20 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		7A8C3BF91B4471910091D797 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */;
-			targetProxy = 7A8C3BF81B4471910091D797 /* PBXContainerItemProxy */;
-		};
-		7A8C3C031B4471910091D797 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7A8C3BE81B4471910091D797 /* Rackyview WatchKit Extension */;
-			targetProxy = 7A8C3C021B4471910091D797 /* PBXContainerItemProxy */;
-		};
 		7AE5C0CD1979C8E400E0C1C4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7AE5C0B51979C8E400E0C1C4 /* Rackyview */;
 			targetProxy = 7AE5C0CC1979C8E400E0C1C4 /* PBXContainerItemProxy */;
+		};
+		CB0931EF1BAA28FB0054E348 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C3BE81B4471910091D797 /* Rackyview WatchKit Extension */;
+			targetProxy = CB0931EE1BAA28FB0054E348 /* PBXContainerItemProxy */;
+		};
+		CB0931F21BAA28FB0054E348 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7A8C3BF51B4471910091D797 /* Rackyview WatchKit App */;
+			targetProxy = CB0931F11BAA28FB0054E348 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -667,8 +684,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -676,11 +695,13 @@
 				);
 				IBSC_MODULE = Rackyview_WatchKit_Extension;
 				INFOPLIST_FILE = "Rackyview WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
@@ -688,25 +709,30 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				GCC_NO_COMMON_BLOCKS = YES;
 				IBSC_MODULE = Rackyview_WatchKit_Extension;
 				INFOPLIST_FILE = "Rackyview WatchKit App/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = 4;
-				"TARGETED_DEVICE_FAMILY[sdk=iphonesimulator*]" = "1,4";
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
 		7A8C3C091B4471910091D797 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -716,26 +742,35 @@
 				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
 		};
 		7A8C3C0A1B4471910091D797 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "${TARGET_NAME}";
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;
 		};
@@ -756,10 +791,12 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -777,7 +814,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -800,8 +837,8 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -814,7 +851,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -826,13 +863,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = rackyview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Rackyview;
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/rackyview-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -845,13 +883,14 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Tokunbo George (R9MG8NJR95)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = rackyview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Rackyview;
-				PROVISIONING_PROFILE = "e72fe42c-eb72-40d8-b4de-58688dc68eef";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/rackyview-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -870,6 +909,7 @@
 				);
 				INFOPLIST_FILE = rackyviewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RackyviewTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
@@ -885,6 +925,7 @@
 				);
 				INFOPLIST_FILE = rackyviewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RackyviewTests;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";

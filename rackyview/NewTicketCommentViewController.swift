@@ -14,7 +14,7 @@ class NewTicketCommentViewController: UIViewController {
     }
     
     @IBAction func postComment() {
-        var postcommentCallback:(NSURLResponse!, NSData!, NSError!)->() = { response,returneddata,error in
+        let postcommentCallback:( NSData?, NSURLResponse?, NSError?)->() = { returneddata, response,error in
             raxutils.setUIBusy(nil, isBusy: false)
             if(response != nil && (response as! NSHTTPURLResponse).statusCode == 201 ) {
                 raxutils.alert("Commented on Ticket", message: "The comment was sent successfully", vc: self,
@@ -24,14 +24,14 @@ class NewTicketCommentViewController: UIViewController {
             } else {
                 var msg:String = "Something went wrong. Unexpected HTTP response code: "
                 if(response != nil) {
-                    msg.extend((String((response as! NSHTTPURLResponse).statusCode)))
+                    msg.appendContentsOf((String((response as! NSHTTPURLResponse).statusCode)))
                 } else {
-                    msg.extend("n/a")
+                    msg.appendContentsOf("n/a")
                 }
                 raxutils.alert("Ticket comment Error", message: msg, vc: self, onDismiss: nil)
             }
         }
-        var submitComment:()->() = {
+        let submitComment:()->() = {
             if(GlobalState.instance.csrftoken == nil) {
                 raxutils.alert("WEBAPI error maybe?", message: "csrftoken is null, restart app and try again.", vc:self, onDismiss:nil)
                 return
@@ -67,7 +67,7 @@ class NewTicketCommentViewController: UIViewController {
     }
     
     func keyboardAppearanceEvent(notification:NSNotification) {
-        var keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
         if(textview.isFirstResponder() && contentInsets == nil) {
             contentInsets = textview.contentInset
             scrollInsets = textview.scrollIndicatorInsets

@@ -1,11 +1,12 @@
-
+    
 
 import UIKit
 import Foundation
 import CoreData
+import WatchConnectivity
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     var window: UIWindow?
     var navctrl: UINavigationController?
     var loginview:LoginViewController!
@@ -28,14 +29,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func application(application: UIApplication, handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?, reply: (([NSObject : AnyObject]!) -> Void)!) {
+    func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: ([String : AnyObject]) -> Void) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            var taskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({})
-            var replydata = NSMutableDictionary()
+            let taskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({})
+            var replydata = [String: AnyObject]()
             var las:NSMutableDictionary!
             if GlobalState.instance.authtoken != nil {
                 las = NSMutableDictionary()
-                las["latestAlarmStates"] = raxAPI.latestAlarmStates(isStreaming: false, updateGlobal: false)
+                las["latestAlarmStates"] = raxAPI.latestAlarmStates(false, updateGlobal: false)
             } else {
                 las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
             }
@@ -47,10 +48,34 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             } else {
                 replydata["error"] = "Problem getting data from host iOS device"
             }
-            reply(replydata as [NSObject : AnyObject])
+            replyHandler(replydata)
             UIApplication.sharedApplication().endBackgroundTask(taskID)
         })
     }
+    
+/*    func application(application: UIApplication, handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?, reply: (([NSObject : AnyObject]?) -> Void)) {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
+            let taskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({})
+            var replydata = [NSObject: AnyObject]()
+            var las:NSMutableDictionary!
+            if GlobalState.instance.authtoken != nil {
+                las = NSMutableDictionary()
+                las["latestAlarmStates"] = raxAPI.latestAlarmStates(false, updateGlobal: false)
+            } else {
+                las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
+            }
+            if las != nil && las.objectForKey("latestAlarmStates") != nil {
+                las = las["latestAlarmStates"] as! NSMutableDictionary
+                replydata["critCount"] = (las.objectForKey("criticalEntities") as! NSArray).count
+                replydata["warnCount"] = (las.objectForKey("warningEntities") as! NSArray).count
+                replydata["okCount"] = (las.objectForKey("okEntities") as! NSArray).count
+            } else {
+                replydata["error"] = "Problem getting data from host iOS device"
+            }
+            reply(replydata)
+            UIApplication.sharedApplication().endBackgroundTask(taskID)
+        })
+    }*/
     
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
@@ -96,7 +121,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "com.rax.rackspacex.LIES" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        return urls[urls.count-1] as! NSURL
+        return urls[urls.count-1] 
         }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
@@ -112,18 +137,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("rackyview.sqlite")
         var error: NSError? = nil
         var failureReason = "There was an error creating or loading the application's saved data."
-        if coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil, error: &error) == nil {
+        do {
+            try coordinator!.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
+        } catch var error1 as NSError {
+            error = error1
             coordinator = nil
             // Report any error we got.
-            let dict = NSMutableDictionary()
+            var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             dict[NSUnderlyingErrorKey] = error
-            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict as [NSObject : AnyObject])
+            error = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(error), \(error!.userInfo)")
             abort()
+        } catch {
+            fatalError()
         }
         
         return coordinator
@@ -135,21 +165,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if coordinator == nil {
             return nil
         }
-        var managedObjectContext = NSManagedObjectContext()
+        var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
-        }()
+    }()
     
     // MARK: - Core Data Saving support
     
     func saveContext () {
         if let moc = self.managedObjectContext {
             var error: NSError? = nil
-            if moc.hasChanges && !moc.save(&error) {
-                // Replace this implementation with code to handle the error appropriately.
-                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-                NSLog("Unresolved error \(error), \(error!.userInfo)")
-                abort()
+            if moc.hasChanges {
+                do {
+                    try moc.save()
+                } catch let error1 as NSError {
+                    error = error1
+                    // Replace this implementation with code to handle the error appropriately.
+                    // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+                    NSLog("Unresolved error \(error), \(error!.userInfo)")
+                    abort()
+                }
             }
         }
     }

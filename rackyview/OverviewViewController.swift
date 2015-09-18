@@ -42,8 +42,11 @@ class OverviewViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        UIApplication.sharedApplication().setStatusBarStyle(UIStatusBarStyle.LightContent, animated: true)
         raxutils.swingView(self.bellIcon, myRotationDegrees: CGFloat(0.4))
+    }
+    
+    override func preferredStatusBarStyle() -> UIStatusBarStyle {
+        return UIStatusBarStyle.LightContent
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -127,7 +130,7 @@ class OverviewViewController: UIViewController {
         } else {
             raxutils.alert("No ok/warn/crit alarms",message:"No alarms ok/warn/crit found on this account so going to the bare minimal homescreen",vc:self,
                 onDismiss: { (action:UIAlertAction!) -> Void in
-                    var noalarmviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("NoAlarmsViewController") as! NoAlarmsViewController
+                    let noalarmviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("NoAlarmsViewController") as! NoAlarmsViewController
                     noalarmviewcontroller.unknownEntities = self.unknownEntities.copy() as! NSArray
                     self.presentViewController( UINavigationController(rootViewController: noalarmviewcontroller),
                     animated: true, completion: nil)
@@ -140,13 +143,13 @@ class OverviewViewController: UIViewController {
         NSOperationQueue.mainQueue().addOperationWithBlock {
             raxutils.setUIBusy(self.view, isBusy: true)
             self.viewingState = ""
-            GlobalState.instance.latestAlarmStates = raxAPI.latestAlarmStates(isStreaming: false)
+            GlobalState.instance.latestAlarmStates = raxAPI.latestAlarmStates(false)
             self.initData(GlobalState.instance.latestAlarmStates)
         }
     }
     
     @IBAction func bigviewbuttonTapped() {
-        var entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
+        let entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
         
         entitylistview.viewingstate = self.viewingState
         
@@ -185,7 +188,7 @@ class OverviewViewController: UIViewController {
     
     @IBAction func MiscButtonTapped()
     {
-        var miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
+        let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
         if unknownEntities != nil {
             miscviewcontroller.unknownEntities = unknownEntities.copy() as! NSArray
         }
@@ -194,7 +197,7 @@ class OverviewViewController: UIViewController {
     }
     
     @IBAction func bellbuttonTapped() {
-        var alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
+        let alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
         
         alarmlistview.viewingstate = viewingState
         
@@ -224,7 +227,7 @@ class OverviewViewController: UIViewController {
         
         self.presentViewController(UINavigationController(rootViewController: alarmlistview),
             animated: true, completion: {
-                    (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer.enabled = false
+                    (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false
             })
     }
     

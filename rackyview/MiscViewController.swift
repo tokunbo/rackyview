@@ -13,7 +13,7 @@ class MiscViewController: UIViewController {
     }
     
     func disableRememberPasswordButton() {
-        var btn = self.view.viewWithTag(3) as! UIButton
+        let btn = self.view.viewWithTag(3) as! UIButton
         btn.setTitle("1 password saved", forState: UIControlState.Disabled)
         btn.backgroundColor = UIColor.grayColor()
         btn.enabled = false
@@ -29,14 +29,14 @@ class MiscViewController: UIViewController {
         self.navigationController?.navigationBar.translucent = false
         self.title = "Miscellaneous Stuff"
         self.loggedinas.text = "Logged in as: "
-        self.loggedinas.text?.extend(GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String)
+        self.loggedinas.text?.appendContentsOf(GlobalState.instance.userdata.objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String)
         self.versionLabel.text = raxutils.getVersion()
         if raxutils.getPasswordFromKeychain() != nil {
             disableRememberPasswordButton()
         }
         for v in self.view.subviews {
             if v.isKindOfClass(UIButton) && v.tag != 4 {
-                raxutils.addBorderAndShadowToView(v as! UIView)
+                raxutils.addBorderAndShadowToView(v )
             }
         }
     }
@@ -44,7 +44,7 @@ class MiscViewController: UIViewController {
 
     @IBAction func onButtonPress(button:UIButton) {
         if(button.tag == 1) {
-            var confirmLogout:()->() = {
+            let confirmLogout:()->() = {
                 raxutils.confirmDialog("You really sure you wanna logout?", message: "You'll lose all your favorites and the knowledge of what ticktets have been read on this iOS device.\n\nReally logout?", vc: self,
                     cancelAction:{ (action:UIAlertAction!) -> Void in
                         return
@@ -75,7 +75,7 @@ class MiscViewController: UIViewController {
             if unknownEntities == nil || unknownEntities.count == 0 {
                 raxutils.alert("Nothing to see here.", message: "No entities with undetermined alarm statuses were seen. Note that an Entity with no alarm events is basically invisible to this app.", vc: self, onDismiss: nil)
             } else {
-                var entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
+                let entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
                 entitylistview.entities = raxutils.sortEntitiesBySeverityThenTime(unknownEntities)
                 entitylistview.highestSeverityFoundColor = raxutils.getColorForState("????")
                 entitylistview.viewingstate = "unknown"
@@ -98,8 +98,8 @@ class MiscViewController: UIViewController {
     }
     
     func rememberPassword() {
-        var testAndSavePassword:(password:String)->() = { password in
-            var retval:String! = raxAPI.login(GlobalState.instance.username, p: password)
+        let testAndSavePassword:(password:String)->() = { password in
+            let retval:String! = raxAPI.login(GlobalState.instance.username, p: password)
             raxutils.setUIBusy(nil, isBusy: false)
             if (retval != "OK" && retval != "twofactorauth") {
                 raxutils.alert("Login error", message: "That password doesn't work or you have no network connection.", vc: self, onDismiss: nil)
@@ -112,13 +112,13 @@ class MiscViewController: UIViewController {
             }
             raxutils.setUIBusy(nil, isBusy: false)
         }
-        var getPasswordDialog:()->() = {
-            var alert = UIAlertController(title: "Save Password to keychain", message: "Enter your password.", preferredStyle: UIAlertControllerStyle.Alert)
+        let getPasswordDialog:()->() = {
+            let alert = UIAlertController(title: "Save Password to keychain", message: "Enter your password.", preferredStyle: UIAlertControllerStyle.Alert)
             alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: { action in
                 return
             }))
             alert.addAction(UIAlertAction(title: "Save", style: UIAlertActionStyle.Destructive, handler: { action in
-                var p:String = (alert.textFields![0] as! UITextField).text
+                let p:String = (alert.textFields![0] as UITextField).text!
                 if(p.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1) {
                     raxutils.alert("Error", message: "Password cannot be blank", vc: self, onDismiss: nil)
                     return
@@ -126,7 +126,7 @@ class MiscViewController: UIViewController {
                 raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
                 NSOperationQueue().addOperationWithBlock { testAndSavePassword(password:p) }
             }))
-            alert.addTextFieldWithConfigurationHandler({(textField: UITextField!) in
+            alert.addTextFieldWithConfigurationHandler({(textField: UITextField) in
                 textField.placeholder = "Password"
                 textField.secureTextEntry = true
             })
@@ -154,33 +154,34 @@ class MiscViewController: UIViewController {
     
     func startRackyTickets() {
         raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
-        var retval = raxAPI.extend_session(reason: "tickets")
+        let retval = raxAPI.extend_session("tickets")
         raxutils.setUIBusy(nil, isBusy: false)
         if (retval != "OK" && retval != "twofactorauth") {
             raxutils.askToRestartApp(self)
         } else {
-            var TicketsTabBarController = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("TicketsTabBarController") as! UITabBarController
-            self.presentViewController( UINavigationController(rootViewController: TicketsTabBarController), animated: true, completion: {
-            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer.enabled = false})
+            let TicketsController = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("TicketsTabBarController") as! TicketsTabBarController
+            self.presentViewController(UINavigationController(rootViewController: TicketsController), animated: true, completion: {
+                (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false
+            })
         }
     }
     
     func showFavoriteAlarms() {
-        var alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
+        let alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
         alarmlistview.displayingFavorites = true
         alarmlistview.highestSeverityFoundColor = UIColor.blackColor()
         self.presentViewController( UINavigationController(rootViewController: alarmlistview), animated: true, completion: {
-            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer.enabled = false
+            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false
             alarmlistview.refreshFavorites()
         })
     }
     
     func showFavoriteEntities() {
-        var entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
+        let entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
         entitylistview.displayingFavorites = true
         entitylistview.viewingstate = "Favorite"
         self.presentViewController( UINavigationController(rootViewController: entitylistview), animated: true, completion: {
-            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer.enabled = false
+            (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false
             entitylistview.refreshFavorites()
         })
     }

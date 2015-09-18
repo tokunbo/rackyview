@@ -1,8 +1,9 @@
 
 import Foundation
 import WatchKit
+import WatchConnectivity
 
-class MainInterfaceController:WKInterfaceController {
+class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
     
     @IBOutlet var critbell:WKInterfaceButton!
     @IBOutlet var warnbell:WKInterfaceButton!
@@ -12,19 +13,29 @@ class MainInterfaceController:WKInterfaceController {
     @IBOutlet var oklabel:WKInterfaceLabel!
     
     @IBAction func refresh() {
-        var myUserInfo = ["action":"latestAlarmStates"]
+        let myUserInfo = ["action":"latestAlarmStates"]
         self.critlabel.setText("loading...")
         self.warnlabel.setText("loading...")
         self.oklabel.setText("loading...")
-        WKInterfaceController.openParentApplication(myUserInfo, reply: { response, error in
-            if response == nil || response.indexForKey("error") != nil || error != nil {
-                self.presentControllerWithName("ErrorPanel", context: response)
-            } else {
-                self.critlabel.setText(String(stringInterpolationSegment: response["critCount"] as! NSNumber)+" CRIT")
-                self.warnlabel.setText(String(stringInterpolationSegment: response["warnCount"] as! NSNumber)+" WARN")
-                self.oklabel.setText(String(stringInterpolationSegment: response["okCount"] as! NSNumber)+" OKAY")
+        print("here we go")
+        WCSession.defaultSession().sendMessage(myUserInfo,
+            replyHandler: {(response:[String:AnyObject]) -> Void in
+                dispatch_sync(dispatch_get_main_queue(), {
+                    if response.indexForKey("error") != nil {
+                        self.presentControllerWithName("ErrorPanel", context: response)
+                    } else {
+                        self.critlabel.setText(String(stringInterpolationSegment: response["critCount"] as! NSNumber)+" CRIT")
+                        self.warnlabel.setText(String(stringInterpolationSegment: response["warnCount"] as! NSNumber)+" WARN")
+                        self.oklabel.setText(String(stringInterpolationSegment: response["okCount"] as! NSNumber)+" OKAY")
+                    }
+                })
+            },
+            errorHandler: {(error:NSError) -> Void in
+                dispatch_sync(dispatch_get_main_queue(), {
+                    self.presentControllerWithName("ErrorPanel", context: ["error": error])
+                })
             }
-        })
+        );
     }
 
     override func awakeWithContext(context: AnyObject?) {
@@ -38,6 +49,12 @@ class MainInterfaceController:WKInterfaceController {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        if WCSession.isSupported() {
+            let wcSession = WCSession.defaultSession()
+            wcSession.delegate = self
+            wcSession.activateSession()
+            print("OK")
+        }
         refresh()
     }
     
@@ -63,15 +80,19 @@ class MainInterfaceController:WKInterfaceController {
     func createColoredImageFromUIImage(myImage:UIImage,myColor:UIColor) -> UIImage {
         var coloredImage:UIImage = myImage.copy() as! UIImage
         var context:CGContextRef
-        var rect:CGRect = CGRectMake(0, 0, myImage.size.width, myImage.size.height)
+        let rect:CGRect = CGRectMake(0, 0, myImage.size.width, myImage.size.height)
         UIGraphicsBeginImageContextWithOptions(myImage.size, false, myImage.scale)
         coloredImage.drawInRect(rect)
-        context = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(context, kCGBlendModeSourceIn)
+        context = UIGraphicsGetCurrentContext()!
+        CGContextSetBlendMode(context, CGBlendMode.SourceIn)
         CGContextSetFillColorWithColor(context, myColor.CGColor)
         CGContextFillRect(context, rect)
         coloredImage = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return coloredImage
+    }
+    
+    func sessionWatchStateDidChange(session: WCSession) {
+        //Nothing
     }
 }

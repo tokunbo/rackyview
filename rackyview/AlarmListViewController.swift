@@ -2,7 +2,7 @@
 import UIKit
 import Foundation
 
-class AlarmListViewController: UITableViewController,UITableViewDataSource {
+class AlarmListViewController: UITableViewController {
     var alarms:NSArray!
     var viewingstate:String!
     var keyForArrayInResultDictionary:String!
@@ -47,7 +47,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         if previouslySelectedIndexPath != nil {
-            var previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
+            let previouslySelectedCell = tableView.cellForRowAtIndexPath(previouslySelectedIndexPath)
             raxutils.flashView(previouslySelectedCell!.contentView)
             previouslySelectedCell?.reloadInputViews()
             previouslySelectedIndexPath = nil
@@ -69,10 +69,10 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("AlarmListTableCell") as! UITableViewCell
-        var alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
-        var alarmstate:String = (alarm.objectForKey("state") as! String).lowercaseString
-        var alarmmessage:String! = alarm.objectForKey("status") as! String!
+        let cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("AlarmListTableCell") as UITableViewCell!
+        let alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
+        let alarmstate:String = (alarm.objectForKey("state") as! String).lowercaseString
+        let alarmmessage:String! = alarm.objectForKey("status") as! String!
         var shortcodestate:String = "GONE"
         (cell.viewWithTag(1) as! UIImageView).image = raxutils.createImageFromColor(UIColor.blueColor())
         
@@ -101,9 +101,9 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
+        let alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
         if(raxutils.alarmHasBeenMarkedAsFavorite(alarm)) {
-            var uiimageview:UIImageView = UIImageView()
+            let uiimageview:UIImageView = UIImageView()
             uiimageview.image = UIImage(named: "smallhearticon.png")
             uiimageview.tag = 99
             uiimageview.frame = CGRect(x:cell.frame.width-12,y:12,width:12,height:12)
@@ -112,8 +112,8 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
         }
     }
     
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        var alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let alarm:NSDictionary = alarms[indexPath.row] as! NSDictionary
         var myTitle = ""
         var favAction = ""
         var bgColor:UIColor
@@ -126,18 +126,18 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
             favAction = "add"
             bgColor = UIColor.blueColor()
         }
-        var toggleFavorite = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: myTitle, handler:{(action,indexrow) in
+        let toggleFavorite = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: myTitle, handler:{(action,indexrow) in
             raxutils.updateAlarmFavorites(alarm, action: favAction)
             self.tableView.setEditing(false, animated: true)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
         })
-        var showAlarmHistory = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Change\nLogs", handler:{(action,indexrow) in
+        let showAlarmHistory = UITableViewRowAction(style: UITableViewRowActionStyle.Normal, title: "Change\nLogs", handler:{(action,indexrow) in
             self.tableView.setEditing(false, animated: true)
             if (alarm["state"] as! String) == "GONE" {
                 return
             }
             self.previouslySelectedIndexPath = indexPath
-            var alarmchangeloglist = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmChangelogListView") as! AlarmChangelogListViewController
+            let alarmchangeloglist = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmChangelogListView") as! AlarmChangelogListViewController
             alarmchangeloglist.entityID = alarm["entity_id"] as? String
             alarmchangeloglist.alarmID = alarm["alarm_id"] as? String
             alarmchangeloglist.title = alarm["alarm_label"] as? String
@@ -153,7 +153,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     }
     
     override func tableView(tableView: UITableView, didEndDisplayingCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
-        var uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
+        let uiimageview:UIImageView! = cell.viewWithTag(99) as! UIImageView!
         if uiimageview != nil {
             uiimageview.removeFromSuperview()
         }
@@ -161,8 +161,8 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         previouslySelectedIndexPath = indexPath
-        var alarm = alarms[indexPath.row] as! NSMutableDictionary
-        var alarmdetailview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmDetailViewController") as! AlarmDetailViewController
+        let alarm = alarms[indexPath.row] as! NSMutableDictionary
+        let alarmdetailview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmDetailViewController") as! AlarmDetailViewController
         alarmdetailview.alarm = alarm
         if alarm.valueForKey("wasntFound") != nil {
             raxutils.alert("Missing",message:"This alarm wasnt found on your account. Maybe it was deleted?",
@@ -177,7 +177,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
         self.navigationController!.navigationBar.layer.removeAllAnimations()
         raxutils.setUIBusy(self.navigationController!.view, isBusy: true)
         NSOperationQueue().addOperationWithBlock {
-            var results:NSMutableDictionary! = raxAPI.latestAlarmStates(isStreaming: self.isStreaming)
+            let results:NSMutableDictionary! = raxAPI.latestAlarmStates(self.isStreaming)
             raxutils.setUIBusy(nil, isBusy: false)
             if results == nil {
                 raxutils.alert("Session Error",message:"Either the network was down or the websessionID has expired. Gotta go...",vc:self,
@@ -188,8 +188,8 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
                 raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
                 return
             }
-            var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-            var alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
+            let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+            let alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
             if(results == nil) {
                 raxutils.alert("Network error or session timeout",message:"Let's try restarting the app.",vc:self,
                 onDismiss: { action in
@@ -204,8 +204,8 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
                 })
                 return
             }
-            var alarmsToSearchThrough = NSMutableArray()
-            var alarmsToBeShown = NSMutableArray()
+            let alarmsToSearchThrough = NSMutableArray()
+            let alarmsToBeShown = NSMutableArray()
             alarmsToSearchThrough.addObjectsFromArray(results["allCriticalAlarms"] as! NSMutableArray as [AnyObject])
             alarmsToSearchThrough.addObjectsFromArray(results["allWarningAlarms"] as! NSMutableArray as [AnyObject])
             alarmsToSearchThrough.addObjectsFromArray(results["allOkAlarms"] as! NSMutableArray as [AnyObject])
@@ -243,7 +243,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
                 if self.isStreaming {
                     raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
                     self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
-                    if raxAPI.extend_session(reason: "favAlarms") != "OK" {
+                    if raxAPI.extend_session("favAlarms") != "OK" {
                         NSLog("extend_session returned something other than 'OK'. This might be a problem.")
                     }
                 }
@@ -252,12 +252,12 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
     }
     
     func toggleStream() {
-        var navbar:UINavigationBar = self.navigationController!.navigationBar
-        var navctrl:UINavigationController =  self.navigationController!
+        let navbar:UINavigationBar = self.navigationController!.navigationBar
+        let navctrl:UINavigationController =  self.navigationController!
         if( !isStreaming ) {
             isStreaming = true
             UIApplication.sharedApplication().idleTimerDisabled = true
-            var uiview = UIView()
+            let uiview = UIView()
             uiview.frame = navctrl.view.frame
             uiview.backgroundColor = UIColor.clearColor()
             uiview.tag = 99
@@ -308,7 +308,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
             },
             okAction:{ (action:UIAlertAction!) -> Void in
                 raxutils.setUIBusy(self.view, isBusy: true)
-                var retval:String! = raxAPI.extend_session(reason: "favAlarms")
+                let retval:String! = raxAPI.extend_session("favAlarms")
                 raxutils.setUIBusy(nil, isBusy:false)
                 if  retval == "OK" {
                     self.toggleStream()
@@ -337,7 +337,7 @@ class AlarmListViewController: UITableViewController,UITableViewDataSource {
         } else {
             raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
             NSOperationQueue().addOperationWithBlock {
-                var results:NSMutableDictionary! = raxAPI.latestAlarmStates(isStreaming: false)
+                let results:NSMutableDictionary! = raxAPI.latestAlarmStates(false)
                 self.alarms = nil
                 raxutils.setUIBusy(nil, isBusy: false)
                 if results == nil {

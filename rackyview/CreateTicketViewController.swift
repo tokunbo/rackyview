@@ -52,10 +52,10 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
     }
     
     func submitButtonTapped() {
-        var actuallyCreateTicket:()->() = {
+        let actuallyCreateTicket:()->() = {
             raxutils.setUIBusy(self.view, isBusy: true)
             NSOperationQueue.mainQueue().addOperationWithBlock {
-                var t_id:String! = raxAPI.createTicket(self.primaryCategoryName, primaryCategoryID: self.primaryCategoryID, subCategoryName: self.subCategoryName, subCategoryID: self.subCategoryID, ticketSubject: self.ticketSubject.text, ticketMessageBody: self.ticketMessageBody.text)
+                let t_id:String! = raxAPI.createTicket(self.primaryCategoryName, primaryCategoryID: self.primaryCategoryID, subCategoryName: self.subCategoryName, subCategoryID: self.subCategoryID, ticketSubject: self.ticketSubject.text!, ticketMessageBody: self.ticketMessageBody.text)
                 raxutils.setUIBusy(nil, isBusy: false)
                 if t_id == nil {
                     raxutils.alert("Error", message: "Either the network is gone or your websession expired", vc: self, onDismiss: nil)
@@ -71,7 +71,7 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
                 }
             }
         }
-        if ticketSubject.text.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 || ticketMessageBody.text.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 {
+        if ticketSubject.text!.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 || ticketMessageBody.text.stringByReplacingOccurrencesOfString(" ", withString: "").lengthOfBytesUsingEncoding(NSUTF8StringEncoding) < 1 {
             raxutils.alert("Blank values", message: "Subject & Message body can't be blank", vc: self, onDismiss: nil)
             return
         }
@@ -89,17 +89,17 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
         var ticketCategories:NSDictionary!
         var showPrimaryCategories:(()->())!
         var showSubCategories:(()->())!
-        var updateUI:()->() = {
+        let updateUI:()->() = {
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 self.ticketCategoryLabel.text = self.primaryCategoryName + " → " + self.subCategoryName
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Submit→", style: UIBarButtonItemStyle.Plain, target: self, action: "submitButtonTapped")
             }
         }
         showPrimaryCategories = {
-            var alert = UIAlertController(title: "New Ticket", message: "Select Category(Step 1 of 2)", preferredStyle: UIAlertControllerStyle.ActionSheet)
+            let alert = UIAlertController(title: "New Ticket", message: "Select Category(Step 1 of 2)", preferredStyle: UIAlertControllerStyle.ActionSheet)
             for tc in (ticketCategories["categories"] as! NSDictionary)["category"] as! NSArray {
-                alert.addAction(UIAlertAction(title: (tc as! NSDictionary)["name"] as! String, style: UIAlertActionStyle.Default, handler: {
-                    (action:UIAlertAction!) -> Void in
+                alert.addAction(UIAlertAction(title: (tc as! NSDictionary)["name"] as? String, style: UIAlertActionStyle.Default, handler: {
+                    (action:UIAlertAction) -> Void in
                     self.primaryCategoryName = (tc as! NSDictionary)["name"] as! String
                     self.primaryCategoryID = (tc as! NSDictionary)["id"] as! String
                     subcategories = ((tc as! NSDictionary)["sub-categories"] as! NSDictionary)["sub-category"] as! NSArray
@@ -107,24 +107,24 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
                 }))
             }
             alert.addAction(UIAlertAction(title:"CANCEL", style: UIAlertActionStyle.Destructive, handler: {
-                (action:UIAlertAction!) -> Void in
+                (action:UIAlertAction) -> Void in
                 self.dismiss()
             }))
             raxutils.setUIBusy(nil, isBusy: false)
             self.presentViewController(alert, animated: true, completion: nil)
         }
         showSubCategories = {
-            var alert = UIAlertController(title: "New Ticket", message: "Select SUBCategory(Step 2 of 2)", preferredStyle: UIAlertControllerStyle.ActionSheet)
+            let alert = UIAlertController(title: "New Ticket", message: "Select SUBCategory(Step 2 of 2)", preferredStyle: UIAlertControllerStyle.ActionSheet)
             for sc in subcategories {
-                alert.addAction(UIAlertAction(title: (sc as! NSDictionary)["name"] as! String, style: UIAlertActionStyle.Default, handler: {
-                    (action:UIAlertAction!) -> Void in
+                alert.addAction(UIAlertAction(title: (sc as! NSDictionary)["name"] as? String, style: UIAlertActionStyle.Default, handler: {
+                    (action:UIAlertAction) -> Void in
                     self.subCategoryName = (sc as! NSDictionary)["name"] as! String
                     self.subCategoryID = (sc as! NSDictionary)["id"] as! String
                     updateUI()
                 }))
             }
             alert.addAction(UIAlertAction(title:"CANCEL", style: UIAlertActionStyle.Destructive, handler: {
-                (action:UIAlertAction!) -> Void in
+                (action:UIAlertAction) -> Void in
                 self.dismiss()
             }))
             self.presentViewController(alert, animated: true, completion: nil)
@@ -136,7 +136,7 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
             })
             return
         }
-        ticketCategories = NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers, error: nil) as! NSDictionary
+        ticketCategories = (try! NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary
         if(ticketCategories == nil) {
             raxutils.setUIBusy(nil, isBusy: false)
             raxutils.alert("Parse Error", message: "error parsing data from server, sorry", vc: self, onDismiss: { (action:UIAlertAction!) -> Void in

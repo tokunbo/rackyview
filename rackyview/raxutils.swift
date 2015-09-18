@@ -8,7 +8,7 @@ import Security
 
 class raxutils {
     class func alert(title: String, message:String, vc: UIViewController, onDismiss:((UIAlertAction!)->())! ) {
-        var alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: onDismiss))
         NSOperationQueue.mainQueue().addOperationWithBlock {
             vc.presentViewController(alert, animated: true, completion: nil)
@@ -34,7 +34,7 @@ class raxutils {
     
     class func substringUsingRegex(regexPattern:String, sourceString:String) -> String! {
         var retval:String!
-        let range = NSRegularExpression(pattern:regexPattern, options:nil, error:nil)!.firstMatchInString(sourceString, options: nil, range: NSMakeRange(0,sourceString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)))?.rangeAtIndex(1)
+        let range = (try! NSRegularExpression(pattern:regexPattern, options:[])).firstMatchInString(sourceString, options: [], range: NSMakeRange(0,sourceString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)))?.rangeAtIndex(1)
         if range == nil {
             return nil
         }
@@ -43,7 +43,7 @@ class raxutils {
     }
     
     class func verticallyMoveView(uiview:UIView, moveUp:Bool, distance:Int) {
-        var movement = (moveUp) ? -distance : distance
+        let movement = (moveUp) ? -distance : distance
         UIView.animateWithDuration(0.3, animations: { ()->Void in
             UIView.beginAnimations("__a", context: nil)
             UIView.setAnimationBeginsFromCurrentState(true)
@@ -63,7 +63,7 @@ class raxutils {
     }
     
     class func flashView(v:UIView, myDuration:NSTimeInterval=0.7, myDelay:NSTimeInterval=0, myColor:UIColor=UIColor.whiteColor()) {
-        var tempView = UIView()
+        let tempView = UIView()
         tempView.backgroundColor = myColor
         tempView.frame = v.frame
         if(v.isKindOfClass(UITextView)) {
@@ -76,7 +76,7 @@ class raxutils {
             v.addSubview(tempView)
             v.bringSubviewToFront(tempView)
         }
-        UIView.animateWithDuration(myDuration, delay: myDelay, options: UIViewAnimationOptions.CurveEaseInOut|UIViewAnimationOptions.AllowUserInteraction,
+        UIView.animateWithDuration(myDuration, delay: myDelay, options: [UIViewAnimationOptions.CurveEaseInOut, UIViewAnimationOptions.AllowUserInteraction],
             animations:{
                 tempView.alpha = 0.0
             },completion: { finished in
@@ -93,7 +93,7 @@ class raxutils {
     class func swingView(v:UIView, myDuration:NSTimeInterval=0.5, myDelay:NSTimeInterval=0, myRotationDegrees:CGFloat=45.0) {
         v.layer.removeAllAnimations()
         v.layer.transform = CATransform3DMakeRotation(-myRotationDegrees, 0, 0, 1.0)
-        UIView.animateWithDuration(myDuration, delay: myDelay, options: UIViewAnimationOptions.CurveEaseInOut|UIViewAnimationOptions.AllowUserInteraction|UIViewAnimationOptions.Autoreverse|UIViewAnimationOptions.BeginFromCurrentState|UIViewAnimationOptions.Repeat,
+        UIView.animateWithDuration(myDuration, delay: myDelay, options: [UIViewAnimationOptions.CurveEaseInOut, UIViewAnimationOptions.AllowUserInteraction, UIViewAnimationOptions.Autoreverse, UIViewAnimationOptions.BeginFromCurrentState, UIViewAnimationOptions.Repeat],
             animations:{
                 v.layer.transform = CATransform3DMakeRotation(myRotationDegrees, 0, 0, 1.0)
             },completion: { finished in
@@ -102,7 +102,7 @@ class raxutils {
     }
     
     class func tableLightwave(tableview:UITableView, myColor:UIColor=UIColor.whiteColor()) {
-        var wave:(NSArray)->() = { cells in
+        let wave:(NSArray)->() = { cells in
             var myDelay:NSTimeInterval = 0
             for cell in cells {
                 NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow:0.05))
@@ -112,17 +112,17 @@ class raxutils {
             }
         }
         NSOperationQueue.mainQueue().addOperationWithBlock {
-            wave(tableview.visibleCells().reverse())
+            wave(Array(tableview.visibleCells.reverse()))
             NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow:0.2))
-            wave(tableview.visibleCells())
+            wave(tableview.visibleCells)
         }
     }
     
     class func createImageFromColor(myColor:UIColor, myWidth:CGFloat=1, myHeight:CGFloat=1) -> UIImage {
         var image:UIImage
-        var rect = CGRect(x: 0, y: 0, width: myWidth, height: myHeight)
+        let rect = CGRect(x: 0, y: 0, width: myWidth, height: myHeight)
         UIGraphicsBeginImageContext(rect.size)
-        var context = UIGraphicsGetCurrentContext()
+        let context = UIGraphicsGetCurrentContext()
         CGContextSetFillColorWithColor(context, myColor.CGColor)
         CGContextFillRect(context, rect)
         image = UIGraphicsGetImageFromCurrentImageContext()
@@ -146,12 +146,12 @@ class raxutils {
     
     class func createColoredImageFromUIImage(myImage:UIImage,myColor:UIColor) -> UIImage {
         var coloredImage:UIImage = myImage.copy() as! UIImage
-        var context:CGContextRef
-        var rect:CGRect = CGRectMake(0, 0, myImage.size.width, myImage.size.height)
+        var context:CGContextRef!
+        let rect:CGRect = CGRectMake(0, 0, myImage.size.width, myImage.size.height)
         UIGraphicsBeginImageContextWithOptions(myImage.size, false, myImage.scale)
         coloredImage.drawInRect(rect)
-        context = UIGraphicsGetCurrentContext()
-        CGContextSetBlendMode(context, kCGBlendModeSourceIn)
+        context = UIGraphicsGetCurrentContext()!
+        CGContextSetBlendMode(context, CGBlendMode.SourceIn)
         CGContextSetFillColorWithColor(context, myColor.CGColor)
         CGContextFillRect(context, rect)
         coloredImage = UIGraphicsGetImageFromCurrentImageContext()
@@ -161,8 +161,8 @@ class raxutils {
     
     class func imageHueFlash(myImageView:UIImageView, myDuration:NSTimeInterval=1.5, myColor:UIColor=UIColor.whiteColor() ) {
         CATransaction.flush()
-        var transition = CATransition()
-        var origImage = myImageView.image!.copy() as! UIImage
+        let transition = CATransition()
+        let origImage = myImageView.image!.copy() as! UIImage
         transition.duration = myDuration
         transition.autoreverses = false
         transition.removedOnCompletion = true
@@ -176,7 +176,7 @@ class raxutils {
         navbar.layer.removeAllAnimations()
         navbar.reloadInputViews()
         CATransaction.flush()
-        var transition = CATransition()
+        let transition = CATransition()
         transition.duration = myDuration
         transition.autoreverses = true
         transition.removedOnCompletion = true
@@ -199,7 +199,7 @@ class raxutils {
         //Otherwise, scrolling up & down tends to stop the animation.
         //Also, the ViewController showing the table must call reloadData inside of viewWillAppear.
         CATransaction.flush()
-        UIView.animateWithDuration(0.7, delay: 0, options: UIViewAnimationOptions.Autoreverse|UIViewAnimationOptions.Repeat|UIViewAnimationOptions.CurveEaseInOut|UIViewAnimationOptions.BeginFromCurrentState,
+        UIView.animateWithDuration(0.7, delay: 0, options: [UIViewAnimationOptions.Autoreverse, UIViewAnimationOptions.Repeat, UIViewAnimationOptions.CurveEaseInOut, UIViewAnimationOptions.BeginFromCurrentState],
         animations:{
             uiview.alpha = 0.1
         },completion: { finished in
@@ -213,7 +213,7 @@ class raxutils {
     class func dictionaryToJSONstring(dictionary:NSDictionary) -> String! {
         var result:String!
         var data:NSData!
-        data = NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions.allZeros, error: nil)
+        data = try? NSJSONSerialization.dataWithJSONObject(dictionary, options: NSJSONWritingOptions())
         if data != nil {
             result = NSString(data: data, encoding: NSUTF8StringEncoding) as String!
         }
@@ -225,7 +225,7 @@ class raxutils {
         var recursiveSearch:((UIViewController)->())!
         recursiveSearch = { currentVC in
             if (currentVC is UINavigationController) {
-                recursiveSearch((currentVC as! UINavigationController).topViewController)
+                recursiveSearch((currentVC as! UINavigationController).topViewController!)
             } else if (currentVC.presentedViewController != nil) {
                 recursiveSearch(currentVC.presentedViewController!)
             } else {
@@ -251,7 +251,7 @@ class raxutils {
     }
     
     class func confirmDialog(title: String, message:String, vc: UIViewController, cancelAction:((UIAlertAction!)->())!, okAction:((UIAlertAction!)->())! ) {
-        var alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Default, handler: cancelAction))
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Destructive, handler: okAction))
         NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -268,12 +268,12 @@ class raxutils {
     
     class func syncTickets(tickets:NSArray) -> NSMutableArray {
         var wasFound:Bool = false
-        var ticketsToBeRemovedOnNextUpdate:NSMutableArray = NSMutableArray()
+        let ticketsToBeRemovedOnNextUpdate:NSMutableArray = NSMutableArray()
         var currentTicket:NSMutableDictionary
         var cachedTicket:NSMutableDictionary!
-        var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-        var openTickets = customSettings["openTickets"] as! NSMutableDictionary
-        var checkedTickets = NSMutableArray()
+        let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+        let openTickets = customSettings["openTickets"] as! NSMutableDictionary
+        let checkedTickets = NSMutableArray()
         for t in tickets {
             currentTicket = t as! NSMutableDictionary
             cachedTicket = openTickets[currentTicket["ticket-id"] as! String] as! NSMutableDictionary!
@@ -312,23 +312,23 @@ class raxutils {
     }
     
     class func alarmHasBeenMarkedAsFavorite(alarm:NSDictionary) -> Bool {
-        var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-        var alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
-        var key = (alarm["entity_id"] as! NSString as String)+":"+(alarm["alarm_id"] as! NSString as String)
+        let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+        let alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
+        let key = (alarm["entity_id"] as! NSString as String)+":"+(alarm["alarm_id"] as! NSString as String)
         return alarmFavorites.valueForKey(key) != nil
     }
     
     class func entityHasBeenMarkedAsFavorite(entity:NSDictionary) -> Bool {
-        var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-        var entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
-        var key = entity["entity_id"] as! NSString as String
+        let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+        let entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
+        let key = entity["entity_id"] as! NSString as String
         return entityFavorites.valueForKey(key) != nil
     }
     
     class func updateAlarmFavorites(alarm:NSDictionary, action:String) {
-        var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-        var alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
-        var key = (alarm["entity_id"] as! NSString as String)+":"+(alarm["alarm_id"] as! NSString as String)
+        let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+        let alarmFavorites = customSettings["alarmFavorites"] as! NSMutableDictionary
+        let key = (alarm["entity_id"] as! NSString as String)+":"+(alarm["alarm_id"] as! NSString as String)
         if action == "add" {
             alarmFavorites[key] = alarm
         } else {
@@ -340,9 +340,9 @@ class raxutils {
     }
     
     class func updateEntityFavorites(entity:NSDictionary, action:String) {
-        var customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
-        var entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
-        var key = entity["entity_id"] as! NSString as String
+        let customSettings = GlobalState.instance.userdata["customSettings"] as! NSMutableDictionary
+        let entityFavorites = customSettings["entityFavorites"] as! NSMutableDictionary
+        let key = entity["entity_id"] as! NSString as String
         if action == "add" {
             entityFavorites[key] = entity
         } else {
@@ -354,8 +354,8 @@ class raxutils {
     }
     
     class func getUserdata() -> NSData! {
-        var mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        var res:NSArray = mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"), error: nil)!
+        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let res:NSArray = try! mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"))
         if res.count > 0 {
             return((res[0] as! NSManagedObject).valueForKey("userdataNSDATA") as! NSData!)
         }
@@ -364,26 +364,32 @@ class raxutils {
     
     class func saveUserdata(userdata:NSData) {
         self.deteleUserdata()
-        var mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-        var appdata:AnyObject! = NSEntityDescription.insertNewObjectForEntityForName("AppData", inManagedObjectContext: mocontext!)
+        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let appdata:AnyObject! = NSEntityDescription.insertNewObjectForEntityForName("AppData", inManagedObjectContext: mocontext!)
         appdata.setValue(userdata, forKey: "userdataNSDATA")
-        mocontext!.save(nil)
+        do {
+            try mocontext!.save()
+        } catch _ {
+        }
     }
     
     class func deteleUserdata() {
-        var mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
         
-        for e in NSArray(array: mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"), error: nil)!) {
+        for e in NSArray(array: try! mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"))) {
             mocontext!.deleteObject(e as! NSManagedObject)
         }
-        mocontext!.save(nil)
+        do {
+            try mocontext!.save()
+        } catch _ {
+        }
     }
     
     class func encryptData(plaindata:NSData) -> NSData! {
         var data:NSData!
         var cipherdata_length:CInt = 0
         
-        var key = UIDevice().identifierForVendor.UUIDString
+        let key = UIDevice().identifierForVendor!.UUIDString
         /*https://developer.apple.com/library/ios/documentation/UIKit/Reference/UIDevice_Class/#//apple_ref/occ/instp/UIDevice/identifierForVendor
         The value of this property is the same for apps that come from the same vendor running on the same device. 
         A different value is returned for apps on the same device that come from different vendors, and for apps on different devices regardless of vendor.
@@ -391,12 +397,12 @@ class raxutils {
         ........and this is all going into the iOS Keychain after encryption.
         */
         
-        var plaindata_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes)
-        var key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
+        let plaindata_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes)
+        let key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
         var key_buf = UnsafeMutablePointer<UInt8>.alloc(key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)
         memset(key_buf, 0, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)//C string needs to be null-terminated
         memcpy(key_buf, key_ptr, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
-        var cipherdata_ptr:UnsafeMutablePointer<UInt8> = rackyEncrypt(plaindata_ptr, key_buf, Int32(plaindata.length), &cipherdata_length)
+        let cipherdata_ptr:UnsafeMutablePointer<UInt8> = rackyEncrypt(plaindata_ptr, key_buf, Int32(plaindata.length), &cipherdata_length)
         if (cipherdata_length > 0) {
             data = NSData(bytesNoCopy: cipherdata_ptr, length: Int(cipherdata_length), freeWhenDone: true)
         }
@@ -407,9 +413,9 @@ class raxutils {
     class func decryptData(cipherdata:NSData) -> NSData! {
         var data:NSData!
         var plaindata_length:CInt = 0
-        var key = UIDevice().identifierForVendor.UUIDString
+        let key = UIDevice().identifierForVendor!.UUIDString
         var cipherdata_ptr:UnsafePointer = UnsafePointer<UInt8>(cipherdata.bytes)
-        var key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
+        let key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
         var key_buf = UnsafeMutablePointer<UInt8>.alloc(key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)
         memset(key_buf, 0, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)//C string needs to be null-terminated
         memcpy(key_buf, key_ptr, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
@@ -437,14 +443,14 @@ class raxutils {
     
     class func getDataFromKeychain() -> NSData! {
         var data:NSData! = nil
-        var dataTypeRef:Unmanaged<AnyObject>?
+        var dataTypeRef:AnyObject?
         var osstatus:OSStatus
         var keychainQuery:[String:AnyObject] = _getTemplateKeychainQuery()
         keychainQuery[kSecReturnData as String] = kCFBooleanTrue
         keychainQuery[kSecMatchLimit as String] = kSecMatchLimitOne
         osstatus = SecItemCopyMatching(keychainQuery, &dataTypeRef)
-        if( osstatus == 0 && dataTypeRef != nil && dataTypeRef?.toOpaque() != nil) {
-            data = Unmanaged<NSData>.fromOpaque((dataTypeRef?.toOpaque())!).takeUnretainedValue()
+        if(osstatus == 0 && dataTypeRef != nil) {
+            data = dataTypeRef as? NSData
         }
         return data
     }
@@ -497,10 +503,10 @@ class raxutils {
             actindview.center = CGPointMake(v.bounds.size.width / 2,  v.bounds.size.height / 2)
             v.addSubview(actindview)
             if(v.isKindOfClass(UITableView)) {
-                actindview.frame.offset(dx: 0, dy: (v as! UITableView).contentOffset.y)
+                actindview.frame.offsetInPlace(dx: 0, dy: (v as! UITableView).contentOffset.y)
             }
             if expectingSignificantLoadTime {
-                var img = UIImageView(image: UIImage(named: "chainhourglass.png"))
+                let img = UIImageView(image: UIImage(named: "chainhourglass.png"))
                 img.center = CGPoint(x: actindview.center.x+24, y: actindview.center.y-24)
                 if(v.isKindOfClass(UITableView)) {
                     img.center = CGPoint(x: actindview.center.x+24, y: actindview.center.y-24-(v as! UITableView).contentOffset.y)
@@ -518,8 +524,8 @@ class raxutils {
 
     
     class func compareAlarmEvents(ae1:AnyObject!,ae2:AnyObject!) -> NSComparisonResult {
-        var timestamp1:Double = (ae1 as! NSDictionary).objectForKey("timestamp") as! Double
-        var timestamp2:Double = (ae2 as! NSDictionary).objectForKey("timestamp") as! Double
+        let timestamp1:Double = (ae1 as! NSDictionary).objectForKey("timestamp") as! Double
+        let timestamp2:Double = (ae2 as! NSDictionary).objectForKey("timestamp") as! Double
         
         if( timestamp1 > timestamp2) {
             return NSComparisonResult.OrderedAscending
@@ -531,10 +537,10 @@ class raxutils {
     }
     
     class func compareEntityByFirstAlarmEventTime(ent1:AnyObject!,ent2:AnyObject!) -> NSComparisonResult {
-        var ae1:NSDictionary = ((ent1 as! NSDictionary).objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary
-        var ae2:NSDictionary = ((ent2 as! NSDictionary).objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary
-        var timestamp1:Double =  ae1.objectForKey("timestamp") as! Double
-        var timestamp2:Double =  ae2.objectForKey("timestamp") as! Double
+        let ae1:NSDictionary = ((ent1 as! NSDictionary).objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary
+        let ae2:NSDictionary = ((ent2 as! NSDictionary).objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary
+        let timestamp1:Double =  ae1.objectForKey("timestamp") as! Double
+        let timestamp2:Double =  ae2.objectForKey("timestamp") as! Double
         
         if( timestamp1 > timestamp2) {
             return NSComparisonResult.OrderedAscending
@@ -546,8 +552,8 @@ class raxutils {
     }
     
     class func sortEntitiesAndTheirEvents(entities:NSArray) -> NSArray {
-        var sortedAlarmEventList:NSMutableArray = NSMutableArray()
-        var tmpEntityArray:NSMutableArray = NSMutableArray()
+        let sortedAlarmEventList:NSMutableArray = NSMutableArray()
+        let tmpEntityArray:NSMutableArray = NSMutableArray()
 
         for e in entities {
             sortedAlarmEventList.removeAllObjects()
@@ -576,13 +582,13 @@ class raxutils {
     }
 
     class func sortAlarmsBySeverityThenTime(in_alarms:NSArray) -> NSArray {
-        var outputArray = NSMutableArray()
-        var criticalAlarms = NSMutableArray()
-        var warningAlarms = NSMutableArray()
-        var unknownAlarms = NSMutableArray()
-        var okAlarms = NSMutableArray()
+        let outputArray = NSMutableArray()
+        let criticalAlarms = NSMutableArray()
+        let warningAlarms = NSMutableArray()
+        let unknownAlarms = NSMutableArray()
+        let okAlarms = NSMutableArray()
         for alarm in in_alarms {
-            var alarmState = (alarm.objectForKey("state") as! String).lowercaseString
+            let alarmState = (alarm.objectForKey("state") as! String).lowercaseString
             if(alarmState.rangeOfString("ok") != nil) {
                 okAlarms.addObject(alarm)
             } else if(alarmState.rangeOfString("warning") != nil) {
@@ -601,13 +607,13 @@ class raxutils {
     }
     
     class func sortEntitiesBySeverityThenTime(in_entities:NSArray) -> NSArray {
-        var outputArray = NSMutableArray()
-        var criticalEntities = NSMutableArray()
-        var warningEntities = NSMutableArray()
-        var okEntities = NSMutableArray()
-        var unknownEntities = NSMutableArray()
+        let outputArray = NSMutableArray()
+        let criticalEntities = NSMutableArray()
+        let warningEntities = NSMutableArray()
+        let okEntities = NSMutableArray()
+        let unknownEntities = NSMutableArray()
         for entity in in_entities {
-            var entityState = (entity.objectForKey("state") as! String).lowercaseString
+            let entityState = (entity.objectForKey("state") as! String).lowercaseString
             if(entityState.rangeOfString("ok") != nil) {
                 okEntities.addObject(entity)
             } else if(entityState.rangeOfString("warn") != nil) {
@@ -629,13 +635,13 @@ class raxutils {
         var calunits:NSCalendarUnit = NSCalendarUnit()
         let gregorianCalendar:NSCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
         
-        calunits = calunits|NSCalendarUnit.CalendarUnitDay
-        calunits = calunits|NSCalendarUnit.CalendarUnitHour
-        calunits = calunits|NSCalendarUnit.CalendarUnitMinute
+        calunits = calunits.union(NSCalendarUnit.Day)
+        calunits = calunits.union(NSCalendarUnit.Hour)
+        calunits = calunits.union(NSCalendarUnit.Minute)
         
-        var epochDate:NSDate = NSDate(timeIntervalSince1970: NSTimeInterval(epochTime/1000))
-        var currentDate:NSDate = NSDate()
-        var dateComponents:NSDateComponents = gregorianCalendar.components(calunits,
+        let epochDate:NSDate = NSDate(timeIntervalSince1970: NSTimeInterval(epochTime/1000))
+        let currentDate:NSDate = NSDate()
+        let dateComponents:NSDateComponents = gregorianCalendar.components(calunits,
             fromDate: epochDate, toDate: currentDate,
             options: NSCalendarOptions.MatchStrictly)
         return String(dateComponents.day)+" day(s) "+String(dateComponents.hour)+" hr(s) "+String(dateComponents.minute)+" min(s) ago"
