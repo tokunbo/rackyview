@@ -51,7 +51,8 @@ class raxAPI {
         var nsdata:NSData! = nil
         var nserror:NSError! = nil
         let mysemaphore:dispatch_semaphore_t = dispatch_semaphore_create(0)
-        NSURLSession.sharedSession().dataTaskWithRequest(request, completionHandler:{
+        NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
+        .dataTaskWithRequest(request, completionHandler:{
             (async_nsdata, async_response, async_error) -> Void in
             nsdata = async_nsdata
             returningResponse = async_response

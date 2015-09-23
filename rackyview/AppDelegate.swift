@@ -58,30 +58,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         })
     }
     
-/*    func application(application: UIApplication, handleWatchKitExtensionRequest userInfo: [NSObject : AnyObject]?, reply: (([NSObject : AnyObject]?) -> Void)) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), {
-            let taskID = UIApplication.sharedApplication().beginBackgroundTaskWithExpirationHandler({})
-            var replydata = [NSObject: AnyObject]()
-            var las:NSMutableDictionary!
-            if GlobalState.instance.authtoken != nil {
-                las = NSMutableDictionary()
-                las["latestAlarmStates"] = raxAPI.latestAlarmStates(false, updateGlobal: false)
-            } else {
-                las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
-            }
-            if las != nil && las.objectForKey("latestAlarmStates") != nil {
-                las = las["latestAlarmStates"] as! NSMutableDictionary
-                replydata["critCount"] = (las.objectForKey("criticalEntities") as! NSArray).count
-                replydata["warnCount"] = (las.objectForKey("warningEntities") as! NSArray).count
-                replydata["okCount"] = (las.objectForKey("okEntities") as! NSArray).count
-            } else {
-                replydata["error"] = "Problem getting data from host iOS device"
-            }
-            reply(replydata)
-            UIApplication.sharedApplication().endBackgroundTask(taskID)
-        })
-    }*/
-    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

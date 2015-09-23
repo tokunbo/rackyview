@@ -31,8 +31,9 @@ class rackyviewTests: XCTestCase {
         //Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
     }
-    /*
-    func testRNGcrypt() {
+    
+    // XCode bug. Module's minimum version iOS9.0 or something... so commenting out.
+    /*func testRNGcrypt() {
         let mySecretMessage:String = "Tatsunoko vs. Capcom"
         
         let rngDecrypt:(NSData!)->() = { cipherdata in
@@ -72,8 +73,8 @@ class rackyviewTests: XCTestCase {
         }
         free(key_buf)
         rngDecrypt(NSData(bytesNoCopy: writebuf_ptr, length: Int(outputdata_length), freeWhenDone: true))
-    }*/
     
+    */
     /*func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock() {

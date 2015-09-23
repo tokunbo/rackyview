@@ -1,6 +1,4 @@
-(NOTE: I know the current app is broken, you can't login. Something changed at Rackspace and login requires the Referer header to be set. Also, viewing comments on tickets broke because pushViewController hangs iOS8.4 at CPU 99% when called from a tableView inside a TabBarController and iOS 9.0 has stricker rules around SSL so the https connections in the current app won't work. 
-
-I'm fixing it and will release that fix to the AppStore ASAP)
+(NOTE: I know the current app is broken, you can't login. I fixed all the things. It's in Apple's AppReview and hopefully approved for the appstore by end-of-month. It only supports iOS9.0+ now)
 
 
 

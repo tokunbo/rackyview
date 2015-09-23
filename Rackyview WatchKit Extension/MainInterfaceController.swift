@@ -17,7 +17,6 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
         self.critlabel.setText("loading...")
         self.warnlabel.setText("loading...")
         self.oklabel.setText("loading...")
-        print("here we go")
         WCSession.defaultSession().sendMessage(myUserInfo,
             replyHandler: {(response:[String:AnyObject]) -> Void in
                 dispatch_sync(dispatch_get_main_queue(), {
@@ -53,7 +52,6 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
             let wcSession = WCSession.defaultSession()
             wcSession.delegate = self
             wcSession.activateSession()
-            print("OK")
         }
         refresh()
     }
