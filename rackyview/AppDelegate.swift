@@ -26,6 +26,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         self.window = UIWindow(frame: UIScreen.mainScreen().bounds)
         loginview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("LoginView") as! LoginViewController
         beginApp()
+        if(WCSession.isSupported()) {
+            let session = WCSession.defaultSession()
+            session.delegate = self
+            session.activateSession()
+        }
         return true
     }
 
