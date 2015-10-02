@@ -1,4 +1,4 @@
-(NOTE: I know the current app is broken, you can't login. I fixed all the things. It's in Apple's AppReview and hopefully approved for the appstore by end-of-month. It only supports iOS9.0+ now)
+(NOTE: I know the current app is broken, you can't login. I fixed all the things. It's now in "Ready to sale", you should all see the update by at least Saturday Oct 3rd 2015. It only supports iOS9.0+ now)
 
 
 
