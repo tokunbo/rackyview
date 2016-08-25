@@ -7,6 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0A26830D1D6534D80030BD21 /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A26830C1D6534D80030BD21 /* WatchConnectivity.framework */; };
+		0A9134531D6E2750002CBA75 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7A4679C61AE3E968003E763F /* Info.plist */; };
+		0A9134971D6E64BD002CBA75 /* rackyviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */; };
+		0A91349A1D6E6A3B002CBA75 /* raxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D55C31987185F000F1716 /* raxAPI.swift */; };
+		0A91349B1D6E6A3B002CBA75 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ADAA88E198710A4008B17FA /* LoginViewController.swift */; };
+		0A91349C1D6E6A3B002CBA75 /* OverviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAF200F198B18AA00737CDA /* OverviewViewController.swift */; };
+		0A91349D1D6E6A3B002CBA75 /* NoAlarmsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ABF7F831B018946003A3679 /* NoAlarmsViewController.swift */; };
+		0A91349E1D6E6A3B002CBA75 /* EntityListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A46CB781992FF1B00BCA7FD /* EntityListViewController.swift */; };
+		0A91349F1D6E6A3B002CBA75 /* AgentInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */; };
+		0A9134A01D6E6A3B002CBA75 /* ProcessListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7326361B32DD09001278FA /* ProcessListViewController.swift */; };
+		0A9134A11D6E6A3B002CBA75 /* TicketsTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */; };
+		0A9134A21D6E6A3B002CBA75 /* MiscViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A54AD5219A1B1AF0021AC80 /* MiscViewController.swift */; };
+		0A9134A31D6E6A3B002CBA75 /* TicketsSummaryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4491ACDDC3D00781CB0 /* TicketsSummaryViewController.swift */; };
+		0A9134A41D6E6A3B002CBA75 /* TicketListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C44B1ACF189500781CB0 /* TicketListViewController.swift */; };
+		0A9134A51D6E6A3B002CBA75 /* TicketDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A18C4511AD04DFB00781CB0 /* TicketDetailsViewController.swift */; };
+		0A9134A61D6E6A3B002CBA75 /* CreateTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3ED4C81AF9868A00723B32 /* CreateTicketViewController.swift */; };
+		0A9134A71D6E6A3B002CBA75 /* NewTicketCommentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5A08F1AEE2E38009249FA /* NewTicketCommentViewController.swift */; };
+		0A9134A81D6E6A3B002CBA75 /* CloseTicketViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A3ED4CA1AFC408D00723B32 /* CloseTicketViewController.swift */; };
+		0A9134A91D6E6A3B002CBA75 /* AlarmListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A20B20B19A2CAE600CA692F /* AlarmListViewController.swift */; };
+		0A9134AA1D6E6A3B002CBA75 /* AlarmChangelogListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A4661D11B367DF600A5BBF4 /* AlarmChangelogListViewController.swift */; };
+		0A9134AB1D6E6A3B002CBA75 /* AlarmDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2E0C6219CCFEAC008B1FB0 /* AlarmDetailViewController.swift */; };
+		0A9134AC1D6E6A3B002CBA75 /* ServerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE03A5819A72AB70034D7D6 /* ServerListViewController.swift */; };
+		0A9134AD1D6E6A3B002CBA75 /* ServerDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7B76881AD75F830013EED3 /* ServerDetailViewController.swift */; };
+		0A9134B11D6E6A43002CBA75 /* GlobalState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A46CB6A199189B600BCA7FD /* GlobalState.swift */; };
+		0A9134B21D6E6A43002CBA75 /* raxutils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AAF200B19897E8C00737CDA /* raxutils.swift */; };
+		0A9134B31D6E7571002CBA75 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */; };
 		7A0CBCCD1B4CB067006DEF70 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A65AF0319F4A4F800D899DE /* Media.xcassets */; };
 		7A0FAD971B09C88B00B7DC83 /* newmessageicon.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FAD961B09C88B00B7DC83 /* newmessageicon.png */; };
 		7A0FAD991B0ABE6900B7DC83 /* chainhourglass.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A0FAD981B0ABE6900B7DC83 /* chainhourglass.png */; };
@@ -45,9 +71,6 @@
 		7A8C3C011B4471910091D797 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7A8C3C001B4471910091D797 /* Images.xcassets */; };
 		7A8CC1AD1B71A4A400DF0B74 /* ErrorPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A8CC1AC1B71A4A400DF0B74 /* ErrorPanel.swift */; };
 		7A8D424B1AC497A500C7F8AD /* diamond.png in Resources */ = {isa = PBXBuildFile; fileRef = 7A8D424A1AC497A500C7F8AD /* diamond.png */; };
-		7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F21AD96AFB004453E6 /* rngCrypt.c */; };
-		7A9CB8721B211A93006D2FC6 /* rngCrypt.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F31AD96AFB004453E6 /* rngCrypt.h */; };
-		7A9CB8731B211A93006D2FC6 /* Rackyview-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = 7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */; };
 		7A9CB88E1B30FC32006D2FC6 /* AgentInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A9CB88D1B30FC32006D2FC6 /* AgentInfoViewController.swift */; };
 		7AA207BD19AC124400D78430 /* refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AA207BC19AC124400D78430 /* refresh.png */; };
 		7AA207BF19AC133300D78430 /* cloudserver2.png in Resources */ = {isa = PBXBuildFile; fileRef = 7AA207BE19AC133300D78430 /* cloudserver2.png */; };
@@ -75,10 +98,8 @@
 		7AE5C0BC1979C8E400E0C1C4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */; };
 		7AE5C0BF1979C8E400E0C1C4 /* rackyview.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0BD1979C8E400E0C1C4 /* rackyview.xcdatamodeld */; };
 		7AE5C0C41979C8E400E0C1C4 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7AE5C0C21979C8E400E0C1C4 /* Main.storyboard */; };
-		7AE5C0D21979C8E400E0C1C4 /* rackyviewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */; };
 		CB0931F01BAA28FB0054E348 /* Rackyview WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 7A8C3BE91B4471910091D797 /* Rackyview WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CB0931F31BAA28FB0054E348 /* Rackyview WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 7A8C3BF61B4471910091D797 /* Rackyview WatchKit App.app */; };
-		CB0931F71BAA45960054E348 /* WatchConnectivity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB0931F61BAA45960054E348 /* WatchConnectivity.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,6 +152,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A26830C1D6534D80030BD21 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = System/Library/Frameworks/WatchConnectivity.framework; sourceTree = SDKROOT; };
 		7A0FAD961B09C88B00B7DC83 /* newmessageicon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newmessageicon.png; sourceTree = "<group>"; };
 		7A0FAD981B0ABE6900B7DC83 /* chainhourglass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chainhourglass.png; sourceTree = "<group>"; };
 		7A18C4471ACCD0F800781CB0 /* TicketsTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TicketsTabBarController.swift; sourceTree = "<group>"; };
@@ -176,7 +198,6 @@
 		7AA207BE19AC133300D78430 /* cloudserver2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cloudserver2.png; sourceTree = "<group>"; };
 		7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Rackyview-Bridging-Header.h"; sourceTree = "<group>"; };
 		7AAB11F21AD96AFB004453E6 /* rngCrypt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = rngCrypt.c; sourceTree = "<group>"; };
-		7AAB11F31AD96AFB004453E6 /* rngCrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rngCrypt.h; sourceTree = "<group>"; };
 		7AAF200B19897E8C00737CDA /* raxutils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = raxutils.swift; sourceTree = "<group>"; };
 		7AAF200F198B18AA00737CDA /* OverviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OverviewViewController.swift; sourceTree = "<group>"; };
 		7AAF20141990265D00737CDA /* greendot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greendot.png; sourceTree = "<group>"; };
@@ -204,7 +225,6 @@
 		7AE5C0C31979C8E400E0C1C4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		7AE5C0CB1979C8E400E0C1C4 /* RackyviewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RackyviewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7AE5C0D11979C8E400E0C1C4 /* rackyviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = rackyviewTests.swift; sourceTree = "<group>"; };
-		CB0931F61BAA45960054E348 /* WatchConnectivity.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WatchConnectivity.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/WatchConnectivity.framework; sourceTree = DEVELOPER_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -212,7 +232,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CB0931F71BAA45960054E348 /* WatchConnectivity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +239,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A26830D1D6534D80030BD21 /* WatchConnectivity.framework in Frameworks */,
 				7A18C4501ACFC13E00781CB0 /* Security.framework in Frameworks */,
 				7A18C44E1ACFC13500781CB0 /* MobileCoreServices.framework in Frameworks */,
 			);
@@ -277,7 +297,7 @@
 		7AE5C0AD1979C8E300E0C1C4 = {
 			isa = PBXGroup;
 			children = (
-				CB0931F61BAA45960054E348 /* WatchConnectivity.framework */,
+				0A26830C1D6534D80030BD21 /* WatchConnectivity.framework */,
 				7A18C44F1ACFC13E00781CB0 /* Security.framework */,
 				7A18C44D1ACFC13500781CB0 /* MobileCoreServices.framework */,
 				7A65AF0319F4A4F800D899DE /* Media.xcassets */,
@@ -304,7 +324,6 @@
 			isa = PBXGroup;
 			children = (
 				7AAB11F21AD96AFB004453E6 /* rngCrypt.c */,
-				7AAB11F31AD96AFB004453E6 /* rngCrypt.h */,
 				7AAB11F11AD96AFA004453E6 /* Rackyview-Bridging-Header.h */,
 				7AE5C0BB1979C8E400E0C1C4 /* AppDelegate.swift */,
 				7A46CB6A199189B600BCA7FD /* GlobalState.swift */,
@@ -581,6 +600,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A9134531D6E2750002CBA75 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -633,10 +653,30 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				7A9CB8731B211A93006D2FC6 /* Rackyview-Bridging-Header.h in Sources */,
-				7A9CB8721B211A93006D2FC6 /* rngCrypt.h in Sources */,
-				7A9CB8711B211A93006D2FC6 /* rngCrypt.c in Sources */,
-				7AE5C0D21979C8E400E0C1C4 /* rackyviewTests.swift in Sources */,
+				0A9134B31D6E7571002CBA75 /* AppDelegate.swift in Sources */,
+				0A91349E1D6E6A3B002CBA75 /* EntityListViewController.swift in Sources */,
+				0A9134AB1D6E6A3B002CBA75 /* AlarmDetailViewController.swift in Sources */,
+				0A9134A81D6E6A3B002CBA75 /* CloseTicketViewController.swift in Sources */,
+				0A91349B1D6E6A3B002CBA75 /* LoginViewController.swift in Sources */,
+				0A91349F1D6E6A3B002CBA75 /* AgentInfoViewController.swift in Sources */,
+				0A9134A91D6E6A3B002CBA75 /* AlarmListViewController.swift in Sources */,
+				0A91349D1D6E6A3B002CBA75 /* NoAlarmsViewController.swift in Sources */,
+				0A9134A21D6E6A3B002CBA75 /* MiscViewController.swift in Sources */,
+				0A9134A11D6E6A3B002CBA75 /* TicketsTabBarController.swift in Sources */,
+				0A9134A61D6E6A3B002CBA75 /* CreateTicketViewController.swift in Sources */,
+				0A9134A51D6E6A3B002CBA75 /* TicketDetailsViewController.swift in Sources */,
+				0A9134AD1D6E6A3B002CBA75 /* ServerDetailViewController.swift in Sources */,
+				0A91349C1D6E6A3B002CBA75 /* OverviewViewController.swift in Sources */,
+				0A9134971D6E64BD002CBA75 /* rackyviewTests.swift in Sources */,
+				0A9134A41D6E6A3B002CBA75 /* TicketListViewController.swift in Sources */,
+				0A9134AC1D6E6A3B002CBA75 /* ServerListViewController.swift in Sources */,
+				0A9134A31D6E6A3B002CBA75 /* TicketsSummaryViewController.swift in Sources */,
+				0A9134A01D6E6A3B002CBA75 /* ProcessListViewController.swift in Sources */,
+				0A9134AA1D6E6A3B002CBA75 /* AlarmChangelogListViewController.swift in Sources */,
+				0A9134B11D6E6A43002CBA75 /* GlobalState.swift in Sources */,
+				0A9134B21D6E6A43002CBA75 /* raxutils.swift in Sources */,
+				0A91349A1D6E6A3B002CBA75 /* raxAPI.swift in Sources */,
+				0A9134A71D6E6A3B002CBA75 /* NewTicketCommentViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -740,6 +780,8 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
+				INSTALL_GROUP = "";
+				INSTALL_OWNER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp.watchkitextension;
@@ -762,6 +804,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = "Rackyview WatchKit Extension/Info.plist";
+				INSTALL_GROUP = "";
+				INSTALL_OWNER = "";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rackyview.Rackyview.watchkitapp.watchkitextension;
@@ -795,6 +839,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -811,7 +856,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				INSTALL_GROUP = "";
+				INSTALL_OWNER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
@@ -849,7 +896,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				INSTALL_GROUP = "";
+				INSTALL_OWNER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -865,8 +914,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = rackyview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				INSTALL_OWNER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Rackyview;
@@ -885,8 +937,11 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEFINES_MODULE = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				INFOPLIST_FILE = rackyview/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				INSTALL_OWNER = "";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = Rackyview;
@@ -899,6 +954,7 @@
 		7AE5C0D91979C8E400E0C1C4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Rackyview.app/Rackyview";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -907,18 +963,21 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
+				"HEADER_SEARCH_PATHS[arch=*]" = "";
 				INFOPLIST_FILE = rackyviewTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RackyviewTests;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/Rackyview-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Debug;
 		};
 		7AE5C0DA1979C8E400E0C1C4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Rackyview.app/Rackyview";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -927,8 +986,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.rackyview.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = RackyviewTests;
-				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "rackyview/Rackyview-Bridging-Header.h";
 				SWIFT_OBJC_INTERFACE_HEADER_NAME = "";
+				TEST_HOST = "$(BUNDLE_LOADER)";
 			};
 			name = Release;
 		};

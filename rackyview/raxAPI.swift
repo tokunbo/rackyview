@@ -59,7 +59,9 @@ class raxAPI {
             nserror = async_error
             dispatch_semaphore_signal(mysemaphore)
         }).resume()
+
         dispatch_semaphore_wait(mysemaphore, DISPATCH_TIME_FOREVER)
+
         if nserror != nil {
             throw nserror
         }
@@ -110,7 +112,6 @@ class raxAPI {
         let request = self._createRequest("POST", url: url, data: postdata, qparams: nil,
             content_type: "application/x-www-form-urlencoded")!
         NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: myDelegate, delegateQueue: NSOperationQueue()).dataTaskWithRequest(request).resume()
-
     }
     
     class func get_csrftoken() -> String! {
@@ -194,7 +195,7 @@ class raxAPI {
          NSURLSession.sharedSession().dataTaskWithRequest(_createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!, completionHandler: funcptr).resume()
     }
     
-    class func latestAlarmStatesUsingSavedUsernameAndPassword()->NSMutableDictionary {
+    class func latestAlarmStatesUsingSavedUsernameAndPassword()->NSMutableDictionary {//This is purely for the appleWatch.
         let results = NSMutableDictionary()
         let userdata = raxutils.getUserdata()
         if userdata == nil {

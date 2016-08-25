@@ -25,7 +25,7 @@ class ServerDetailViewController: UIViewController {
             alreadyAutoRefreshed = true
         }
         raxutils.setUIBusy(self.view, isBusy: true)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Details", style: UIBarButtonItemStyle.Plain, target: self, action: "details")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Details", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ServerDetailViewController.details))
         self.title = (server["server"] as! NSDictionary)["name"] as! NSString! as String!
         let textview = self.view.viewWithTag(1) as! UITextView
         textview.text = "Public IPs:\n"

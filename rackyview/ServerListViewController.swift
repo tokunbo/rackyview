@@ -14,8 +14,8 @@ class ServerListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.blackColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "↓ Hide", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻ Refresh", style: UIBarButtonItemStyle.Plain, target: self, action: "refresh")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "↓ Hide", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ServerListViewController.dismiss))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻ Refresh", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ServerListViewController.refresh))
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.2, green: 0.2, blue: 0.5, alpha: 1)
         self.navigationController?.navigationBar.translucent = false

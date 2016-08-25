@@ -1,5 +1,3 @@
-
-
 import UIKit
 import Foundation
 import CoreData
@@ -260,7 +258,7 @@ class raxutils {
     }
     
     class func logout(v:UIViewController) {
-        raxutils.deteleUserdata()
+        raxutils.deleteUserdata()
         raxutils.deleteDataInKeychain()
         GlobalState.reset()
         (UIApplication.sharedApplication().delegate as! AppDelegate).beginApp()
@@ -354,7 +352,8 @@ class raxutils {
     }
     
     class func getUserdata() -> NSData! {
-        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        var mocontext:NSManagedObjectContext!
+        mocontext = (UIApplication.sharedApplication().delegate as! AnyObject).managedObjectContext
         let res:NSArray = try! mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"))
         if res.count > 0 {
             return((res[0] as! NSManagedObject).valueForKey("userdataNSDATA") as! NSData!)
@@ -363,8 +362,9 @@ class raxutils {
     }
     
     class func saveUserdata(userdata:NSData) {
-        self.deteleUserdata()
-        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        self.deleteUserdata()
+        var mocontext:NSManagedObjectContext!
+        mocontext = (UIApplication.sharedApplication().delegate as! AnyObject).managedObjectContext
         let appdata:AnyObject! = NSEntityDescription.insertNewObjectForEntityForName("AppData", inManagedObjectContext: mocontext!)
         appdata.setValue(userdata, forKey: "userdataNSDATA")
         do {
@@ -373,8 +373,9 @@ class raxutils {
         }
     }
     
-    class func deteleUserdata() {
-        let mocontext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    class func deleteUserdata() {
+        var mocontext:NSManagedObjectContext!
+        mocontext = (UIApplication.sharedApplication().delegate as! AnyObject).managedObjectContext
         
         for e in NSArray(array: try! mocontext!.executeFetchRequest(NSFetchRequest(entityName: "AppData"))) {
             mocontext!.deleteObject(e as! NSManagedObject)
@@ -398,7 +399,7 @@ class raxutils {
         */
         
         let plaindata_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes)
-        let key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
+        var key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
         var key_buf = UnsafeMutablePointer<UInt8>.alloc(key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)
         memset(key_buf, 0, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)//C string needs to be null-terminated
         memcpy(key_buf, key_ptr, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
@@ -632,15 +633,11 @@ class raxutils {
     }
     
     class func epochToHumanReadableTimeAgo(epochTime: Double) -> String {
-        var calunits:NSCalendarUnit = NSCalendarUnit()
+        let calunits:NSCalendarUnit = NSCalendarUnit().union(NSCalendarUnit.Day).union(NSCalendarUnit.Hour).union(NSCalendarUnit.Minute)
         let gregorianCalendar:NSCalendar = NSCalendar(calendarIdentifier: NSCalendarIdentifierGregorian)!
-        
-        calunits = calunits.union(NSCalendarUnit.Day)
-        calunits = calunits.union(NSCalendarUnit.Hour)
-        calunits = calunits.union(NSCalendarUnit.Minute)
-        
         let epochDate:NSDate = NSDate(timeIntervalSince1970: NSTimeInterval(epochTime/1000))
         let currentDate:NSDate = NSDate()
+        
         let dateComponents:NSDateComponents = gregorianCalendar.components(calunits,
             fromDate: epochDate, toDate: currentDate,
             options: NSCalendarOptions.MatchStrictly)

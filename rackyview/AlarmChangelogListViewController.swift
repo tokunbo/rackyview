@@ -31,7 +31,7 @@ class AlarmChangelogListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.grayColor()
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(16), NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmChangelogListViewController.dismiss))
         self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController!.navigationBar.barTintColor = UIColor.grayColor()
         self.navigationController!.navigationBar.translucent = false
@@ -39,7 +39,7 @@ class AlarmChangelogListViewController: UITableViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.backgroundColor = UIColor.blackColor()
         self.refreshControl?.tintColor = UIColor.whiteColor()
-        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(AlarmChangelogListViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
     }
 
     override func viewDidAppear(animated: Bool) {

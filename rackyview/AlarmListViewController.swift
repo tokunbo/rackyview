@@ -33,7 +33,7 @@ class AlarmListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.grayColor()
         self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(16), NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController!.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmListViewController.dismiss))
         self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController!.navigationBar.barTintColor = UIColor.grayColor()
         self.navigationController!.navigationBar.translucent = false
@@ -41,7 +41,7 @@ class AlarmListViewController: UITableViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.backgroundColor = UIColor.blackColor()
         self.refreshControl?.tintColor = UIColor.whiteColor()
-        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(AlarmListViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -53,7 +53,7 @@ class AlarmListViewController: UITableViewController {
             previouslySelectedIndexPath = nil
         }
         if displayingFavorites {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "stream", style: UIBarButtonItemStyle.Plain, target: self, action: "confirmStartStream")
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "stream", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmListViewController.confirmStartStream))
             self.title = "Favorite Alarms"
         }
     }
@@ -242,7 +242,7 @@ class AlarmListViewController: UITableViewController {
                 self.view.setNeedsLayout()
                 if self.isStreaming {
                     raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
-                    self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
+                    self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: #selector(AlarmListViewController.refreshFavorites), userInfo: nil, repeats: false)
                     if raxAPI.extend_session("favAlarms") != "OK" {
                         NSLog("extend_session returned something other than 'OK'. This might be a problem.")
                     }
@@ -263,7 +263,7 @@ class AlarmListViewController: UITableViewController {
             uiview.tag = 99
             uiview.alpha = 1
             uiview.center = CGPointMake(navctrl.view.bounds.size.width / 2,  navctrl.view.bounds.size.height / 2)
-            uiview.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("confirmCancelStream")))
+            uiview.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(AlarmListViewController.confirmCancelStream)))
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 navbar.translucent = true
                 navctrl.view.addSubview(uiview)
@@ -278,7 +278,7 @@ class AlarmListViewController: UITableViewController {
                     raxutils.tableLightwave(self.tableView, myColor:self.highestSeverityFoundColor)
                 }
             }
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(AlarmListViewController.refreshFavorites), userInfo: nil, repeats: false)
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 sleep(3)
                 self.tableView.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)

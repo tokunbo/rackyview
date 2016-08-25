@@ -56,13 +56,13 @@ class NewTicketCommentViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST→", style: UIBarButtonItemStyle.Plain, target: self, action: "postComment")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "POST→", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NewTicketCommentViewController.postComment))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.0, green: 0.2, blue: 0.3, alpha: 100.0)
         self.navigationController?.navigationBar.translucent = false
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardAppearanceEvent:", name: UIKeyboardDidShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardAppearanceEvent:", name: UIKeyboardDidHideNotification, object: self.view.window)
-        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewTicketCommentViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(NewTicketCommentViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidHideNotification, object: self.view.window)
+        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(NewTicketCommentViewController.dismissKeyboard)))
         self.textview = self.view.viewWithTag(2) as! UITextView
     }
     
@@ -79,6 +79,5 @@ class NewTicketCommentViewController: UIViewController {
             contentInsets = nil
             scrollInsets = nil
         }
-    }
-    
+    }    
 }

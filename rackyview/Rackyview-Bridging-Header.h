@@ -1,8 +1,6 @@
 //
 //  Use this file to import your target's public headers that you would like to expose to Swift.
 //
-#import "rngCrypt.h"
-
 #ifndef __rackyview__rngCrypt__
 #define __rackyview__rngCrypt__
 

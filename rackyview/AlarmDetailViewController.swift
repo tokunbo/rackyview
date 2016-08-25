@@ -19,11 +19,11 @@ class AlarmDetailViewController: UIViewController {
         self.title = alarm["alarm_label"] as! NSString as String
         notificationPlanLabel = self.view.viewWithTag(1) as! UILabel
         alarmCriteriaTextView = self.view.viewWithTag(2) as! UITextView
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "details", style: UIBarButtonItemStyle.Plain, target: self, action: "details")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "details", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmDetailViewController.details))
         raxutils.setUIBusy(self.parentViewController?.view, isBusy: true)
-        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardAppearanceEvent:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardAppearanceEvent:", name: UIKeyboardDidHideNotification, object: nil)
+        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(AlarmDetailViewController.dismissKeyboard)))
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidHideNotification, object: nil)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -103,11 +103,14 @@ class AlarmDetailViewController: UIViewController {
                     raxutils.reportGenericError(self)
                     return
                 }
-                postdata = NSString(data: nsdata, encoding: NSUTF8StringEncoding) as String!
+                postdata = (NSString(data: nsdata, encoding: NSUTF8StringEncoding) as String!)
                 if postdata == nil {
                     raxutils.reportGenericError(self)
                     return
                 }
+                
+                postdata = postdata.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
+                
                 nsdata = raxAPI.test_check_or_alarm(self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
                 if nsdata == nil {
                     raxutils.reportGenericError(self)

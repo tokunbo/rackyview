@@ -32,10 +32,10 @@ class CloseTicketViewController:UIViewController{
         (self.view.viewWithTag(4) as! UILabel).text = "ID: "
         (self.view.viewWithTag(4) as! UILabel).text?.appendContentsOf(ticket.objectForKey("ticket-id") as! NSString as String)
         self.title = ticket.objectForKey("ticket-id") as! NSString as String
-        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidAppear:", name: UIKeyboardDidShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidDisappear:", name: UIKeyboardDidHideNotification, object: self.view.window)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CLOSE→", style: UIBarButtonItemStyle.Plain, target: self, action: "closeTicket")
+        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(CloseTicketViewController.dismissKeyboard)))
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidAppear(_:)), name: UIKeyboardDidShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidDisappear(_:)), name: UIKeyboardDidHideNotification, object: self.view.window)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CLOSE→", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(CloseTicketViewController.closeTicket))
     }
     
     override func viewDidAppear(animated: Bool) {

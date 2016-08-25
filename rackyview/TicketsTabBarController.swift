@@ -12,7 +12,7 @@ class TicketsTabBarController: UITabBarController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<<wait...>>", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<<wait...>>", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TicketsTabBarController.dismiss))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
         self.navigationItem.leftBarButtonItem?.enabled = false
         self.navigationController?.navigationBar.barTintColor = UIColor.grayColor()

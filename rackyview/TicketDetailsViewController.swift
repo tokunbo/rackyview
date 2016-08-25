@@ -57,7 +57,7 @@ class TicketDetailsViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         if((ticket.objectForKey("ticket-status") as! NSString as String) != "CLOSED") {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: "edit")
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Edit", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(TicketDetailsViewController.edit))
         }
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.0, green: 0.2, blue: 0.3, alpha: 100.0)
@@ -74,10 +74,10 @@ class TicketDetailsViewController: UIViewController {
         (self.view.viewWithTag(4) as! UILabel).text?.appendContentsOf(ticket.objectForKey("ticket-id") as! NSString as String)
         self.title = ticket.objectForKey("ticket-id") as! NSString as String
         
-        let swipeleft = UISwipeGestureRecognizer(target: self, action: "handleSwipeEvent:")
+        let swipeleft = UISwipeGestureRecognizer(target: self, action: #selector(TicketDetailsViewController.handleSwipeEvent(_:)))
         swipeleft.direction = UISwipeGestureRecognizerDirection.Left
         self.view.addGestureRecognizer(swipeleft)
-        let swiperight = UISwipeGestureRecognizer(target: self, action: "handleSwipeEvent:")
+        let swiperight = UISwipeGestureRecognizer(target: self, action: #selector(TicketDetailsViewController.handleSwipeEvent(_:)))
         swiperight.direction = UISwipeGestureRecognizerDirection.Right
         self.view.addGestureRecognizer(swiperight)
         

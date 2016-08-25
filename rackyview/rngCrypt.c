@@ -1,6 +1,6 @@
 //
 //Disclaimer: I'm not a cryptography master. This was redone in C, following a program written in Csharp, which was redone to mimic the assembly code of a Nintendo
-//Pokemon game in an emulator project. And I didn't understand all of the code so I improvised and added stuff. Lots of part. Now this code has very little in common with whatever I was trying to copy.
+//Pokemon game in an emulator project. And I didn't understand all of the code so I improvised and added stuff. Lots of stuff. Now this code has very little in common with whatever I was trying to copy.
 //Yes, I know writing my own crypto is pretty much asking for trouble... but it's fun and the iOS keychain is the first line of defense here anyway, not my encryption.
 
 #include <string.h>

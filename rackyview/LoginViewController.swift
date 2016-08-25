@@ -45,7 +45,7 @@ class LoginViewController: UIViewController,NSURLSessionTaskDelegate {
             raxutils.setUIBusy(self.view, isBusy: true)
             raxAPI.refreshUserData(self.getcatalogCallback)
         }
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(LoginViewController.dismissKeyboard)))
     }
     
     func getcatalogCallback( returneddata: NSData?, response: NSURLResponse?,error: NSError?) {

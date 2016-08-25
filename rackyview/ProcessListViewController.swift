@@ -18,16 +18,16 @@ class ProcessListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.grayColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ProcessListViewController.dismiss))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "sort", style: UIBarButtonItemStyle.Plain, target: self, action: "sortProcesses")
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "sort", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(ProcessListViewController.sortProcesses))
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         self.navigationController?.navigationBar.translucent = false
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.backgroundColor = UIColor.blackColor()
         self.refreshControl?.tintColor = UIColor.whiteColor()
-        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(ProcessListViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
     }
     
     override func viewDidAppear(animated: Bool) {

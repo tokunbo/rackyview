@@ -31,7 +31,7 @@ class EntityListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.grayColor()
         self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: "dismiss")
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EntityListViewController.dismiss))
         self.navigationController?.navigationBar.barTintColor = raxutils.getColorForState(viewingstate)
         self.navigationController?.navigationBar.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.translucent = false
@@ -42,7 +42,7 @@ class EntityListViewController: UITableViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl?.backgroundColor = UIColor.blackColor()
         self.refreshControl?.tintColor = UIColor.whiteColor()
-        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.addTarget(self, action: #selector(EntityListViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -54,7 +54,7 @@ class EntityListViewController: UITableViewController {
             previouslySelectedIndexPath = nil
         }
         if displayingFavorites {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "stream", style: UIBarButtonItemStyle.Plain, target: self, action: "confirmStartStream")
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "stream", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(EntityListViewController.confirmStartStream))
             self.title = "Favorite Entities"
         }
     }
@@ -228,7 +228,7 @@ class EntityListViewController: UITableViewController {
                 self.view.setNeedsLayout()
                 if self.isStreaming {
                     raxutils.navbarGlow(self.navigationController!.navigationBar, myColor: self.highestSeverityFoundColor)
-                    self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
+                    self.timer = NSTimer.scheduledTimerWithTimeInterval(45, target: self, selector: #selector(EntityListViewController.refreshFavorites), userInfo: nil, repeats: false)
                     if raxAPI.extend_session("favEntities") != "OK" {
                         NSLog("extend_session error, this might a sign of trouble.")
                     }
@@ -249,7 +249,7 @@ class EntityListViewController: UITableViewController {
             uiview.tag = 99
             uiview.alpha = 1
             uiview.center = CGPointMake(navctrl.view.bounds.size.width / 2,  navctrl.view.bounds.size.height / 2)
-            uiview.addGestureRecognizer(UITapGestureRecognizer(target: self, action: Selector("confirmCancelStream")))
+            uiview.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(EntityListViewController.confirmCancelStream)))
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 navbar.translucent = true
                 navctrl.view.addSubview(uiview)
@@ -264,7 +264,7 @@ class EntityListViewController: UITableViewController {
                     raxutils.tableLightwave(self.tableView, myColor:self.highestSeverityFoundColor)
                 }
             }
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: Selector("refreshFavorites"), userInfo: nil, repeats: false)
+            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(EntityListViewController.refreshFavorites), userInfo: nil, repeats: false)
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 sleep(3)
                 self.tableView.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)

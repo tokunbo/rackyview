@@ -37,8 +37,8 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
         ticketSubject = self.view.viewWithTag(2) as! UITextField
         ticketMessageBody = self.view.viewWithTag(3) as! UITextView
         ticketMessageBody.delegate = self
-        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: Selector("dismissKeyboard")))
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardAppearanceEvent:", name: UIKeyboardWillChangeFrameNotification, object: nil)
+        self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(CreateTicketViewController.dismissKeyboard)))
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CreateTicketViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardWillChangeFrameNotification, object: nil)
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.0, green: 0.0, blue: 0.2, alpha: 100.0)
     }
@@ -92,7 +92,7 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
         let updateUI:()->() = {
             NSOperationQueue.mainQueue().addOperationWithBlock {
                 self.ticketCategoryLabel.text = self.primaryCategoryName + " → " + self.subCategoryName
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Submit→", style: UIBarButtonItemStyle.Plain, target: self, action: "submitButtonTapped")
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Submit→", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(CreateTicketViewController.submitButtonTapped))
             }
         }
         showPrimaryCategories = {

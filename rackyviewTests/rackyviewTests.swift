@@ -1,11 +1,10 @@
-
-
 import UIKit
 import XCTest
-//import Rackyview
+@testable import Rackyview
 
 class rackyviewTests: XCTestCase {
     var isTestComplete:Bool = false
+    let mySecretMessage:String = "Tatsunoko vs. Capcom"
     
     func waitForAsync() {
         let timeout = 30.0
@@ -32,49 +31,38 @@ class rackyviewTests: XCTestCase {
         super.tearDown()
     }
     
-    // XCode bug. Module's minimum version iOS9.0 or something... so commenting out.
-    /*func testRNGcrypt() {
-        let mySecretMessage:String = "Tatsunoko vs. Capcom"
-        
-        let rngDecrypt:(NSData!)->() = { cipherdata in
-            let key = UIDevice().identifierForVendor!.UUIDString
-            var plaindata:NSData!
-            var outputdata_length:CInt = 0
-            let readonlybuf_ptr:UnsafePointer = UnsafePointer<UInt8>(cipherdata.bytes)
-            let key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
-            let key_buf = UnsafeMutablePointer<UInt8>.alloc(key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)
-            memset(key_buf, 0, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)//C string needs to be null-terminated
-            memcpy(key_buf, key_ptr, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
-            var writebuf_ptr:UnsafeMutablePointer<UInt8> = rackyDecrypt(readonlybuf_ptr, key_buf, Int32(cipherdata.length), &outputdata_length)
-            free(key_buf)
-            if(outputdata_length == 0) {
-                XCTFail("Decryption returned 0 length buffer\n")
-            }
-            plaindata = NSData(bytesNoCopy: writebuf_ptr, length: Int(outputdata_length), freeWhenDone: true)
-            print("Decrypted \(outputdata_length) bytes")
-            print(plaindata)
-            let decryptedMessage:String = NSString(data: plaindata, encoding: NSISOLatin1StringEncoding) as! String
-            if(decryptedMessage != mySecretMessage) {
-                XCTFail("Decrypted message: \(decryptedMessage), doesn't equal  original: \(mySecretMessage)")
-            }
+    func test_crypt() {
+        let encrypted_data = raxutils.encryptData(mySecretMessage.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        let decrypted_data = raxutils.decryptData(encrypted_data)
+        let decrypted_message = NSString(data: decrypted_data, encoding: NSUTF8StringEncoding) as String!
+        if (decrypted_message != mySecretMessage) {
+            XCTFail("Decrypted message: \(decrypted_message), doesn't equal  original: \(mySecretMessage)")
         }
-        
-        let plaindata:NSData! = mySecretMessage.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
-        var outputdata_length:CInt = 0
-        let key = UIDevice().identifierForVendor!.UUIDString
-        let readonlybuf_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes)
-        let key_ptr = UnsafePointer<UInt8>((key.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.bytes)!)
-        var key_buf = UnsafeMutablePointer<UInt8>.alloc(key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)
-        memset(key_buf, 0, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)+1)//C string needs to be null-terminated
-        memcpy(key_buf, key_ptr, key.lengthOfBytesUsingEncoding(NSUTF8StringEncoding))
-        var writebuf_ptr:UnsafeMutablePointer<UInt8> = rackyEncrypt(readonlybuf_ptr, key_buf, Int32(plaindata.length), &outputdata_length)
-        if(outputdata_length == 0) {
-            XCTFail("Encryption returned 0 length buffer")
-        }
-        free(key_buf)
-        rngDecrypt(NSData(bytesNoCopy: writebuf_ptr, length: Int(outputdata_length), freeWhenDone: true))
+    }
     
-    */
+    func test_keychain() {
+        raxutils.savePasswordToKeychain(mySecretMessage)
+        let password = raxutils.getPasswordFromKeychain()
+        if(password != mySecretMessage) {
+            XCTFail("Returned password: \(password), doesn't equal original: \(mySecretMessage)")
+        }
+        
+    }
+    
+    
+    func test_xcdatamodel() {
+        raxutils.deleteUserdata()
+        if(raxutils.getUserdata() != nil) {
+            XCTFail("Userdata should be nil, but it wasn't")
+        }
+        
+        raxutils.saveUserdata(mySecretMessage.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
+        let returned_message = NSString(data: raxutils.getUserdata(), encoding: NSUTF8StringEncoding) as String!
+        if(returned_message != mySecretMessage) {
+            XCTFail("Returned password: \(returned_message), doesn't equal original: \(mySecretMessage)")
+        }
+    }
+    
     /*func testPerformanceExample() {
         // This is an example of a performance test case.
         self.measureBlock() {
