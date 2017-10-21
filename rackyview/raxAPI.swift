@@ -3,41 +3,42 @@ import UIKit
 import Foundation
 
 class raxAPI {
-    class func _createRequest(method: String, url: String, data: String!, qparams: String!, content_type:String!) -> NSMutableURLRequest! {
+    class func _createRequest(method: String, url: String, reqbody: String!, qparams: String!, content_type:String!) -> NSMutableURLRequest! {
         let req:NSMutableURLRequest = NSMutableURLRequest()
         var cookieString:String = ""
-        req.HTTPMethod = method
+        req.httpMethod = method
         if (content_type == nil) {
             req.setValue("application/json", forHTTPHeaderField:"content-type")
         } else {
             req.setValue(content_type, forHTTPHeaderField:"content-type")
         }
+        
         req.setValue("Rackyview (iOS app "+raxutils.getVersion()+")", forHTTPHeaderField:"User-Agent")
-        if(GlobalState.instance.authtoken != nil && url.rangeOfString("//mycloud") == nil) {
+        if(GlobalState.instance.authtoken != nil && url.range(of: "//mycloud") == nil) {
             req.setValue(GlobalState.instance.authtoken, forHTTPHeaderField:"X-Auth-Token")
         }
-        if(url.rangeOfString("//mycloud") != nil && url.rangeOfString("com/") != nil) {//Don't set cookies when trying to login.
+        if(url.range(of: "//mycloud") != nil && url.range(of: "com/") != nil) {//Don't set cookies when trying to login.
             if(GlobalState.instance.sessionid != nil) {
-                cookieString.appendContentsOf("sessionid="+GlobalState.instance.sessionid+";")
+                cookieString.append("sessionid="+GlobalState.instance.sessionid+";")
             }
             if(GlobalState.instance.csrftoken != nil) {
-                cookieString.appendContentsOf("csrftoken="+GlobalState.instance.csrftoken+";")
+                cookieString.append("csrftoken="+GlobalState.instance.csrftoken+";")
             }
-            if(cookieString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding) > 0) {//setting an empty string breaks the whole req object, i think.
+            if(cookieString.lengthOfBytes(using: String.Encoding.utf8) > 0) {//setting an empty string breaks the whole req object, i think.
                 req.setValue(cookieString,forHTTPHeaderField:"Cookie")
             }
         }
-        if(url.rangeOfString("com/") == nil) {
+        if(url.range(of: "com/") == nil) {
             req.setValue("https://mycloud.rackspace.com/?logout_success=true", forHTTPHeaderField:"Referer")//Apparently Rackspace needs this now during login.
         }
 
         if(qparams != nil){
-            req.URL = NSURL(string: url+"/"+qparams!)
+            req.url = (NSURL(string: url+"/"+qparams!)! as URL)
         } else {
-            req.URL = NSURL(string: url)
+            req.url = (NSURL(string: url)! as URL)
         }
-        if(data != nil) {
-            req.HTTPBody = (data as NSString).dataUsingEncoding(NSUTF8StringEncoding)
+        if(reqbody != nil) {
+            req.httpBody = reqbody.data(using: .utf8)
         }
         if(method == "HEAD") {
             req.setValue("close", forHTTPHeaderField: "Connection")
@@ -47,21 +48,23 @@ class raxAPI {
     
     //Because Apple deprecated NSURLConnection.sendSynchronousRequest, but I really like its blocking behavior
     //Idea comes from the Obj-C equiv someone else wrote: https://forums.developer.apple.com/thread/11519
-    class func sendSynchronousRequest(request:NSURLRequest, inout returningResponse:NSURLResponse?) throws -> NSData! {
+    class func sendSynchronousRequest(request:NSURLRequest, returningResponse: inout URLResponse?) throws -> NSData! {
         var nsdata:NSData! = nil
         var nserror:NSError! = nil
-        let mysemaphore:dispatch_semaphore_t = dispatch_semaphore_create(0)
-        NSURLSession(configuration: NSURLSessionConfiguration.defaultSessionConfiguration())
-        .dataTaskWithRequest(request, completionHandler:{
-            (async_nsdata, async_response, async_error) -> Void in
-            nsdata = async_nsdata
-            returningResponse = async_response
-            nserror = async_error
-            dispatch_semaphore_signal(mysemaphore)
+        var response:URLResponse! = nil
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        URLSession(configuration: URLSessionConfiguration.default)
+        .dataTask(with: request as URLRequest, completionHandler: { (async_nsdata, async_response, async_error) -> Void in
+            nsdata = async_nsdata! as NSData
+            nserror = async_error! as NSError
+            response = async_response
+            semaphore.signal()
         }).resume()
-
-        dispatch_semaphore_wait(mysemaphore, DISPATCH_TIME_FOREVER)
-
+        
+        _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+        
+        returningResponse = response
         if nserror != nil {
             throw nserror
         }
@@ -72,13 +75,13 @@ class raxAPI {
         let url:String = "https://mycloud.rackspace.com"
         var setcookie:String!
         var postdata:String = "username="+u
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var err:NSError? = nil
-        postdata += "&password="+p.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
+        postdata += "&password="+p.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
         postdata += "&type=password"
         do {
-            try self.sendSynchronousRequest(
-                self._createRequest("POST", url: url, data: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded")!,
+            try _ = self.sendSynchronousRequest(request:
+                self._createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded")!,
                 returningResponse:&resp)
         } catch let error as NSError {
             err = error
@@ -90,47 +93,47 @@ class raxAPI {
                 return String(stringInterpolationSegment: err)
             }
         }
-        setcookie = (resp as? NSHTTPURLResponse)?.allHeaderFields["Set-Cookie"] as? String!
+        setcookie = (resp as? HTTPURLResponse)?.allHeaderFields["Set-Cookie"] as? String!
         if setcookie == nil {
             return "Not Set-Cookie in responseHeaders"
         }
-        let respURL = String(stringInterpolationSegment: resp?.URL)
-        if respURL.rangeOfString("/cloud/") != nil {
-            GlobalState.instance.sessionid = raxutils.substringUsingRegex("sessionid=(\\S+);", sourceString: setcookie)
+        let respURL = String(stringInterpolationSegment: resp?.url)
+        if respURL.range(of: "/cloud/") != nil {
+            GlobalState.instance.sessionid = raxutils.substringUsingRegex(regexPattern: "sessionid=(\\S+);", sourceString: setcookie)
             return "OK"
-        } else if respURL.rangeOfString("/accounts/verify") != nil {
+        } else if respURL.range(of: "/accounts/verify") != nil {
             return "twofactorauth"
-        } else if respURL.rangeOfString("/home") != nil {
-            return "Routed to deadend(Sometimes that happens, just try again): "+respURL
+        } else if respURL.range(of: "/home") != nil {
+            return "Routed to deadend(Sometimes that happens, just try again): " + respURL
         }
         return String(stringInterpolationSegment: resp)
     }
     
-    class func _getSessionidWith2FAcode(code:String,myDelegate:NSURLSessionDelegate) {
+    class func _getSessionidWith2FAcode(code:String, myDelegate:URLSessionDelegate) {
         let url:String = "https://mycloud.rackspace.com/accounts/verify"
         let postdata:String = "verification_code="+code+"&mfa_type=multifactor_auth"
-        let request = self._createRequest("POST", url: url, data: postdata, qparams: nil,
+        let request = self._createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil,
             content_type: "application/x-www-form-urlencoded")!
-        NSURLSession(configuration:NSURLSessionConfiguration.defaultSessionConfiguration(), delegate: myDelegate, delegateQueue: NSOperationQueue()).dataTaskWithRequest(request).resume()
+        URLSession(configuration:URLSessionConfiguration.default, delegate: myDelegate, delegateQueue: OperationQueue()).dataTask(with: request as URLRequest).resume()
     }
     
     class func get_csrftoken() -> String! {
         var csrftoken:String! = nil
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var url:String = "https://mycloud.rackspace.com/cloud/"
-        url.appendContentsOf(GlobalState.instance.userdata.objectForKey("access")!
-            .objectForKey("token")!.objectForKey("tenant")!.objectForKey("id")! as! String)
-        url.appendContentsOf("/servers")
+        url.append(
+            (((GlobalState.instance.userdata.object(forKey: "access")! as AnyObject).object(forKey: "token")! as AnyObject).object(forKey: "tenant")! as AnyObject).object(forKey: "id")! as! String)
+        url.append("/servers")
         do {
-            try self.sendSynchronousRequest(
-                self._createRequest("HEAD", url: url, data: nil, qparams: nil, content_type: "text/html; charset=utf-8")!,
+            try _ = self.sendSynchronousRequest(
+                request: self._createRequest(method: "HEAD", url: url, reqbody: nil, qparams: nil, content_type: "text/html; charset=utf-8")!,
                 returningResponse:&resp)
         } catch _ as NSError {
             //
         }
-        if(resp != nil && (resp as! NSHTTPURLResponse).statusCode == 200 ) {
-            let setcookie:String! = (resp as? NSHTTPURLResponse)?.allHeaderFields["Set-Cookie"] as? String
-            csrftoken = raxutils.substringUsingRegex("csrftoken=(\\S+);", sourceString: setcookie)
+        if(resp != nil && (resp as! HTTPURLResponse).statusCode == 200 ) {
+            let setcookie:String! = (resp as? HTTPURLResponse)?.allHeaderFields["Set-Cookie"] as? String
+            csrftoken = raxutils.substringUsingRegex(regexPattern: "csrftoken=(\\S+);", sourceString: setcookie)
         }
         return csrftoken
     }
@@ -138,20 +141,19 @@ class raxAPI {
     class func getUserIdForUsername(username:String) -> String! {
         var userid:String!
         let url:String = "https://mycloud.rackspace.com/proxy/identity/v2.0/users/?limit=1000"
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData! = nil
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             print("Error in getUserIdForUsername")
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        let jsonData = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        let jsonData = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
         if jsonData != nil {
-            for user in (jsonData["users"] as! NSArray) {
+            for user in (jsonData!["users"] as! NSArray) {
                 if (user as! NSDictionary)["username"] as! NSString! as String == username {
                     userid = (user as! NSDictionary)["id"] as! NSString! as String
                     break
@@ -164,35 +166,34 @@ class raxAPI {
     class func getAPIkeyForUserid(userid:String) -> String! {
         var apikey:String!
         let url:String = "https://mycloud.rackspace.com/proxy/identity/v2.0/users/"+userid+"/OS-KSADM/credentials/RAX-KSKEY:apiKeyCredentials"
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request:  self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        let jsonData = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        let jsonData = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
         if jsonData != nil {
-            apikey = (jsonData["RAX-KSKEY:apiKeyCredentials"] as! NSDictionary)["apiKey"] as! NSString! as String
+            apikey = (jsonData!["RAX-KSKEY:apiKeyCredentials"] as! NSDictionary)["apiKey"] as! NSString! as String
         }
         return apikey
     }
     
-    class func getServiceCatalogUsingUsernameAndAPIKey(username:String,apiKey:String,funcptr:(data: NSData?, response: NSURLResponse?, error: NSError?)->Void) {
+    class func getServiceCatalogUsingUsernameAndAPIKey(username:String, apiKey:String, funcptr:@escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?)->Void) {
         let url = "https://identity.api.rackspacecloud.com/v2.0/tokens"
-        let postdata = raxutils.dictionaryToJSONstring(
+        let postdata = raxutils.dictionaryToJSONstring(dictionary:
             ["auth": [
                 "RAX-KSKEY:apiKeyCredentials":[
                     "username": username,
                     "apiKey": apiKey
                 ]
             ]])
-    
-         NSURLSession.sharedSession().dataTaskWithRequest(_createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!, completionHandler: funcptr).resume()
+        URLSession(configuration:URLSessionConfiguration.default)
+            .dataTask(with: _createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: nil)! as URLRequest, completionHandler: funcptr).resume()
     }
     
     class func latestAlarmStatesUsingSavedUsernameAndPassword()->NSMutableDictionary {//This is purely for the appleWatch.
@@ -202,38 +203,38 @@ class raxAPI {
             results["error"] = "Userdata hasn't been saved in host iOS app"
             return results
         }
-        let username = (NSKeyedUnarchiver.unarchiveObjectWithData(userdata) as! NSMutableDictionary!).objectForKey("access")!.objectForKey("user")!.objectForKey("name")! as! String
+        let username = (((NSKeyedUnarchiver.unarchiveObject(with: userdata! as Data) as! NSMutableDictionary!).object(forKey: "access")! as AnyObject).object(forKey: "user")! as AnyObject).object(forKey: "name")! as! String
         let password:String! = raxutils.getPasswordFromKeychain()
         if password == nil {
             results["error"] = "Password wasn't saved in host iOS app."
             return results
         }
         let url = "https://identity.api.rackspacecloud.com/v2.0/tokens"
-        let postdata = raxutils.dictionaryToJSONstring(
+        let postdata = raxutils.dictionaryToJSONstring(dictionary:
             ["auth": [
                 "passwordCredentials":[
                     "username": username,
                     "password": password
                 ]
             ]])
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!,
+            nsdata = try self.sendSynchronousRequest(request:  self._createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: nil)!,
                         returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             results["error"] = "Couldn't get service catalog."
             results["response"] = resp
             return results
         }
-        let serviceCatalog = ((try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!)
-        GlobalState.instance.authtoken = serviceCatalog.objectForKey("access")!.objectForKey("token")!.objectForKey("id")! as! String
-        for obj in (serviceCatalog.objectForKey("access")!.objectForKey("serviceCatalog")! as! NSArray) {
-            if(obj.objectForKey("name")!.isEqualToString("cloudMonitoring")) {
-                GlobalState.instance.monitoringEndpoint = (obj.objectForKey("endpoints") as! NSArray)[0].objectForKey("publicURL") as! String
+        let serviceCatalog = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
+        GlobalState.instance.authtoken = (((serviceCatalog as AnyObject).object(forKey: "access") as AnyObject).object(forKey: "token") as AnyObject).object(forKey: "id")! as! String
+        for obj in ((serviceCatalog as AnyObject).object(forKey: "access") as AnyObject).object(forKey: "serviceCatalog")! as! NSArray {
+            if ((obj as AnyObject).object(forKey: "name")! as AnyObject).isEqual(to: "cloudMonitoring") {
+                GlobalState.instance.monitoringEndpoint = ((((obj as AnyObject).object(forKey: "endpoints") as! NSArray)[0] as AnyObject).object as AnyObject).object(forKey: "publicURL") as! String
                 break
             }
         }
@@ -250,23 +251,23 @@ class raxAPI {
         let checkID:String = alarm["check_id"] as! String
         let alarmID:String = alarm["alarm_id"] as! String
         let url = GlobalState.instance.monitoringEndpoint+"/entities/"+entityID+"/alarms/"+alarmID+"/notification_history/"+checkID
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody:  nil, qparams: nil, content_type: nil)!,
                         returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        let jsonData = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        let jsonData = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
         if jsonData == nil {
             return nil
         }
-        for alert in jsonData["values"] as! NSArray {
-            ahistoricAlerts.addObject(alert as! NSDictionary)
+        for alert in jsonData!["values"] as! NSArray {
+            ahistoricAlerts.add(alert as! NSDictionary)
         }
         return ahistoricAlerts.copy() as! NSArray
     }
@@ -279,39 +280,39 @@ class raxAPI {
         } else {
             url += "limit=1000"
         }
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        let jsonData = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        let jsonData = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
         if jsonData == nil {
             return nil
         }
-        for changelog in jsonData["values"] as! NSArray {
-            changeLogs.addObject(changelog as! NSDictionary)
+        for changelog in jsonData!["values"] as! NSArray {
+            changeLogs.add(changelog as! NSDictionary)
         }
         return changeLogs.copy() as! NSArray
     }
     
-    class func refreshUserData(funcptr:(data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
+    class func refreshUserData(funcptr:@escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?)->Void) {
         let url = "https://identity.api.rackspacecloud.com/v2.0/tokens"
-        let tenantID = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("token")!.objectForKey("tenant")!.objectForKey("id")! as! String
-        let authtoken = GlobalState.instance.userdata.objectForKey("access")!.objectForKey("token")!.objectForKey("id")! as! String
-        let postdata = raxutils.dictionaryToJSONstring(
+        let tenantID = (((GlobalState.instance.userdata.object(forKey: "access")! as AnyObject).object(forKey: "token")! as AnyObject).object(forKey: "tenant")! as AnyObject).object(forKey: "id")! as! String
+        let authtoken = ((GlobalState.instance.userdata.object(forKey: "access")! as AnyObject).object(forKey: "token")! as AnyObject).object(forKey: "id")! as! String
+        let postdata = raxutils.dictionaryToJSONstring(dictionary:
         ["auth": [
             "tenantId": tenantID,
             "token": [
                 "id": authtoken
             ]
         ]])
-        NSURLSession.sharedSession().dataTaskWithRequest(_createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!, completionHandler: funcptr).resume()
+        URLSession(configuration:URLSessionConfiguration.default)
+            .dataTask(with: _createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: nil)! as URLRequest, completionHandler: funcptr).resume()
     }
     
     class func latestAlarmStates(isStreaming:Bool=false, updateGlobal:Bool=true) -> NSMutableDictionary! {
@@ -326,7 +327,7 @@ class raxAPI {
         } else {
             url = GlobalState.instance.monitoringEndpoint+"/views/latest_alarm_states?limit=1000"
         }
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
 
         var severity = ""
         var alarmstatelist:NSArray! = nil
@@ -349,83 +350,83 @@ class raxAPI {
         var unknownEntities = NSMutableArray()
         
         var nsdata:NSData!
+        
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-
-        if(nsdata == nil || resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200  ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        let jsonData = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        let jsonData = try? JSONSerialization.jsonObject(with: nsdata as Data) as! [String: AnyObject]
         if jsonData == nil {
             return nil
         }
-        for entity in (jsonData.objectForKey("values") as! NSArray) {
+        
+        for case let entity as AnyObject in jsonData!["values"] as! NSArray {
             criticalAlarms.removeAllObjects()
             warningAlarms.removeAllObjects()
             okAlarms.removeAllObjects()
             unknownAlarms.removeAllObjects()
             allAlarmsFoundOnEntity.removeAllObjects()
             severity = ""
-            alarmstatelist = (entity as! NSDictionary).objectForKey("latest_alarm_states") as! NSArray
+            alarmstatelist = (entity as! NSDictionary).object(forKey: "latest_alarm_states") as! NSArray
             if(alarmstatelist.count == 0) {
                 continue
             }
-            for event in alarmstatelist {
+            for case let event as AnyObject in alarmstatelist {
                 severity += ":"
-                alarmState = (event.objectForKey("state") as! String).lowercaseString
+                alarmState = (event.object(forKey: "state") as! String).lowercased()
                 severity += alarmState
-                if(alarmState.rangeOfString("ok") != nil) {
-                    event.setObject(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), forKey: "UIColor")
-                    okAlarms.addObject(event)
-                    allOkAlarms.addObject(event)
-                } else if(alarmState.rangeOfString("warning") != nil) {
-                    event.setObject(UIColor.orangeColor(), forKey: "UIColor")
-                    warningAlarms.addObject(event)
-                    allWarningAlarms.addObject(event)
-                } else if(alarmState.rangeOfString("critical") != nil) {
-                    event.setObject(UIColor.redColor(), forKey: "UIColor")
-                    allCriticalAlarms.addObject(event)
-                    criticalAlarms.addObject(event)
+                if(alarmState.range(of: "ok") != nil) {
+                    event.set(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), forKey: "UIColor")
+                    okAlarms.add(event)
+                    allOkAlarms.add(event)
+                } else if(alarmState.range(of: "warning") != nil) {
+                    event.set(UIColor.orange, forKey: "UIColor")
+                    warningAlarms.add(event)
+                    allWarningAlarms.add(event)
+                } else if(alarmState.range(of: "critical") != nil) {
+                    event.set(UIColor.red, forKey: "UIColor")
+                    allCriticalAlarms.add(event)
+                    criticalAlarms.add(event)
                 } else {//This alarm is in a state that we don't know about.
-                    event.setObject(UIColor.blueColor(), forKey: "UIColor")
-                    unknownAlarms.addObject(event)
-                    allUnknownAlarms.addObject(event)
+                    event.set(UIColor.blue, forKey: "UIColor")
+                    unknownAlarms.add(event)
+                    allUnknownAlarms.add(event)
                 }
-                allAlarmsFoundOnEntity.addObject(event)
+                allAlarmsFoundOnEntity.add(event)
             }
-            entity.setObject(raxutils.sortAlarmsBySeverityThenTime(allAlarmsFoundOnEntity), forKey:"allAlarms")
+            entity.set(raxutils.sortAlarmsBySeverityThenTime(in_alarms: allAlarmsFoundOnEntity), forKey:"allAlarms")
             entity.setObject(criticalAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "criticalAlarms")
             entity.setObject(warningAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "warningAlarms")
             entity.setObject(okAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "okAlarms")
             entity.setObject(unknownAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "unknownAlarms")
             if(unknownAlarms.count > 0 ) {
                 entity.setValue("????", forKey: "state")
-                unknownEntities.addObject(entity)
-            } else if(severity.rangeOfString(":critical") != nil) {
+                unknownEntities.add(entity)
+            } else if(severity.range(of: ":critical") != nil) {
                 entity.setValue("CRIT", forKey: "state")
-                criticalEntities.addObject(entity)
-            } else if(severity.rangeOfString(":warning") != nil) {
-                warningEntities.addObject(entity)
+                criticalEntities.add(entity)
+            } else if(severity.range(of: ":warning") != nil) {
+                warningEntities.add(entity)
                 entity.setValue("WARN", forKey: "state")
             } else {
                 entity.setValue("OK", forKey: "state")
-                okEntities.addObject(entity)
+                okEntities.add(entity)
             }
-            allEntities.addObject(entity)
+            allEntities.add(entity)
         }
-        unknownEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(unknownEntities))
-        criticalEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(criticalEntities))
-        warningEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(warningEntities))
-        okEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(okEntities))
+        unknownEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: unknownEntities))
+        criticalEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: criticalEntities))
+        warningEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: warningEntities))
+        okEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: okEntities))
         allCriticalAlarms = NSMutableArray(array: allCriticalAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
         allWarningAlarms = NSMutableArray(array: allWarningAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
         allOkAlarms = NSMutableArray(array: allOkAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
         allUnknownAlarms = NSMutableArray(array: allUnknownAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
-        results["allEntities"] = raxutils.sortEntitiesBySeverityThenTime(allEntities)
+        results["allEntities"] = raxutils.sortEntitiesBySeverityThenTime(in_entities: allEntities)
         results["unknownEntities"] = unknownEntities
         results["criticalEntities"] = criticalEntities
         results["warningEntities"] = warningEntities
@@ -442,127 +443,119 @@ class raxAPI {
     
     class func getAgentInfoBasic(agentID:String) -> NSDictionary! {
         let url = "https://mycloud.rackspace.com/proxy/rax:monitor,cloudMonitoring/views/agent_host_info/?include=memory&include=system&include=cpus&include=filesystems&agentId="+agentID+"&sampleCpus=true"
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
     }
     
     class func getSupportedAgentInfoTypes(agentID:String) -> NSDictionary! {
         let url = GlobalState.instance.monitoringEndpoint+"/agents/"+agentID+"/host_info_types"
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
     }
     
     class func getAgentInfoByType(agentID:String, type:String) -> NSDictionary! {
         let url = GlobalState.instance.monitoringEndpoint+"/agents/"+agentID+"/host_info/"+type
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
     }
     
     class func getEntity(entityID:String) -> NSDictionary! {
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         let url = GlobalState.instance.monitoringEndpoint+"/entities/"+entityID
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
     }
  
     class func getCheck(entityid:String, checkid:String) -> NSDictionary! {
         var nsdata:NSData!
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         let url = GlobalState.instance.monitoringEndpoint+"/entities/"+entityid+"/checks/"+checkid
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as!NSDictionary
     }
     
     class func getAlarm(entityID:String, alarmID:String) -> NSMutableDictionary! {
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         let url = GlobalState.instance.monitoringEndpoint+"/entities/"+entityID+"/alarms/"+alarmID
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSMutableDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSMutableDictionary
     }
     
     class func getNotificationPlan(np_id:String) -> NSDictionary! {
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         let url = GlobalState.instance.monitoringEndpoint+"/notification_plans/"+np_id
         var nsdata:NSData!
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             nsdata = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
     }
     
     class func test_check_or_alarm(entityid:String, postdata:String, targetType:String) -> NSData! {
-        var nsdata:NSData!
-        var resp:NSURLResponse? = nil
+        var nsdata:NSData! = nil
+        var resp:URLResponse? = nil
         let url = GlobalState.instance.monitoringEndpoint+"/entities/"+entityid+"/test-"+targetType
         do {
-            nsdata = try self.sendSynchronousRequest(self._createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!,
-                returningResponse: &resp)
+            nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "POST", url: url, reqbody:  postdata, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
-            nsdata = nil
+           
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             nsdata = nil
         }
         return nsdata
@@ -570,35 +563,32 @@ class raxAPI {
     
     class func extend_session(reason:String="") -> String! {
         var responseBody:String! = nil
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var url:String = "https://mycloud.rackspace.com/cloud/"
         var data:NSData! = nil
-        url.appendContentsOf(GlobalState.instance.userdata.objectForKey("access")!
-            .objectForKey("token")!.objectForKey("tenant")!.objectForKey("id")! as! String)
-        url.appendContentsOf("/extend_session?window_hash=rackyview_iOSapp&reason="+reason)
+        url.append(((((GlobalState.instance.userdata as AnyObject).object(forKey: "access") as AnyObject).object(forKey: "token") as AnyObject).object(forKey: "tenant") as AnyObject).object(forKey: "id")! as! String)
+        url.append("/extend_session?window_hash=rackyview_iOSapp&reason="+reason)
         do {
-            data = try self.sendSynchronousRequest(
-                self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: "text/html; charset=utf-8")!,
-                returningResponse:&resp)
+            data = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody:  nil, qparams: nil, content_type: "text/html; charset=utf-8")!, returningResponse: &resp)
         } catch _ as NSError {
             data = nil
         }
-        if(resp != nil && (resp as! NSHTTPURLResponse).statusCode == 200 ) {
-            responseBody = NSString(data: data, encoding: NSUTF8StringEncoding) as String!
+        if(resp != nil && (resp as! HTTPURLResponse).statusCode == 200 ) {
+            responseBody = NSString(data: data! as Data, encoding: String.Encoding.utf8.rawValue)! as String
         }
         return responseBody
     }
     
     class func _doProxyRequest(url:String) -> NSData! {
-        var resp:NSURLResponse? = nil
+        var resp:URLResponse? = nil
         var data:NSData!
         do {
-            data = try self.sendSynchronousRequest(_createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
+            data = try self.sendSynchronousRequest(request: _createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!,
                     returningResponse: &resp)
         } catch _ as NSError {
             data = nil
         }
-        if(resp == nil || (resp as! NSHTTPURLResponse).statusCode != 200 ) {
+        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             data = nil
         }
         return data
@@ -607,18 +597,17 @@ class raxAPI {
     class func getServerFlavor(server:NSDictionary) -> NSDictionary! {
         var flavor:NSDictionary! = nil
         var url:String = server["APIendpoint"] as! NSString as String
-        url.appendContentsOf("/flavors/")
-        url.appendContentsOf(((server["server"] as! NSDictionary)["flavor"] as! NSDictionary)["id"] as! NSString as String)
-        var resp:NSURLResponse? = nil
+        url.append("/flavors/")
+        url.append(((server["server"] as! NSDictionary)["flavor"] as! NSDictionary)["id"] as! NSString as String)
+        var resp:URLResponse? = nil
         var data:NSData!
         do {
-            data = try self.sendSynchronousRequest(_createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            data = try self.sendSynchronousRequest(request: _createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             data = nil
         }
-        if(resp != nil && (resp as! NSHTTPURLResponse).statusCode == 200 ) {
-            flavor = (try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        if(resp != nil && (resp as! HTTPURLResponse).statusCode == 200 ) {
+            flavor = try! JSONSerialization.jsonObject(with: data as Data) as! NSDictionary
         }
         return flavor
     }
@@ -626,45 +615,45 @@ class raxAPI {
     class func getServerImage(server:NSDictionary) -> NSDictionary! {
         var image:NSDictionary!
         var url:String = server["APIendpoint"] as! NSString as String
-        url.appendContentsOf("/images/")
-        url.appendContentsOf(((server["server"] as! NSDictionary)["image"] as! NSDictionary)["id"] as! NSString as String)
-        var resp:NSURLResponse? = nil
+        url.append("/images/")
+        url.append(((server["server"] as! NSDictionary)["image"] as! NSDictionary)["id"] as! NSString as String)
+        var resp:URLResponse? = nil
         var data:NSData!
         do {
-            data = try self.sendSynchronousRequest(_createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
-                        returningResponse: &resp)
+            data = try self.sendSynchronousRequest(request: _createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
             data = nil
         }
-        if(resp != nil && (resp as! NSHTTPURLResponse).statusCode == 200 ) {
-            image = (try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+        if(resp != nil && (resp as! HTTPURLResponse).statusCode == 200 ) {
+            image = try! JSONSerialization.jsonObject(with: data as Data) as! NSDictionary
         }
         return image
     }
     
-    class func serveraction(server:NSDictionary, postdata:String, funcptr:( data: NSData?, response: NSURLResponse?,error: NSError?) -> Void) {
+    class func serveraction(server:NSDictionary, postdata:String, funcptr:@escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?)->Void) {
         var url:String = server["APIendpoint"] as! NSString as String
-        url.appendContentsOf("/servers/")
-        url.appendContentsOf((server["server"] as! NSDictionary)["id"] as! NSString as String)
-        url.appendContentsOf("/action")
-        NSURLSession.sharedSession().dataTaskWithRequest(_createRequest("POST", url: url, data: postdata, qparams: nil, content_type: nil)!, completionHandler: funcptr).resume()
+        url.append("/servers/")
+        url.append((server["server"] as! NSDictionary)["id"] as! NSString as String)
+        url.append("/action")
+        URLSession(configuration:URLSessionConfiguration.default)
+            .dataTask(with: _createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: nil)! as URLRequest, completionHandler: funcptr).resume()
     }
     
     
     class func get_tickets_summary () -> NSData! {
-        return _doProxyRequest("https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets/summary")
+        return _doProxyRequest(url: "https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets/summary")
     }
     
     class func get_tickets_by_status(t_status:String) -> NSData! {
-        return _doProxyRequest("https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets?status="+t_status)
+        return _doProxyRequest(url: "https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets?status="+t_status)
     }
     
     class func get_ticket_details(t_id:String) -> NSData! {
-        return _doProxyRequest("https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets/"+t_id)
+        return _doProxyRequest(url: "https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets/"+t_id)
     }
     
     class func get_ticket_categories() -> NSData! {
-        return _doProxyRequest("https://mycloud.rackspace.com/proxy/rax:tickets,tickets/ticket-categories")
+        return _doProxyRequest(url: "https://mycloud.rackspace.com/proxy/rax:tickets,tickets/ticket-categories")
     }
     
     
@@ -674,7 +663,7 @@ class raxAPI {
         var postdata:String = "csrfmiddlewaretoken="
         postdata += GlobalState.instance.csrftoken
         postdata += "&data="
-        postdata += raxutils.dictionaryToJSONstring(
+        postdata += raxutils.dictionaryToJSONstring(dictionary:
             ["ticket": [
                 "category": [
                     "id": primaryCategoryID,
@@ -686,33 +675,34 @@ class raxAPI {
             ],
             "subject": ticketSubject,
             "description": ticketMessageBody
-        ]]).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
-        var resp:NSURLResponse? = nil
+        ]]).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        var resp:URLResponse? = nil
         do {
-           try self.sendSynchronousRequest(_createRequest("POST", url: url, data:postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=UTF-8")!,returningResponse: &resp)
+           _ = try self.sendSynchronousRequest(request: _createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=UTF-8")!, returningResponse: &resp)
         } catch _ as NSError {
             //Nothing
         }
-        if(resp != nil && (resp as! NSHTTPURLResponse).statusCode == 201 ) {
-            let locationHeader:String! = (resp as? NSHTTPURLResponse)?.allHeaderFields["Location"] as? String
-            let range = (try! NSRegularExpression(pattern:"/v1/tickets/(\\S+)", options:[])).firstMatchInString(locationHeader, options: [], range: NSMakeRange(0, locationHeader.lengthOfBytesUsingEncoding(NSUTF8StringEncoding)))?.rangeAtIndex(1)
-            newTicketID = (locationHeader as NSString).substringWithRange(NSMakeRange((range?.location)!, (range?.length)!))
+        if(resp != nil && (resp as! HTTPURLResponse).statusCode == 201 ) {
+            let locationHeader:String! = (resp as? HTTPURLResponse)?.allHeaderFields["Location"] as? String
+            let range = (try! NSRegularExpression(pattern:"/v1/tickets/(\\S+)", options:[])).firstMatch(in: locationHeader, options: [], range: NSMakeRange(0, locationHeader.lengthOfBytes(using: String.Encoding.utf8)))?.range(at: 1)
+            newTicketID = (locationHeader as NSString).substring(with: NSMakeRange((range?.location)!, (range?.length)!))
         }
         return newTicketID
     }
     
-    class func submitTicketComment(t_id:String,commentText:String, funcptr:( data: NSData?, response: NSURLResponse?, error: NSError?) -> Void) {
+    class func submitTicketComment(t_id:String,commentText:String, funcptr:@escaping (_ data: Data?, _ response: URLResponse?, _ error: Error?)->Void) {
         let url:String = "https://mycloud.rackspace.com/proxy/rax:tickets,tickets/tickets/"+t_id+"/comments"
         var postdata = "csrfmiddlewaretoken="
         postdata += GlobalState.instance.csrftoken
         postdata += "&data="
-        postdata += raxutils.dictionaryToJSONstring([
+        postdata += raxutils.dictionaryToJSONstring(dictionary: [
             "comment": [
                 "type": "TextCommentForCreateType",
                 "text": commentText
             ]
-        ]).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
-        NSURLSession.sharedSession().dataTaskWithRequest(_createRequest("POST", url: url, data: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=utf-8")!, completionHandler: funcptr).resume()
+        ]).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        URLSession(configuration:URLSessionConfiguration.default)
+            .dataTask(with: _createRequest(method: "POST", url: url, reqbody: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=utf-8")! as URLRequest, completionHandler: funcptr).resume()
     }
     
     class func closeTicket(t_id:String, rating:Int, comment:String) -> Int {
@@ -721,39 +711,39 @@ class raxAPI {
         var postdata:String = "csrfmiddlewaretoken="
         postdata += GlobalState.instance.csrftoken+"&data="
         postdata += raxutils.dictionaryToJSONstring(
-            ["ticket-rating": [
+            dictionary: ["ticket-rating": [
                 "rating":String(rating),
                 "comment": [
                     "text":comment
                 ]
             ]
-        ]).stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
-        var resp:NSURLResponse? = nil
+        ]).addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+        var resp:URLResponse? = nil
         do {
-           try self.sendSynchronousRequest(_createRequest("PUT", url: url, data:postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=UTF-8")!,returningResponse: &resp)
+            _ = try self.sendSynchronousRequest(request: _createRequest(method: "PUT", url: url, reqbody: postdata, qparams: nil, content_type: "application/x-www-form-urlencoded;charset=UTF-8")!, returningResponse: &resp)
         } catch _ as NSError {
         //nothing
         }
         if(resp != nil) {
-            responseCode = (resp as! NSHTTPURLResponse).statusCode
+            responseCode = (resp as! HTTPURLResponse).statusCode
         }
         return responseCode
     }
     
-    class func listServerDetails( funcptr:(servers:NSArray,errors:NSArray)->Void ){
+    class func listServerDetails( funcptr:@escaping (_ servers:NSArray,_ errors:NSArray)->Void ){
         let serverlist:NSMutableArray = NSMutableArray()
         let errorlist:NSMutableArray = NSMutableArray()
-        let q = NSOperationQueue()
+        let q = OperationQueue()
         q.maxConcurrentOperationCount = 1
-        q.suspended = true
+        q.isSuspended = true
         for ep in GlobalState.instance.serverEndpoints {
-            q.addOperationWithBlock {
-                let url = String(ep.objectForKey("publicURL") as! NSString)+"/servers/detail"
-                var resp:NSURLResponse? = nil
+            q.addOperation {
+                let url = String((ep as AnyObject).object(forKey: "publicURL") as! NSString)+"/servers/detail"
+                var resp:URLResponse? = nil
                 var err:NSError? = nil
                 var data:NSData!
                 do {
-                    data = try self.sendSynchronousRequest(self._createRequest("GET", url: url, data: nil, qparams: nil, content_type: nil)!,
+                    data = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!,
                                         returningResponse: &resp)
                 } catch let error as NSError {
                     err = error
@@ -762,27 +752,27 @@ class raxAPI {
                     fatalError()
                 }
                 if err != nil {
-                    errorlist.addObject(err!)
+                    errorlist.add(err!)
                 }
                 if(data == nil) {
                     return
                 }
-                let serverdata:NSDictionary! = (try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+                let serverdata:NSDictionary! = try! JSONSerialization.jsonObject(with: data as Data) as! NSDictionary
                 if(serverdata == nil) {
                     return
                 }
                 var dentry:NSMutableDictionary!
-                for s in serverdata.objectForKey("servers") as! NSArray {
+                for s in (serverdata as AnyObject).object(forKey: "servers") as! NSArray {
                     dentry = NSMutableDictionary()
-                    dentry.setValue(ep.objectForKey("region") as! String, forKeyPath: "region")
+                    dentry.setValue((ep as AnyObject).object(forKey: "region") as! String, forKeyPath: "region")
                     dentry.setValue(s, forKeyPath: "server")
-                    dentry.setValue(ep.objectForKey("publicURL") as! NSString, forKeyPath: "APIendpoint")
-                    serverlist.addObject(dentry)
+                    dentry.setValue((ep as AnyObject).object(forKey: "publicURL") as! NSString, forKeyPath: "APIendpoint")
+                    serverlist.add(dentry)
                 }
             }
         }
-        q.suspended = false
+        q.isSuspended = false
         q.waitUntilAllOperationsAreFinished()
-        funcptr(servers:serverlist.copy() as! NSArray,errors:errorlist.copy() as! NSArray)
+        funcptr(serverlist.copy() as! NSArray, errorlist.copy() as! NSArray)
     }
 }

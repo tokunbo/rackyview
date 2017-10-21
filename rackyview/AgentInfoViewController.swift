@@ -10,23 +10,19 @@ class AgentInfoViewController: UIViewController {
     
     @IBOutlet var textview:UITextView!
     
-    func dismiss() {
-        self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AgentInfoViewController.dismiss))
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻Refresh", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AgentInfoViewController.refresh))
-        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
-        self.navigationItem.rightBarButtonItem?.tintColor = UIColor.whiteColor()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AgentInfoViewController.dismiss))
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻Refresh", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AgentInfoViewController.refresh))
+        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
+        self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.2, green: 0.3, blue: 0.2, alpha: 1.0)
-        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.navigationBar.isTranslucent = false
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if !alreadyAutoRefreshed {
             refresh()
@@ -34,26 +30,26 @@ class AgentInfoViewController: UIViewController {
         }
     }
     
-    func refresh() {
-        raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
+    @objc func refresh() {
+        raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
         if agentid == nil {
-            let entityDetails:NSDictionary! = raxAPI.getEntity(entityid)
+            let entityDetails:NSDictionary! = raxAPI.getEntity(entityID: entityid)
             if entityDetails == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
-            agentid = entityDetails.objectForKey("agent_id") as? String
-            raxutils.setUIBusy(nil, isBusy: false)
+            agentid = entityDetails["agent_id"] as? String
+            raxutils.setUIBusy(v: nil, isBusy: false)
         }
         if agentid == nil {
-            raxutils.setUIBusy(nil, isBusy: false)
+            raxutils.setUIBusy(v: nil, isBusy: false)
             textview.text = "No agent id. Please install agent on this entity. See Rackspace website for instructions."
             return
         }
-        let agentInfoBasic:NSDictionary! = raxAPI.getAgentInfoBasic(agentid)
-        raxutils.setUIBusy(nil, isBusy: false)
+        let agentInfoBasic:NSDictionary! = raxAPI.getAgentInfoBasic(agentID: agentid)
+        raxutils.setUIBusy(v: nil, isBusy: false)
         if agentInfoBasic == nil {
-            raxutils.confirmDialog("Ureachable Agent", message: "I see the agentID/serverID but the agent seems to be unreachable. Please check Rackspace website to verify that the agent is actually installed, running & sending data correctly.\n\nIf you're sure the agent is running, there's also a chance that the websession has expired. \n\nWant to refresh your login from the login screen?", vc: self,
+            raxutils.confirmDialog(title: "Ureachable Agent", message: "I see the agentID/serverID but the agent seems to be unreachable. Please check Rackspace website to verify that the agent is actually installed, running & sending data correctly.\n\nIf you're sure the agent is running, there's also a chance that the websession has expired. \n\nWant to refresh your login from the login screen?", vc: self,
                 cancelAction:{ (action:UIAlertAction!) -> Void in
                     return
                 },
@@ -63,23 +59,23 @@ class AgentInfoViewController: UIViewController {
             textview.text = "Agent unreachable"
             return
         }
-        if(agentInfoBasic.objectForKey("values") == nil ||
-          (agentInfoBasic.objectForKey("values") as! NSArray)[0].objectForKey("host_info") == nil) {
-            raxutils.reportGenericError(self, message:"Missing or malformed data.")
+        if(agentInfoBasic["values"] == nil ||
+            ((agentInfoBasic["values"] as! NSArray)[0] as AnyObject).object(forKey: "host_info") == nil) {
+            raxutils.reportGenericError(vc: self, message:"Missing or malformed data.")
             textview.text = "Missing or malformed data."
             return
         }
         var RAMUsage:String = "RAM: "
         var DiskUsage:String = "Disk: "
         var CPUsUsage:String = "CPUs: "
-        let hostInfo:NSDictionary = (agentInfoBasic.objectForKey("values") as! NSArray)[0].objectForKey("host_info") as! NSDictionary
+        let hostInfo:NSDictionary = ((agentInfoBasic["values"] as! NSArray)[0] as AnyObject).object(forKey: "host_info") as! NSDictionary
         
-        if (hostInfo.objectForKey("memory") as! NSDictionary!) != nil  {
-            if ((hostInfo.objectForKey("memory") as! NSDictionary!).objectForKey("error") as? String) != nil {
-                RAMUsage += ((hostInfo.objectForKey("memory") as! NSDictionary!)["error"] as! String )
+        if (hostInfo["memory"] as! NSDictionary!) != nil  {
+            if ((hostInfo["memory"] as! NSDictionary!)["error"] as? String) != nil {
+                RAMUsage += ((hostInfo["memory"] as! NSDictionary!)["error"] as! String )
             } else {
-                let meminfo:NSDictionary = (hostInfo.objectForKey("memory") as! NSDictionary!)["info"] as! NSDictionary
-                RAMUsage += String(stringInterpolationSegment: (meminfo["used_percent"] as! NSNumber).integerValue)
+                let meminfo:NSDictionary = (hostInfo["memory"] as! NSDictionary!)["info"] as! NSDictionary
+                RAMUsage += String(stringInterpolationSegment: (meminfo["used_percent"] as! NSNumber).intValue)
                 RAMUsage += "% ("
                 RAMUsage += String(stringInterpolationSegment: (meminfo["actual_used"] as! NSNumber).doubleValue / 1000000)
                 RAMUsage += " MB of "
@@ -90,15 +86,15 @@ class AgentInfoViewController: UIViewController {
             RAMUsage += "N/A"
         }
         
-        if (hostInfo.objectForKey("filesystems") as! NSDictionary!) != nil  {
-            if ((hostInfo.objectForKey("filesystems") as! NSDictionary!).objectForKey("error") as? String) != nil {
-                DiskUsage += ((hostInfo.objectForKey("filesystems") as! NSDictionary!)["error"] as! String )
-            } else if ((hostInfo.objectForKey("filesystems") as! NSDictionary!)["info"] as! NSArray).count == 0 {
+        if (hostInfo["filesystems"] as! NSDictionary!) != nil  {
+            if ((hostInfo["filesystems"] as! NSDictionary!)["error"] as? String) != nil {
+                DiskUsage += ((hostInfo["filesystems"] as! NSDictionary!)["error"] as! String )
+            } else if ((hostInfo["filesystems"] as! NSDictionary!)["info"] as! NSArray).count == 0 {
                 DiskUsage = "N/A"
             } else {
-                let filesys:NSDictionary = ((hostInfo.objectForKey("filesystems") as! NSDictionary!)["info"] as! NSArray)[0] as! NSDictionary
+                let filesys:NSDictionary = ((hostInfo["filesystems"] as! NSDictionary!)["info"] as! NSArray)[0] as! NSDictionary
                 DiskUsage += "MountPoint: "+(filesys["dir_name"] as! String)
-                DiskUsage += "\n"+String(stringInterpolationSegment: Float((filesys["used"] as! NSNumber).integerValue) / Float((filesys["total"] as! NSNumber).integerValue) * 100)
+                DiskUsage += "\n"+String(stringInterpolationSegment: Float((filesys["used"] as! NSNumber).intValue) / Float((filesys["total"] as! NSNumber).intValue) * 100)
                 DiskUsage += "% ("
                 DiskUsage += String( stringInterpolationSegment: (filesys["used"] as! NSNumber).doubleValue/1000)
                 DiskUsage += " MB of "
@@ -109,18 +105,18 @@ class AgentInfoViewController: UIViewController {
             DiskUsage += "N/A"
         }
         
-        if (hostInfo.objectForKey("cpus") as! NSDictionary!) != nil  {
-            if ((hostInfo.objectForKey("cpus") as! NSDictionary!).objectForKey("error") as? String) != nil {
-                CPUsUsage += ((hostInfo.objectForKey("cpus") as! NSDictionary!)["error"] as! String )
-            } else if ((hostInfo.objectForKey("cpus") as! NSDictionary!)["info"] as! NSArray).count == 0 {
+        if (hostInfo["cpus"] as! NSDictionary!) != nil  {
+            if ((hostInfo["cpus"] as! NSDictionary!)["error"] as? String) != nil {
+                CPUsUsage += ((hostInfo["cpus"] as! NSDictionary!)["error"] as! String )
+            } else if ((hostInfo["cpus"] as! NSDictionary!)["info"] as! NSArray).count == 0 {
                 CPUsUsage = "N/A"
             } else {
-                for cpu in (hostInfo.objectForKey("cpus") as! NSDictionary!)["info"] as! NSArray {
-                    let idle = (cpu.objectForKey("idle") as! NSNumber).doubleValue
-                    let total = (cpu.objectForKey("total") as! NSNumber).doubleValue
+                for case let cpu as NSDictionary in (hostInfo["cpus"] as! NSDictionary!)["info"] as! NSArray {
+                    let idle = (cpu["idle"] as! NSNumber).doubleValue
+                    let total = (cpu["total"] as! NSNumber).doubleValue
                     CPUsUsage += "\n"
-                    CPUsUsage += cpu.objectForKey("name") as! String
-                    CPUsUsage += " at " + String(stringInterpolationSegment: NSNumber(double: idle / total).integerValue ) + "%"
+                    CPUsUsage += cpu["name"] as! String
+                    CPUsUsage += " at " + String(stringInterpolationSegment: NSNumber(value: idle / total).intValue ) + "%"
                 }
             }
         } else {
@@ -132,67 +128,67 @@ class AgentInfoViewController: UIViewController {
     @IBAction func viewProcesses() {
         
         if agentid == nil {
-            raxutils.alert("No agent ID", message: "Cannot fetch this data without a reachable monitoring agent", vc: self, onDismiss: nil)
+            raxutils.alert(title: "No agent ID", message: "Cannot fetch this data without a reachable monitoring agent", vc: self, onDismiss: nil)
             return
         }
-        let processlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("ProcessListView") as! ProcessListViewController
+        let processlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "ProcessListView") as! ProcessListViewController
         processlistview.agentid = agentid
         processlistview.title = self.title
-        self.presentViewController(UINavigationController(rootViewController: processlistview), animated: true, completion: nil)
+        self.present(UINavigationController(rootViewController: processlistview), animated: true, completion: nil)
     }
     
     @IBAction func viewRawData() {
         if agentid == nil {
-            raxutils.alert("No agent ID", message: "Cannot fetch this data without a reachable monitoring agent", vc: self, onDismiss: nil)
+            raxutils.alert(title: "No agent ID", message: "Cannot fetch this data without a reachable monitoring agent", vc: self, onDismiss: nil)
             return
         }
         let showAgentMetric:(String)->() = { atype in
-            raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
-            let ametric:NSDictionary! = raxAPI.getAgentInfoByType(self.agentid, type: atype)
-            raxutils.setUIBusy(nil, isBusy: false)
+            raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
+            let ametric:NSDictionary! = raxAPI.getAgentInfoByType(agentID: self.agentid, type: atype)
+            raxutils.setUIBusy(v: nil, isBusy: false)
             if ametric == nil {
-                raxutils.reportGenericError(self, message: "Couldn't get metric data. Sorry.")
+                raxutils.reportGenericError(vc: self, message: "Couldn't get metric data. Sorry.")
             } else {
-                raxutils.confirmDialog(atype+" data\n\nCopy this info to clipboard?", message: String(stringInterpolationSegment: ametric), vc: self,
+                raxutils.confirmDialog(title: atype+" data\n\nCopy this info to clipboard?", message: String(stringInterpolationSegment: ametric), vc: self,
                     cancelAction:{ (action:UIAlertAction!) -> Void in
                         return
                     },
                     okAction:{ (action:UIAlertAction!) -> Void in
-                        UIPasteboard.generalPasteboard().string = String(stringInterpolationSegment: ametric)
+                        UIPasteboard.general.string = String(stringInterpolationSegment: ametric)
                     })
             }
         }
-        raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
-        let agentInfoTypes:NSDictionary! = raxAPI.getSupportedAgentInfoTypes(agentid)
+        raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
+        let agentInfoTypes:NSDictionary! = raxAPI.getSupportedAgentInfoTypes(agentID: agentid)
         if agentInfoTypes == nil {
-            raxutils.reportGenericError(self)
+            raxutils.reportGenericError(vc: self)
             return
         }
-        if agentInfoTypes.objectForKey("types") as? NSArray == nil {
-            raxutils.reportGenericError(self, message:"agent could not respond to request of available metrics")
+        if agentInfoTypes["types"] as? NSArray == nil {
+            raxutils.reportGenericError(vc: self, message:"agent could not respond to request of available metrics")
             return
         }
-        let atypes:NSArray = agentInfoTypes.objectForKey("types") as! NSArray
+        let atypes:NSArray = agentInfoTypes["types"] as! NSArray
         if atypes.count == 0 {
-            raxutils.reportGenericError(self, message:"Agent said it doesn't support any metrics at all!")
+            raxutils.reportGenericError(vc: self, message:"Agent said it doesn't support any metrics at all!")
             return
         }
-        let alert = UIAlertController(title: "Available Agent Metrics", message: "Choose one", preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let alert = UIAlertController(title: "Available Agent Metrics", message: "Choose one", preferredStyle: UIAlertControllerStyle.actionSheet)
         for atype in atypes {
-            alert.addAction(UIAlertAction(title: atype as? String, style: UIAlertActionStyle.Default, handler: {
+            alert.addAction(UIAlertAction(title: atype as? String, style: UIAlertActionStyle.default, handler: {
                 (action:UIAlertAction) -> Void in
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation{
                     showAgentMetric(atype as! String)
                 }
             }))
         }
-        alert.addAction(UIAlertAction(title:"CANCEL", style: UIAlertActionStyle.Destructive, handler: {
+        alert.addAction(UIAlertAction(title:"CANCEL", style: UIAlertActionStyle.destructive, handler: {
             (action:UIAlertAction) -> Void in
             return
         }))
-        raxutils.setUIBusy(nil, isBusy: false)
-        NSOperationQueue.mainQueue().addOperationWithBlock {
-            self.presentViewController(alert, animated: true, completion: nil)
+        raxutils.setUIBusy(v: nil, isBusy: false)
+        OperationQueue.main.addOperation {
+            self.present(alert, animated: true, completion: nil)
         }
     }
 

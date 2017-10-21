@@ -40,20 +40,20 @@ class OverviewViewController: UIViewController {
     var allOkAlarms:NSMutableArray!
     var viewingState:String = ""
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        raxutils.swingView(self.bellIcon, myRotationDegrees: CGFloat(0.4))
+        raxutils.swingView(v: self.bellIcon, myRotationDegrees: CGFloat(0.4))
     }
     
-    override func preferredStatusBarStyle() -> UIStatusBarStyle {
-        return UIStatusBarStyle.LightContent
+    override var preferredStatusBarStyle:UIStatusBarStyle {
+        return UIStatusBarStyle.lightContent
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        raxutils.addBorderAndShadowToView(bigviewbutton)
+        raxutils.addBorderAndShadowToView(v: bigviewbutton)
         if GlobalState.instance.latestAlarmStates != nil {
-            initData(GlobalState.instance.latestAlarmStates)
+            initData(results: GlobalState.instance.latestAlarmStates)
         } else {
             self.refresh()
         }
@@ -61,46 +61,46 @@ class OverviewViewController: UIViewController {
     
     func updateUI(viewingstate:String, entities:NSMutableArray, viewButtonColor:UIColor, alarmCount:Int) {
         self.viewingState = viewingstate
-        self.criticalbutton.setTitle("Critical ("+String(self.criticalEntities.count)+")", forState: UIControlState.Normal)
-        self.warningbutton.setTitle("Warning ("+String(self.warningEntities.count)+")", forState: UIControlState.Normal)
-        self.okbutton.setTitle("OK ("+String(self.okEntities.count)+")", forState: UIControlState.Normal)
+        self.criticalbutton.setTitle("Critical ("+String(self.criticalEntities.count)+")", for: UIControlState.normal)
+        self.warningbutton.setTitle("Warning ("+String(self.warningEntities.count)+")", for: UIControlState.normal)
+        self.okbutton.setTitle("OK ("+String(self.okEntities.count)+")", for: UIControlState.normal)
         
-        self.bignumberbutton.setTitle(String(entities.count), forState: UIControlState.Normal)
+        self.bignumberbutton.setTitle(String(entities.count), for: UIControlState.normal)
         self.attentionstate.text = "in "+self.viewingState+" state"
-        self.bigviewbutton.setTitle("View "+self.viewingState+" Entities", forState: UIControlState.Normal)
+        self.bigviewbutton.setTitle("View "+self.viewingState+" Entities", for: UIControlState.normal)
         self.bigviewbutton.backgroundColor = viewButtonColor
-        raxutils.flashView(self.bigviewbutton)
-        raxutils.imageHueFlash(self.bellIcon, myDuration: 1.0, myColor: viewButtonColor)
+        raxutils.flashView(v: self.bigviewbutton)
+        raxutils.imageHueFlash(myImageView: self.bellIcon, myDuration: 1.0, myColor: viewButtonColor)
     
         self.timelastchangehrsmins.text = raxutils.epochToHumanReadableTimeAgo(
-            ((entities[0].objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary).objectForKey("timestamp") as! Double)
+            epochTime: (((entities[0] as! NSDictionary)["latest_alarm_states"] as! NSArray)[0] as! NSDictionary)["timestamp"] as! Double)
         self.timelastchangedesc.text = "Newest "+self.viewingState+" event"
         
         self.totalalarmsnumber.text = String(alarmCount)
         self.totalalarmsdesc.text = self.viewingState+" alarms"
         
         self.newestAlarmMessageDesc.text = "Newest "+self.viewingState+" alarm message"
-        self.newestAlarmMessageStatus.text = "\"" + (((entities[0].objectForKey("latest_alarm_states") as! NSArray)[0] as! NSDictionary).objectForKey("status") as! String) + "\""
+        self.newestAlarmMessageStatus.text = "\"" + ((((entities[0] as! NSDictionary)["latest_alarm_states"] as! NSArray)[0] as! NSDictionary)["status"] as! String) + "\""
         
         if (viewingstate == "Critical") {
-            self.criticalTriangle.hidden = false
-            self.warningTriangle.hidden = true
-            self.okTriangle.hidden = true
+            self.criticalTriangle.isHidden = false
+            self.warningTriangle.isHidden = true
+            self.okTriangle.isHidden = true
         } else if(viewingstate == "Warning") {
-            self.criticalTriangle.hidden = true
-            self.warningTriangle.hidden = false
-            self.okTriangle.hidden = true
+            self.criticalTriangle.isHidden = true
+            self.warningTriangle.isHidden = false
+            self.okTriangle.isHidden = true
         } else if(viewingstate == "OK") {
-            self.criticalTriangle.hidden = true
-            self.warningTriangle.hidden = true
-            self.okTriangle.hidden = false
+            self.criticalTriangle.isHidden = true
+            self.warningTriangle.isHidden = true
+            self.okTriangle.isHidden = false
         }
     }
     
     func initData(results:NSMutableDictionary!) {
-        raxutils.setUIBusy(nil, isBusy: false)
+        raxutils.setUIBusy(v: nil, isBusy: false)
         if results == nil {
-            raxutils.reportGenericError(self)
+            raxutils.reportGenericError(vc: self)
             return
         }
         unknownEntities = results["unknownEntities"] as! NSMutableArray
@@ -122,94 +122,91 @@ class OverviewViewController: UIViewController {
             self.viewingState = ""
         }
         if criticalEntities.count > 0 && (self.viewingState == "" || self.viewingState == "Critical") {
-            updateUI("Critical",entities:criticalEntities, viewButtonColor:UIColor.redColor(),alarmCount:allCriticalAlarms.count)
+            updateUI(viewingstate: "Critical",entities:criticalEntities, viewButtonColor:UIColor.red,alarmCount:allCriticalAlarms.count)
         } else if warningEntities.count > 0 && (self.viewingState == "" || self.viewingState == "Warning") {
-            updateUI("Warning",entities:warningEntities, viewButtonColor:UIColor.orangeColor(),alarmCount:allWarningAlarms.count)
+            updateUI(viewingstate: "Warning",entities:warningEntities, viewButtonColor:UIColor.orange,alarmCount:allWarningAlarms.count)
         } else if okEntities.count > 0 && (self.viewingState == "" || self.viewingState == "OK"){
-            updateUI("OK",entities:okEntities, viewButtonColor:UIColor(red: 0, green: 0.5, blue: 0, alpha: 1),alarmCount:allOkAlarms.count)
+            updateUI(viewingstate: "OK",entities:okEntities, viewButtonColor:UIColor(red: 0, green: 0.5, blue: 0, alpha: 1),alarmCount:allOkAlarms.count)
         } else {
-            raxutils.alert("No ok/warn/crit alarms",message:"No alarms ok/warn/crit found on this account so going to the bare minimal homescreen",vc:self,
+            raxutils.alert(title: "No ok/warn/crit alarms",message:"No alarms ok/warn/crit found on this account so going to the bare minimal homescreen",vc:self,
                 onDismiss: { (action:UIAlertAction!) -> Void in
-                    let noalarmviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("NoAlarmsViewController") as! NoAlarmsViewController
+                    let noalarmviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "NoAlarmsViewController") as! NoAlarmsViewController
                     noalarmviewcontroller.unknownEntities = self.unknownEntities.copy() as! NSArray
-                    self.presentViewController( UINavigationController(rootViewController: noalarmviewcontroller),
-                    animated: true, completion: nil)
+                    self.present(UINavigationController(rootViewController: noalarmviewcontroller), animated: true, completion: nil)
             })
             return
         }
     }
     
     @IBAction func refresh() {
-        NSOperationQueue.mainQueue().addOperationWithBlock {
-            raxutils.setUIBusy(self.view, isBusy: true)
+        OperationQueue.main.addOperation {
+            raxutils.setUIBusy(v: self.view, isBusy: true)
             self.viewingState = ""
-            GlobalState.instance.latestAlarmStates = raxAPI.latestAlarmStates(false)
-            self.initData(GlobalState.instance.latestAlarmStates)
+            GlobalState.instance.latestAlarmStates = raxAPI.latestAlarmStates(isStreaming: false)
+            self.initData(results: GlobalState.instance.latestAlarmStates)
         }
     }
     
     @IBAction func bigviewbuttonTapped() {
-        let entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("EntityListView") as! EntityListViewController
+        let entitylistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "EntityListView") as! EntityListViewController
         
         entitylistview.viewingstate = self.viewingState
         
         if(viewingState == "Critical") {
-            entitylistview.highestSeverityFoundColor = raxutils.getColorForState("CRIT")
+            entitylistview.highestSeverityFoundColor = raxutils.getColorForState(state: "CRIT")
             entitylistview.entities = self.criticalEntities
             entitylistview.keyForArrayInResultDictionary = "criticalEntities"
         }
         if(viewingState == "Warning") {
-            entitylistview.highestSeverityFoundColor = raxutils.getColorForState("WARN")
+            entitylistview.highestSeverityFoundColor = raxutils.getColorForState(state: "WARN")
             entitylistview.entities = self.warningEntities
             entitylistview.keyForArrayInResultDictionary = "warningEntities"
         }
         if(viewingState == "OK") {
-            entitylistview.highestSeverityFoundColor = raxutils.getColorForState("OK")
+            entitylistview.highestSeverityFoundColor = raxutils.getColorForState(state: "OK")
             entitylistview.entities = self.okEntities
             entitylistview.keyForArrayInResultDictionary = "okEntities"
         }
         if(entitylistview.entities.count == 0) {
-            raxutils.alert("",message:"No Entities are currently "+self.viewingState, vc:self, onDismiss: nil)
+            raxutils.alert(title: "",message:"No Entities are currently "+self.viewingState, vc:self, onDismiss: nil)
             return
         }
-        self.presentViewController( UINavigationController(rootViewController: entitylistview),
-            animated: true, completion: nil)
+        self.present( UINavigationController(rootViewController: entitylistview), animated: true, completion: nil)
     }
     
     @IBAction func onViewSelect(button:UIButton) {
         if(button.tag == 1 && criticalEntities.count > 0) {
-            updateUI("Critical",entities:criticalEntities, viewButtonColor:UIColor.redColor(),alarmCount:allCriticalAlarms.count)
+            updateUI(viewingstate: "Critical",entities:criticalEntities, viewButtonColor:UIColor.red,alarmCount:allCriticalAlarms.count)
         } else if(button.tag == 2 && warningEntities.count > 0) {
-            updateUI("Warning",entities:warningEntities, viewButtonColor:UIColor.orangeColor(),alarmCount:allWarningAlarms.count)
+            updateUI(viewingstate: "Warning",entities:warningEntities, viewButtonColor:UIColor.orange,alarmCount:allWarningAlarms.count)
         } else if(button.tag == 3 && okEntities.count > 0) {
-            updateUI("OK",entities:okEntities, viewButtonColor:UIColor(red: 0, green: 0.5, blue: 0, alpha: 1),alarmCount:allOkAlarms.count)
+            updateUI(viewingstate: "OK",entities:okEntities, viewButtonColor:UIColor(red: 0, green: 0.5, blue: 0, alpha: 1),alarmCount:allOkAlarms.count)
         }
     }
     
     @IBAction func MiscButtonTapped()
     {
-        let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
+        let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "MiscViewController") as! MiscViewController
         if unknownEntities != nil {
             miscviewcontroller.unknownEntities = unknownEntities.copy() as! NSArray
         }
-        self.presentViewController( UINavigationController(rootViewController: miscviewcontroller),
-            animated: true, completion: nil)
+        self.present(UINavigationController(rootViewController: miscviewcontroller), animated: true, completion: nil)
     }
     
     @IBAction func bellbuttonTapped() {
-        let alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("AlarmListView") as! AlarmListViewController
+        let alarmlistview = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "AlarmListView") as! AlarmListViewController
         
         alarmlistview.viewingstate = viewingState
         
         if(viewingState == "Critical") {
             alarmlistview.alarms = allCriticalAlarms
             alarmlistview.keyForArrayInResultDictionary = "allCriticalAlarms"
-            alarmlistview.highestSeverityFoundColor = UIColor.redColor()
+            alarmlistview.highestSeverityFoundColor = UIColor.red
         }
         if(viewingState == "Warning") {
             alarmlistview.alarms = allWarningAlarms
             alarmlistview.keyForArrayInResultDictionary = "allWarningAlarms"
-            alarmlistview.highestSeverityFoundColor = UIColor.orangeColor()
+            alarmlistview.highestSeverityFoundColor = UIColor.orange
         }
         if(viewingState == "OK") {
             alarmlistview.alarms = allOkAlarms
@@ -218,24 +215,24 @@ class OverviewViewController: UIViewController {
         }
         
         if(alarmlistview.alarms.count == 0) {
-            raxutils.alert("",message:"No Alarms are "+self.viewingState+" state", vc:self, onDismiss: nil)
+            raxutils.alert(title: "",message:"No Alarms are "+self.viewingState+" state", vc:self, onDismiss: nil)
             return
         }
     
         
         alarmlistview.title = "All "+self.viewingState+" alarms"
         
-        self.presentViewController(UINavigationController(rootViewController: alarmlistview),
+        self.present(UINavigationController(rootViewController: alarmlistview),
             animated: true, completion: {
-                    (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.enabled = false
+                (self.presentedViewController as! UINavigationController).interactivePopGestureRecognizer!.isEnabled = false
             })
     }
     
     @IBAction func serverButtonTapped() {
         if(GlobalState.instance.serverlistview == nil) {
             GlobalState.instance.serverlistview = UIStoryboard(name:"Main",bundle:nil)
-                .instantiateViewControllerWithIdentifier("ServerListView") as! ServerListViewController
+                .instantiateViewController(withIdentifier: "ServerListView") as! ServerListViewController
         }
-        self.presentViewController(UINavigationController(rootViewController: GlobalState.instance.serverlistview), animated: true, completion: nil)
+        self.present(UINavigationController(rootViewController: GlobalState.instance.serverlistview), animated: true, completion: nil)
     }
 }

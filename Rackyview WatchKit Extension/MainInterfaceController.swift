@@ -17,9 +17,9 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
         self.critlabel.setText("loading...")
         self.warnlabel.setText("loading...")
         self.oklabel.setText("loading...")
-        WCSession.defaultSession().sendMessage(myUserInfo,
-            replyHandler: {(response:[String:AnyObject]) -> Void in
-                dispatch_sync(dispatch_get_main_queue(), {
+        WCSession.default.sendMessage(myUserInfo,
+            replyHandler: {(response:[String:Any]) -> Void in
+                DispatchQueue.sync(dispatch_get_main_queue(), {
                     if response.indexForKey("error") != nil {
                         self.presentControllerWithName("ErrorPanel", context: response)
                     } else {
@@ -29,7 +29,7 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
                     }
                 })
             },
-            errorHandler: {(error:NSError) -> Void in
+            errorHandler: {(error:Error) -> Void in
                 dispatch_sync(dispatch_get_main_queue(), {
                     self.presentControllerWithName("ErrorPanel", context: ["error": error])
                 })

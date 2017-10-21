@@ -5,35 +5,37 @@ import Foundation
 class NoAlarmsViewController: UIViewController {
     
     var unknownEntities:NSArray!
-    
-    func dismiss() {
+   
+    override func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
         GlobalState.instance.latestAlarmStates = nil
-        self.dismissViewControllerAnimated(true, completion: nil)
+        super.dismiss(animated: animated, completion: completion)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
+        let selector = #selector(self.dismiss)
         super.viewWillAppear(animated)
-        self.navigationController?.navigationBar.titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Retry", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(NoAlarmsViewController.dismiss))
-        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.whiteColor()
-        self.navigationController?.navigationBar.barTintColor = UIColor.blackColor()
-        self.navigationController?.navigationBar.translucent = false
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "← Retry", style: UIBarButtonItemStyle.plain,
+                                                                target: self, action: selector) as UIBarButtonItem
+        self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
+        self.navigationController?.navigationBar.barTintColor = UIColor.black
+        self.navigationController?.navigationBar.isTranslucent = false
         self.title = "Rackyview Minimal Mode"
     }
     
     @IBAction func btnPressed(button:UIButton) {
         if button.tag == 1 {
-            let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewControllerWithIdentifier("MiscViewController") as! MiscViewController
+            let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "MiscViewController") as! MiscViewController
             miscviewcontroller.unknownEntities = unknownEntities
-            self.presentViewController( UINavigationController(rootViewController: miscviewcontroller),
+            self.present( UINavigationController(rootViewController: miscviewcontroller),
                 animated: true, completion: nil)
         } else if button.tag == 2 {
             if(GlobalState.instance.serverlistview == nil) {
                 GlobalState.instance.serverlistview = UIStoryboard(name:"Main",bundle:nil)
-                    .instantiateViewControllerWithIdentifier("ServerListView") as! ServerListViewController
+                    .instantiateViewController(withIdentifier: "ServerListView") as! ServerListViewController
             }
-            self.presentViewController(UINavigationController(rootViewController: GlobalState.instance.serverlistview), animated: true, completion: nil)
+            self.present(UINavigationController(rootViewController: GlobalState.instance.serverlistview), animated: true, completion: nil)
         }
     }
 }

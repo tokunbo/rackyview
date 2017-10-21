@@ -15,33 +15,23 @@ class GlobalState {
     var serverlistview:ServerListViewController!
     var latestAlarmStates:NSMutableDictionary!
     
-    struct Static {
-        static var onlyoneinstance:dispatch_once_t = 0
-        static var instance: GlobalState!
-    }
-    
-    class var instance: GlobalState {
-        dispatch_once(&Static.onlyoneinstance, { Static.instance = GlobalState() } )
-        return Static.instance
-    }
+    static var instance:GlobalState = { return GlobalState() }()
     
     class func reset() {
-        self.Static.instance = GlobalState()
+        self.instance = GlobalState()
     }
     
-    class func addBackgroundTask(name:String, block:( () -> () )) {
-        if self.Static.instance.opqueues.valueForKey(name) != nil {
+    class func addBackgroundTask(name:String, block:@escaping ( () -> () )) {
+        if self.instance.opqueues.value(forKey: name) != nil {
             return
         }
-        let q = NSOperationQueue()
-        self.Static.instance.opqueues.setValue(q,forKey: name)
-        q.suspended = true
-        q.addOperationWithBlock{
+        let q = OperationQueue()
+        self.instance.opqueues.setValue(q,forKey: name)
+        q.isSuspended = true
+        q.addOperation{
             block();
-            self.Static.instance.opqueues.removeObjectForKey(name)
+            self.instance.opqueues.removeObject(forKey: name)
         }
-        q.suspended = false
+        q.isSuspended = false
     }
 }
-
-

@@ -4,11 +4,11 @@ import WatchKit
 class ErrorPanelInterfaceController:WKInterfaceController {
     
     @IBAction func retry() {
-        self.dismissController()
+        self.dismiss()
     }
     
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
+    override func awake(witchContext: AnyObject?) {
+        super.awake(witContext: withContext)
     }
     
     override func willActivate() {
