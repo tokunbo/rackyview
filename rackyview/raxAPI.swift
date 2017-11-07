@@ -399,10 +399,10 @@ class raxAPI {
                 allAlarmsFoundOnEntity.add(event)
             }
             entity.set(raxutils.sortAlarmsBySeverityThenTime(in_alarms: allAlarmsFoundOnEntity), forKey:"allAlarms")
-            entity.setObject(criticalAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "criticalAlarms")
-            entity.setObject(warningAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "warningAlarms")
-            entity.setObject(okAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "okAlarms")
-            entity.setObject(unknownAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents), forKey: "unknownAlarms")
+            entity.set(criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "criticalAlarms")
+            entity.set(warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "warningAlarms")
+            entity.set(okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "okAlarms")
+            entity.set(unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "unknownAlarms")
             if(unknownAlarms.count > 0 ) {
                 entity.setValue("????", forKey: "state")
                 unknownEntities.add(entity)
@@ -422,10 +422,10 @@ class raxAPI {
         criticalEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: criticalEntities))
         warningEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: warningEntities))
         okEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: okEntities))
-        allCriticalAlarms = NSMutableArray(array: allCriticalAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
-        allWarningAlarms = NSMutableArray(array: allWarningAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
-        allOkAlarms = NSMutableArray(array: allOkAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
-        allUnknownAlarms = NSMutableArray(array: allUnknownAlarms.sortedArrayUsingComparator(raxutils.compareAlarmEvents))
+        allCriticalAlarms = NSMutableArray(array: allCriticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+        allWarningAlarms = NSMutableArray(array: allWarningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+        allOkAlarms = NSMutableArray(array: allOkAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+        allUnknownAlarms = NSMutableArray(array: allUnknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
         results["allEntities"] = raxutils.sortEntitiesBySeverityThenTime(in_entities: allEntities)
         results["unknownEntities"] = unknownEntities
         results["criticalEntities"] = criticalEntities

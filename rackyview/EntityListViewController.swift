@@ -238,72 +238,72 @@ class EntityListViewController: UITableViewController {
         let navctrl:UINavigationController =  self.navigationController!
         if( !isStreaming ) {
             isStreaming = true
-            UIApplication.sharedApplication().idleTimerDisabled = true
+            UIApplication.shared.isIdleTimerDisabled = true
             let uiview = UIView()
             uiview.frame = navctrl.view.frame
-            uiview.backgroundColor = UIColor.clearColor()
+            uiview.backgroundColor = UIColor.clear
             uiview.tag = 99
             uiview.alpha = 1
-            uiview.center = CGPointMake(navctrl.view.bounds.size.width / 2,  navctrl.view.bounds.size.height / 2)
+            uiview.center = CGPoint(x: navctrl.view.bounds.size.width / 2,  y: navctrl.view.bounds.size.height / 2)
             uiview.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(EntityListViewController.confirmCancelStream)))
-            NSOperationQueue.mainQueue().addOperationWithBlock {
-                navbar.translucent = true
+            OperationQueue.main.addOperation {
+                navbar.isTranslucent = true
                 navctrl.view.addSubview(uiview)
-                navctrl.view.bringSubviewToFront(uiview)
+                navctrl.view.bringSubview(toFront: uiview)
             }
-            self.view.userInteractionEnabled = false
-            raxutils.navbarGlow(navbar, myColor: UIColor.whiteColor())
-            raxutils.tableLightwave(self.tableView, myColor:UIColor.whiteColor())
-            NSOperationQueue().addOperationWithBlock {
+            self.view.isUserInteractionEnabled = false
+            raxutils.navbarGlow(navbar: navbar, myColor: UIColor.white)
+            raxutils.tableLightwave(tableview: self.tableView, myColor:UIColor.white)
+            OperationQueue().addOperation {
                 while self.isStreaming {
                     sleep(2)
-                    raxutils.tableLightwave(self.tableView, myColor:self.highestSeverityFoundColor)
+                    raxutils.tableLightwave(tableview: self.tableView, myColor:self.highestSeverityFoundColor)
                 }
             }
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: #selector(EntityListViewController.refreshFavorites), userInfo: nil, repeats: false)
-            NSOperationQueue.mainQueue().addOperationWithBlock {
+            self.timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(EntityListViewController.refreshFavorites), userInfo: nil, repeats: false)
+            OperationQueue.main.addOperation {
                 sleep(3)
-                self.tableView.scrollRectToVisible(CGRectMake(0, 0, 1, 1), animated: true)
+                self.tableView.scrollRectToVisible(CGRect(x: 0, y: 0, width: 1, height: 1), animated: true)
             }
         } else {
             isStreaming = false
-            UIApplication.sharedApplication().idleTimerDisabled = false
+            UIApplication.shared.isIdleTimerDisabled = false
             self.timer.invalidate()
-            NSOperationQueue.mainQueue().addOperationWithBlock {
+            OperationQueue.main.addOperation {
                 while navctrl.view.viewWithTag(99) != nil {//Worst iOS dev hack in the history of iOS dev hacks.
                     navctrl.view.viewWithTag(99)?.removeFromSuperview()
                 }
                 navbar.barTintColor = self.highestSeverityFoundColor
                 navbar.layer.removeAllAnimations()
-                navbar.translucent = false
+                navbar.isTranslucent = false
                 self.refresh()
-                self.view.userInteractionEnabled = true
+                self.view.isUserInteractionEnabled = true
             }
         }
     }
     
     @objc func confirmStartStream() {
-        raxutils.confirmDialog("About to activate streaming.", message: "This will auto-refresh every 45 seconds while constantly animating the color that matches the most severe entity status detected since the last refresh. \n\nYou *CANNOT* use the app during streaming. \n\nTo stop streaming, tap screen twice. \n\n And iOS autolock/sleep will be disabled so it is recommended this device is plugged in for charging.\n\nReady?", vc: self,
+        raxutils.confirmDialog(title: "About to activate streaming.", message: "This will auto-refresh every 45 seconds while constantly animating the color that matches the most severe entity status detected since the last refresh. \n\nYou *CANNOT* use the app during streaming. \n\nTo stop streaming, tap screen twice. \n\n And iOS autolock/sleep will be disabled so it is recommended this device is plugged in for charging.\n\nReady?", vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
                 return
             },
             okAction:{ (action:UIAlertAction!) -> Void in
-                raxutils.setUIBusy(self.view, isBusy: true)
-                let retval:String! = raxAPI.extend_session("favEntities")
-                raxutils.setUIBusy(nil, isBusy:false)
+                raxutils.setUIBusy(v: self.view, isBusy: true)
+                let retval:String! = raxAPI.extend_session(reason: "favEntities")
+                raxutils.setUIBusy(v: nil, isBusy:false)
                 if  retval == "OK" {
                     self.toggleStream()
                 } else {
-                    raxutils.askToRestartApp(self)
+                    raxutils.askToRestartApp(vc: self)
                 }
             })
     }
     
-    func confirmCancelStream() {
-        self.navigationController?.view.viewWithTag(99)!.userInteractionEnabled = false
-        raxutils.confirmDialog("Streaming is active", message: "Turing it off will STOP auto-refresh. Is this what you want?", vc: self,
+    @objc func confirmCancelStream() {
+        self.navigationController?.view.viewWithTag(99)!.isUserInteractionEnabled = false
+        raxutils.confirmDialog(title: "Streaming is active", message: "Turing it off will STOP auto-refresh. Is this what you want?", vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
-                self.navigationController?.view.viewWithTag(99)!.userInteractionEnabled = true
+                self.navigationController?.view.viewWithTag(99)!.isUserInteractionEnabled = true
                 return
             },
             okAction:{ (action:UIAlertAction!) -> Void in
@@ -316,25 +316,25 @@ class EntityListViewController: UITableViewController {
         if displayingFavorites {
             refreshFavorites()
         } else {
-            raxutils.setUIBusy(self.navigationController?.view, isBusy: true)
-            NSOperationQueue().addOperationWithBlock {
-                let results:NSMutableDictionary! = raxAPI.latestAlarmStates(false)
+            raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
+            OperationQueue().addOperation {
+                let results:NSMutableDictionary! = raxAPI.latestAlarmStates(isStreaming: false)
                 self.entities = nil
-                raxutils.setUIBusy(nil, isBusy: false)
+                raxutils.setUIBusy(v: nil, isBusy: false)
                 if results == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
                 self.entities = (results[self.keyForArrayInResultDictionary] as! NSMutableArray).copy() as! NSArray
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation{
                     if self.entities == nil || self.entities.count == 0 {
-                        raxutils.alert("Poof! All gone!",message:"Whoa, all the entities are gone or something? Probably bad network. Try again.",vc:self,
+                        raxutils.alert(title: "Poof! All gone!",message:"Whoa, all the entities are gone or something? Probably bad network. Try again.",vc:self,
                             onDismiss: { action in
-                                self.dismiss()
+                                self.dismiss(animated: true)
                         })
                         return
                     }
-                    self.highestSeverityFoundColor = raxutils.getColorForState((self.entities[0] as! NSDictionary)["state"] as! NSString as String)
+                    self.highestSeverityFoundColor = raxutils.getColorForState(state: (self.entities[0] as! NSDictionary)["state"] as! NSString as String)
                     self.navigationController?.navigationBar.barTintColor = self.highestSeverityFoundColor
                     self.tableView.reloadData()
                 }

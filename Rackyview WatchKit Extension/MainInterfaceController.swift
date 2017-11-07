@@ -4,6 +4,11 @@ import WatchKit
 import WatchConnectivity
 
 class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
+    @available(watchOSApplicationExtension 2.2, *)
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        //TODO... something I guess....
+    }
+    
     
     @IBOutlet var critbell:WKInterfaceButton!
     @IBOutlet var warnbell:WKInterfaceButton!
