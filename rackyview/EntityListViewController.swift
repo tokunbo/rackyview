@@ -12,6 +12,10 @@ class EntityListViewController: UITableViewController {
     var highestSeverityFoundColor:UIColor = UIColor.black
     var timer:Timer!
     
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isStreaming = false
@@ -27,7 +31,7 @@ class EntityListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.gray
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EntityListViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(EntityListViewController.actionDismiss))
         self.navigationController?.navigationBar.barTintColor = raxutils.getColorForState(state: viewingstate)
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.isTranslucent = false
@@ -160,7 +164,7 @@ class EntityListViewController: UITableViewController {
         }
     }
     
-    @objc func refreshFavorites() {
+    @IBAction func refreshFavorites() {
         self.navigationController!.navigationBar.layer.removeAllAnimations()
         raxutils.setUIBusy(v: self.navigationController!.view, isBusy: true)
         OperationQueue().addOperation {
@@ -282,7 +286,7 @@ class EntityListViewController: UITableViewController {
         }
     }
     
-    @objc func confirmStartStream() {
+    @IBAction func confirmStartStream() {
         raxutils.confirmDialog(title: "About to activate streaming.", message: "This will auto-refresh every 45 seconds while constantly animating the color that matches the most severe entity status detected since the last refresh. \n\nYou *CANNOT* use the app during streaming. \n\nTo stop streaming, tap screen twice. \n\n And iOS autolock/sleep will be disabled so it is recommended this device is plugged in for charging.\n\nReady?", vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
                 return
@@ -299,7 +303,7 @@ class EntityListViewController: UITableViewController {
             })
     }
     
-    @objc func confirmCancelStream() {
+    @IBAction func confirmCancelStream() {
         self.navigationController?.view.viewWithTag(99)!.isUserInteractionEnabled = false
         raxutils.confirmDialog(title: "Streaming is active", message: "Turing it off will STOP auto-refresh. Is this what you want?", vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
@@ -311,7 +315,7 @@ class EntityListViewController: UITableViewController {
         })
     }
     
-    @objc func refresh() {
+    @IBAction func refresh() {
         self.refreshControl?.endRefreshing()
         if displayingFavorites {
             refreshFavorites()

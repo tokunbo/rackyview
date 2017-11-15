@@ -10,11 +10,15 @@ class AgentInfoViewController: UIViewController {
     
     @IBOutlet var textview:UITextView!
     
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AgentInfoViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AgentInfoViewController.actionDismiss))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻Refresh", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AgentInfoViewController.refresh))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
@@ -30,7 +34,7 @@ class AgentInfoViewController: UIViewController {
         }
     }
     
-    @objc func refresh() {
+    @IBAction func refresh() {
         raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
         if agentid == nil {
             let entityDetails:NSDictionary! = raxAPI.getEntity(entityID: entityid)

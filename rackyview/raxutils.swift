@@ -353,7 +353,10 @@ class raxutils {
     class func getUserdata() -> NSData! {
         var mocontext:NSManagedObjectContext!
         mocontext = (UIApplication.shared.delegate as AnyObject).managedObjectContext
-        let res:NSArray = try! mocontext!.fetch(NSFetchRequest(entityName: "AppData")) as NSArray
+        if mocontext == nil {
+            return nil
+        }
+        let res:NSArray! = try! mocontext!.fetch(NSFetchRequest(entityName: "AppData")) as NSArray
         if res.count > 0 {
             return((res[0] as! NSManagedObject).value(forKey: "userdataNSDATA") as! NSData!)
         }
@@ -363,7 +366,7 @@ class raxutils {
     class func saveUserdata(userdata:NSData) {
         self.deleteUserdata()
         var mocontext:NSManagedObjectContext!
-        mocontext = (UIApplication.shared.delegate as AnyObject).managedObjectContext
+        mocontext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
         let appdata:AnyObject! = NSEntityDescription.insertNewObject(forEntityName: "AppData", into: mocontext!)
         appdata.setValue(userdata, forKey: "userdataNSDATA")
         do {
@@ -375,7 +378,7 @@ class raxutils {
     
     class func deleteUserdata() {
         var mocontext:NSManagedObjectContext!
-        mocontext = (UIApplication.shared.delegate as AnyObject).managedObjectContext
+        mocontext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
         
         for e in NSArray(array: try! mocontext!.fetch(NSFetchRequest(entityName: "AppData"))) {
             mocontext!.delete(e as! NSManagedObject)
@@ -395,7 +398,7 @@ class raxutils {
         A different value is returned for apps on the same device that come from different vendors, and for apps on different devices regardless of vendor.
         ........and this is all going into the iOS Keychain after encryption.*/
         let plaindata_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes.assumingMemoryBound(to: UInt8.self))
-        var key_ptr:UnsafePointer<UInt8>
+        var key_ptr:UnsafePointer<UInt8>? = nil //TODO: Fix this
         key.data(using: String.Encoding.utf8, allowLossyConversion: false)?.withUnsafeBytes {
             key_ptr = $0.successor()
         }
@@ -415,7 +418,7 @@ class raxutils {
         var plaindata_length:CInt = 0
         let key = UIDevice().identifierForVendor!.uuidString
         let cipherdata_ptr:UnsafePointer = UnsafePointer<UInt8>(cipherdata.bytes.assumingMemoryBound(to: UInt8.self))
-        var key_ptr:UnsafePointer<UInt8>
+        var key_ptr:UnsafePointer<UInt8>? = nil //TODO: Fix this
         key.data(using: String.Encoding.utf8, allowLossyConversion: false)?.withUnsafeBytes {
             key_ptr = $0.successor()
         }
@@ -526,7 +529,7 @@ class raxutils {
     }
 
     
-    class func compareAlarmEvents(ae1:AnyObject!, ae2:AnyObject!) -> ComparisonResult {
+    class func compareAlarmEvents(ae1:Any, ae2:Any) -> ComparisonResult {
         let timestamp1:Double = (ae1 as! NSDictionary).object(forKey: "timestamp") as! Double
         let timestamp2:Double = (ae2 as! NSDictionary).object(forKey: "timestamp") as! Double
         
@@ -539,7 +542,7 @@ class raxutils {
         return ComparisonResult.orderedSame
     }
     
-    class func compareEntityByFirstAlarmEventTime(ent1:AnyObject!,ent2:AnyObject!) -> ComparisonResult {
+    class func compareEntityByFirstAlarmEventTime(ent1:Any,ent2:Any) -> ComparisonResult {
         let ae1:NSDictionary = ((ent1 as! NSDictionary).object(forKey: "latest_alarm_states") as! NSArray)[0] as! NSDictionary
         let ae2:NSDictionary = ((ent2 as! NSDictionary).object(forKey: "latest_alarm_states") as! NSArray)[0] as! NSDictionary
         let timestamp1:Double =  ae1.object(forKey: "timestamp") as! Double
@@ -560,14 +563,14 @@ class raxutils {
 
         for e in entities {
             sortedAlarmEventList.removeAllObjects()
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary).object(forKey: "criticalAlarms") as! NSArray).sortedArray(comparator: compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary).object(forKey: "warningAlarms") as! NSArray).sortedArray(comparator: compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary).object(forKey: "okAlarms") as! NSArray).sortedArray(comparator: compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary).object(forKey: "unknownAlarms") as! NSArray).sortedArray(comparator: compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["criticalAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["warningAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["okAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["unknownAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
             (e as AnyObject).set(sortedAlarmEventList.copy(), forKey: "latest_alarm_states")
             tmpEntityArray.add(e)
         }
-        return tmpEntityArray.sortedArray(comparator: compareEntityByFirstAlarmEventTime as! (Any, Any) -> ComparisonResult) as NSArray
+        return tmpEntityArray.sortedArray(comparator: compareEntityByFirstAlarmEventTime) as NSArray
     }
 
     class func sortAlarmsBySeverityThenTime(in_alarms:NSArray) -> NSArray {
@@ -587,11 +590,11 @@ class raxutils {
             } else {
                 unknownAlarms.add(alarm)
             }
-        }
+        }/*
         outputArray.addObjects(from: unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
         outputArray.addObjects(from: criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
         outputArray.addObjects(from: warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+        outputArray.addObjects(from: okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))*/
         return outputArray.copy() as! NSArray
     }
     
@@ -613,10 +616,10 @@ class raxutils {
                 unknownEntities.add(entity)
             }
         }
-        outputArray.addObjects(from: unknownEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: criticalEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: warningEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: okEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime as! (Any, Any) -> ComparisonResult))
+        outputArray.addObjects(from: unknownEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime))
+        outputArray.addObjects(from: criticalEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime))
+        outputArray.addObjects(from: warningEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime))
+        outputArray.addObjects(from: okEntities.sortedArray(comparator: raxutils.compareEntityByFirstAlarmEventTime))
         return outputArray.copy() as! NSArray
     }
     

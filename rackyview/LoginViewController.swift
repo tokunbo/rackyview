@@ -49,8 +49,8 @@ class LoginViewController: UIViewController,URLSessionTaskDelegate {
     }
     
     func getcatalogCallback( returneddata: Data?, response: URLResponse?,error: Error?) {
-        self.view.setNeedsDisplay()
         OperationQueue.main.addOperation {
+            self.view.setNeedsDisplay()
             if(error != nil) {
                 raxutils.alert(title: "Login Error",message:"Username or password not correct.\n\n\n"+String(stringInterpolationSegment: error!),vc:self,onDismiss: nil)
                 raxutils.setUIBusy(v: nil, isBusy: false)
@@ -62,11 +62,15 @@ class LoginViewController: UIViewController,URLSessionTaskDelegate {
                 return
             }
             
-            var userdata:NSMutableDictionary!
+            var userdata:NSMutableDictionary! = nil
             
             do {
-                 try userdata = JSONSerialization.jsonObject(with: returneddata! as Data) as! NSMutableDictionary
+               userdata = (try JSONSerialization.jsonObject(with: returneddata!, options: JSONSerialization.ReadingOptions()) as! NSDictionary).mutableCopy() as! NSMutableDictionary
             } catch {
+                //I guess it didn't work.
+            }
+            
+            if(userdata == nil) {
                 raxutils.alert(title: "Login Error", message: "invalid JSON.", vc: self, onDismiss: nil)
                 raxutils.setUIBusy(v: nil, isBusy: false)
                 return

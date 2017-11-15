@@ -15,37 +15,37 @@ class CloseTicketViewController:UIViewController{
     }
     
     func dismiss() {
-        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.ratingLabel = self.view.viewWithTag(5) as! UILabel
         self.slider = self.view.viewWithTag(6) as! UISlider
         self.reasonText = self.view.viewWithTag(7) as! UITextView
-        self.slider.continuous = false
-        (self.view.viewWithTag(1) as! UILabel).text = (ticket.objectForKey("subject") as! NSString) as String
+        self.slider.isContinuous = false
+        (self.view.viewWithTag(1) as! UILabel).text = (ticket["subject"] as! NSString) as String
         (self.view.viewWithTag(2) as! UILabel).text = "Updated: "
-        (self.view.viewWithTag(2) as! UILabel).text?.appendContentsOf(ticket.objectForKey("updated-at") as! NSString as String)
+        (self.view.viewWithTag(2) as! UILabel).text?.append(ticket["updated-at"] as! NSString as String)
         (self.view.viewWithTag(3) as! UILabel).text = "Status: "
-        (self.view.viewWithTag(3) as! UILabel).text?.appendContentsOf(ticket.objectForKey("ticket-status") as! NSString as String)
+        (self.view.viewWithTag(3) as! UILabel).text?.append(ticket["ticket-status"] as! NSString as String)
         (self.view.viewWithTag(4) as! UILabel).text = "ID: "
-        (self.view.viewWithTag(4) as! UILabel).text?.appendContentsOf(ticket.objectForKey("ticket-id") as! NSString as String)
-        self.title = ticket.objectForKey("ticket-id") as! NSString as String
+        (self.view.viewWithTag(4) as! UILabel).text?.append(ticket["ticket-id"] as! NSString as String)
+        self.title = ticket["ticket-id"] as! NSString as String
         self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(CloseTicketViewController.dismissKeyboard)))
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidAppear(_:)), name: UIKeyboardDidShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidDisappear(_:)), name: UIKeyboardDidHideNotification, object: self.view.window)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CLOSE→", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(CloseTicketViewController.closeTicket))
+        NotificationCenter.default.addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidAppear), name: NSNotification.Name.UIKeyboardDidShow, object: self.view.window)
+        NotificationCenter.default.addObserver(self, selector: #selector(CloseTicketViewController.keyboardDidDisappear), name: NSNotification.Name.UIKeyboardDidHide, object: self.view.window)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "CLOSE→", style: UIBarButtonItemStyle.plain, target: self, action: #selector(CloseTicketViewController.closeTicket))
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         viewDefaultFrame = self.view.frame
     }
     
     @IBAction func sliderMoved(sender: UISlider) {
         let roundedValue = (Int)(sender.value)
-        NSOperationQueue.mainQueue().addOperationWithBlock {
+        OperationQueue.main.addOperation {
             sender.setValue((Float)(roundedValue), animated: true)
             self.ratingLabel.text = "Rating: "+String(roundedValue)
         }
@@ -53,18 +53,18 @@ class CloseTicketViewController:UIViewController{
     
     @IBAction func closeTicket() {
         let actuallyCloseTicket:()->() = {
-            raxutils.setUIBusy(self.view, isBusy: true)
-            NSOperationQueue().addOperationWithBlock {
-                let responseCode:Int! = raxAPI.closeTicket((self.ticket.objectForKey("ticket-id") as! NSString) as String, rating: (Int)(self.slider.value), comment: self.reasonText.text)
+            raxutils.setUIBusy(v: self.view, isBusy: true)
+            OperationQueue().addOperation {
+                let responseCode:Int! = raxAPI.closeTicket(t_id: (self.ticket["ticket-id"] as! NSString) as String, rating: (Int)(self.slider.value), comment: self.reasonText.text)
                 if responseCode == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
-                raxutils.setUIBusy(nil, isBusy: false)
+                raxutils.setUIBusy(v: nil, isBusy: false)
                 if responseCode != 200 {
-                    raxutils.alert("Problem closing ticket", message: "Unexpected HTTP responseCode:\n"+String(responseCode), vc: self, onDismiss: nil)
+                    raxutils.alert(title: "Problem closing ticket", message: "Unexpected HTTP responseCode:\n"+String(responseCode), vc: self, onDismiss: nil)
                 } else {
-                    raxutils.alert("Ticket Closed", message: "The ticket has been closed!", vc: self,
+                    raxutils.alert(title: "Ticket Closed", message: "The ticket has been closed!", vc: self,
                     onDismiss: { (action:UIAlertAction!) -> Void in
                         self.dismiss()
                     })
@@ -73,7 +73,7 @@ class CloseTicketViewController:UIViewController{
             
         }
         let askAgain:()->() = {
-            raxutils.confirmDialog("Really Close ticket?", message: "REALLY REALLY SURE? You can't reopen it or comment on it ever again.", vc: self,
+            raxutils.confirmDialog(title: "Really Close ticket?", message: "REALLY REALLY SURE? You can't reopen it or comment on it ever again.", vc: self,
                 cancelAction:{ (action:UIAlertAction!) -> Void in
                     return
                 },
@@ -81,7 +81,7 @@ class CloseTicketViewController:UIViewController{
                     actuallyCloseTicket()
             })
         }
-        raxutils.confirmDialog("Close ticket?", message: "You really want to close this ticket?", vc: self,
+        raxutils.confirmDialog(title: "Close ticket?", message: "You really want to close this ticket?", vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
                 return
             },
@@ -91,14 +91,14 @@ class CloseTicketViewController:UIViewController{
         reasonText.resignFirstResponder()//stops all the jumping up & down when you tap close.
     }
 
-    func keyboardDidAppear(notification:NSNotification) {
-        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
+    @IBAction func keyboardDidAppear(notification:NSNotification) {
+        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
         if !viewMoved {
-            raxutils.verticallyMoveView(self.view, moveUp: true, distance: Int(keyboardSize.height))
+            raxutils.verticallyMoveView(uiview: self.view, moveUp: true, distance: Int(keyboardSize.height))
             viewMoved = true
         }
     }
-    func keyboardDidDisappear(notification:NSNotification) {
+    @IBAction func keyboardDidDisappear(notification:NSNotification) {
         self.view.frame = viewDefaultFrame
         viewMoved = false
     }

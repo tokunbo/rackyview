@@ -1,6 +1,6 @@
 import UIKit
 import XCTest
-@testable import Rackyview
+//@testable import Rackyview
 
 class rackyviewTests: XCTestCase {
     var isTestComplete:Bool = false
@@ -8,10 +8,10 @@ class rackyviewTests: XCTestCase {
     
     func waitForAsync() {
         let timeout = 30.0
-        let startTime:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
+        let startTime:TimeInterval = NSDate.timeIntervalSinceReferenceDate
         while(!isTestComplete){
-            NSRunLoop.currentRunLoop().runUntilDate(NSDate(timeIntervalSinceNow:1))
-            let elapsedTime:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate() - startTime
+            RunLoop.current.run(until: NSDate(timeIntervalSinceNow:1) as Date)
+            let elapsedTime:TimeInterval = NSDate.timeIntervalSinceReferenceDate - startTime
             if(elapsedTime > timeout) {
                 XCTFail("This unittest took too long. More than "+String(format:"%f", timeout)+" seconds")
                 self.isTestComplete = true
@@ -32,34 +32,32 @@ class rackyviewTests: XCTestCase {
     }
     
     func test_crypt() {
-        let encrypted_data = raxutils.encryptData(mySecretMessage.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
-        let decrypted_data = raxutils.decryptData(encrypted_data)
-        let decrypted_message = NSString(data: decrypted_data, encoding: NSUTF8StringEncoding) as String!
+        let encrypted_data = raxutils.encryptData(plaindata: mySecretMessage.data(using: String.Encoding.utf8, allowLossyConversion: false)! as NSData)
+        let decrypted_data = raxutils.decryptData(cipherdata: encrypted_data!)
+        let decrypted_message = NSString(data: decrypted_data! as Data, encoding: String.Encoding.utf8.rawValue) as String!
         if (decrypted_message != mySecretMessage) {
-            XCTFail("Decrypted message: \(decrypted_message), doesn't equal  original: \(mySecretMessage)")
+            XCTFail("Decrypted message: \(String(describing: decrypted_message)), doesn't equal  original: \(mySecretMessage)")
         }
     }
     
     func test_keychain() {
-        raxutils.savePasswordToKeychain(mySecretMessage)
+        _ = raxutils.savePasswordToKeychain(password: mySecretMessage)
         let password = raxutils.getPasswordFromKeychain()
         if(password != mySecretMessage) {
-            XCTFail("Returned password: \(password), doesn't equal original: \(mySecretMessage)")
+            XCTFail("Returned password: \(String(describing: password)), doesn't equal original: \(mySecretMessage)")
         }
         
     }
-    
     
     func test_xcdatamodel() {
         raxutils.deleteUserdata()
         if(raxutils.getUserdata() != nil) {
             XCTFail("Userdata should be nil, but it wasn't")
         }
-        
-        raxutils.saveUserdata(mySecretMessage.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!)
-        let returned_message = NSString(data: raxutils.getUserdata(), encoding: NSUTF8StringEncoding) as String!
+        raxutils.saveUserdata(userdata: mySecretMessage.data(using: String.Encoding.utf8, allowLossyConversion: false)! as NSData)
+        let returned_message = NSString(data: raxutils.getUserdata() as Data, encoding: String.Encoding.utf8.rawValue) as String!
         if(returned_message != mySecretMessage) {
-            XCTFail("Returned password: \(returned_message), doesn't equal original: \(mySecretMessage)")
+            XCTFail("Returned password: \(String(describing: returned_message)), doesn't equal original: \(mySecretMessage)")
         }
     }
     

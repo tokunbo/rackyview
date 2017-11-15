@@ -24,29 +24,30 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
         self.oklabel.setText("loading...")
         WCSession.default.sendMessage(myUserInfo,
             replyHandler: {(response:[String:Any]) -> Void in
-                DispatchQueue.sync(dispatch_get_main_queue(), {
-                    if response.indexForKey("error") != nil {
-                        self.presentControllerWithName("ErrorPanel", context: response)
+                DispatchQueue.main.sync {
+                    if response.index(forKey: "error") != nil {
+                        self.presentController(withName: "ErrorPanel", context: response)
                     } else {
                         self.critlabel.setText(String(stringInterpolationSegment: response["critCount"] as! NSNumber)+" CRIT")
                         self.warnlabel.setText(String(stringInterpolationSegment: response["warnCount"] as! NSNumber)+" WARN")
                         self.oklabel.setText(String(stringInterpolationSegment: response["okCount"] as! NSNumber)+" OKAY")
                     }
-                })
+                }
             },
             errorHandler: {(error:Error) -> Void in
-                dispatch_sync(dispatch_get_main_queue(), {
-                    self.presentControllerWithName("ErrorPanel", context: ["error": error])
-                })
+                DispatchQueue.main.sync {
+                    self.presentController(withName: "ErrorPanel", context: ["error": error])
+                }
             }
         );
     }
 
-    override func awakeWithContext(context: AnyObject?) {
-        super.awakeWithContext(context)
-        critbell.setBackgroundImage(createColoredImageFromUIImage(UIImage(named: "bellicon.png")!, myColor: getColorForState("crit")))
-        warnbell.setBackgroundImage(createColoredImageFromUIImage(UIImage(named: "bellicon.png")!, myColor: getColorForState("warn")))
-        okbell.setBackgroundImage(createColoredImageFromUIImage(UIImage(named: "bellicon.png")!, myColor: getColorForState("ok")))
+    
+    override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
+        critbell.setBackgroundImage(createColoredImageFromUIImage(myImage: UIImage(named: "bellicon.png")!, myColor: getColorForState(state: "crit")))
+        warnbell.setBackgroundImage(createColoredImageFromUIImage(myImage: UIImage(named: "bellicon.png")!, myColor: getColorForState(state: "warn")))
+        okbell.setBackgroundImage(createColoredImageFromUIImage(myImage: UIImage(named: "bellicon.png")!, myColor: getColorForState(state: "ok")))
         // Configure interface objects here.
     }
     
@@ -54,9 +55,9 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
         if WCSession.isSupported() {
-            let wcSession = WCSession.defaultSession()
+            let wcSession = WCSession.default
             wcSession.delegate = self
-            wcSession.activateSession()
+            wcSession.activate()
         }
         refresh()
     }
@@ -68,29 +69,29 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
     
     func getColorForState(state:String) -> UIColor {
         var stateColor:UIColor
-        if state.lowercaseString == "ok" {
+        if state.lowercased() == "ok" {
             stateColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
-        } else if state.lowercaseString == "warn" || state.lowercaseString == "warning" {
-            stateColor = UIColor.orangeColor()
-        } else if state.lowercaseString == "crit" || state.lowercaseString == "critical" {
-            stateColor = UIColor.redColor()
+        } else if state.lowercased() == "warn" || state.lowercased() == "warning" {
+            stateColor = UIColor.orange
+        } else if state.lowercased() == "crit" || state.lowercased() == "critical" {
+            stateColor = UIColor.red
         } else {
-            stateColor = UIColor.blueColor()
+            stateColor = UIColor.blue
         }
         return stateColor
     }
     
     func createColoredImageFromUIImage(myImage:UIImage,myColor:UIColor) -> UIImage {
         var coloredImage:UIImage = myImage.copy() as! UIImage
-        var context:CGContextRef
-        let rect:CGRect = CGRectMake(0, 0, myImage.size.width, myImage.size.height)
+        var context:CGContext
+        let rect:CGRect = CGRect(x: 0, y: 0, width: myImage.size.width, height: myImage.size.height)
         UIGraphicsBeginImageContextWithOptions(myImage.size, false, myImage.scale)
-        coloredImage.drawInRect(rect)
+        coloredImage.draw(in: rect)
         context = UIGraphicsGetCurrentContext()!
-        CGContextSetBlendMode(context, CGBlendMode.SourceIn)
-        CGContextSetFillColorWithColor(context, myColor.CGColor)
-        CGContextFillRect(context, rect)
-        coloredImage = UIGraphicsGetImageFromCurrentImageContext()
+        context.setBlendMode(CGBlendMode.sourceIn)
+        context.setFillColor(myColor.cgColor)
+        context.fill(rect)
+        coloredImage = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return coloredImage
     }

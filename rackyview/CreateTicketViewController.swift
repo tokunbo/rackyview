@@ -51,7 +51,7 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
         }
     }
     
-    @objc func submitButtonTapped() {
+    @IBAction func submitButtonTapped() {
         let actuallyCreateTicket:()->() = {
             raxutils.setUIBusy(v: self.view, isBusy: true)
             OperationQueue.main.addOperation {
@@ -160,7 +160,7 @@ class CreateTicketViewController:UIViewController,UITextViewDelegate {
         }
     }
     
-    @objc func keyboardAppearanceEvent(notification:NSNotification) {
+    @IBAction func keyboardAppearanceEvent(notification:NSNotification) {
         keyboardCGRect = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
     }
 }

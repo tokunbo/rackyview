@@ -14,11 +14,11 @@ class AlarmChangelogListViewController: UITableViewController {
     var alarmID:String!
     var changelogs:NSArray!
     
-    func dismiss () {
-        self.navigationController?.popViewControllerAnimated(true)
+    override func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+        self.navigationController?.popViewController(animated: animated)
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if changelogs == nil {
             return 0
         } else {
@@ -26,93 +26,93 @@ class AlarmChangelogListViewController: UITableViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        self.view.backgroundColor = UIColor.grayColor()
-        self.navigationController!.navigationBar.titleTextAttributes = [NSFontAttributeName: UIFont.systemFontOfSize(16), NSForegroundColorAttributeName: UIColor.whiteColor()]
+        self.view.backgroundColor = UIColor.gray
+        self.navigationController!.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController!.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmChangelogListViewController.dismiss))
-        self.navigationController!.navigationBar.tintColor = UIColor.whiteColor()
-        self.navigationController!.navigationBar.barTintColor = UIColor.grayColor()
-        self.navigationController!.navigationBar.translucent = false
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmChangelogListViewController.dismiss))
+        self.navigationController!.navigationBar.tintColor = UIColor.white
+        self.navigationController!.navigationBar.barTintColor = UIColor.gray
+        self.navigationController!.navigationBar.isTranslucent = false
         self.tableView.reloadData()//---Because I want the heart icon to update in real time.
         self.refreshControl = UIRefreshControl()
-        self.refreshControl?.backgroundColor = UIColor.blackColor()
-        self.refreshControl?.tintColor = UIColor.whiteColor()
-        self.refreshControl?.addTarget(self, action: #selector(AlarmChangelogListViewController.refresh), forControlEvents: UIControlEvents.ValueChanged)
+        self.refreshControl?.backgroundColor = UIColor.black
+        self.refreshControl?.tintColor = UIColor.white
+        self.refreshControl?.addTarget(self, action: #selector(AlarmChangelogListViewController.refresh), for: UIControlEvents.valueChanged)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         refresh()
     }
     
-    func refresh() {
+    @IBAction func refresh() {
         self.refreshControl?.endRefreshing()
         var got1000entries:Bool = false
-        raxutils.setUIBusy(self.navigationController?.view, isBusy: true, expectingSignificantLoadTime: true)
-        changelogs = raxAPI.getAlarmChangelogs(entityID)
-        raxutils.setUIBusy(nil, isBusy: false)
+        raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true, expectingSignificantLoadTime: true)
+        changelogs = raxAPI.getAlarmChangelogs(entityID: entityID)
+        raxutils.setUIBusy(v: nil, isBusy: false)
         if changelogs == nil {
-            raxutils.reportGenericError(self)
+            raxutils.reportGenericError(vc: self)
         } else {
             let tmpArray = NSMutableArray()
-            for cl in changelogs {
+            for case let cl as NSDictionary in changelogs {
                 if cl["alarm_id"] as? String == alarmID {
-                    tmpArray.addObject(cl)
+                    tmpArray.add(cl)
                 }
             }
             if changelogs.count == 1000 {
                 got1000entries = true
             }
-            changelogs = tmpArray.sortedArrayUsingDescriptors([NSSortDescriptor(key: "timestamp", ascending: false)])
+            changelogs = tmpArray.sortedArray(using: [NSSortDescriptor(key: "timestamp", ascending: false)]) as NSArray
             if changelogs.count == 0 {
-                raxutils.alert("No changelogs", message: "There doesn't seem to be any changelogs for this alarm." , vc: self, onDismiss: { action in
-                    self.dismiss()
+                raxutils.alert(title: "No changelogs", message: "There doesn't seem to be any changelogs for this alarm." , vc: self, onDismiss: { action in
+                    self.dismiss(animated: true)
                 })
             } else {
                 tableView.reloadData()
                 if got1000entries {
-                    raxutils.alert("1,000 entries",
+                    raxutils.alert(title: "1,000 entries",
                         message: "Note that this app doesn't support pagination and the API returns the changelogs for *ALL* the alarms on the entity this particular alarm belongs to, then this app filters by alarmID. The app just filtered by alarmID for the first 1,000 changelogs. Anything beyond that is unfortunately unavailable.", vc: self, onDismiss: nil)
                 }
             }
         }
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = (self.view as! UITableView).dequeueReusableCellWithIdentifier("AlarmHistoryListTableCell") as UITableViewCell!
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = (self.view as! UITableView).dequeueReusableCell(withIdentifier: "AlarmHistoryListTableCell")!
         let changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
-        let changelogState = (changelog["state"]as! String).lowercaseString
-        let stateColor = raxutils.getColorForState(changelogState)
+        let changelogState = (changelog["state"]as! String).lowercased()
+        let stateColor = raxutils.getColorForState(state: changelogState)
         var shortcodeState = "????"
-        (cell.viewWithTag(1) as! UIImageView).image = raxutils.createColoredImageFromUIImage(UIImage(named: "bellicon.png")!, myColor: stateColor)
-        if(changelogState.rangeOfString("critical") != nil) {
+        (cell.viewWithTag(1) as! UIImageView).image = raxutils.createColoredImageFromUIImage(myImage: UIImage(named: "bellicon.png")!, myColor: stateColor)
+        if(changelogState.range(of: "critical") != nil) {
             shortcodeState = "CRIT"
         }
-        if(changelogState.rangeOfString("warning") != nil) {
+        if(changelogState.range(of: "warning") != nil) {
             shortcodeState = "WARN"
         }
-        if(changelogState.rangeOfString("ok") != nil) {
+        if(changelogState.range(of: "ok") != nil) {
             shortcodeState = "OK"
         }
         (cell.viewWithTag(2) as! UILabel).text = shortcodeState
-        (cell.viewWithTag(3) as! UILabel).text = raxutils.epochToHumanReadableTimeAgo(changelog.objectForKey("timestamp") as! Double)
+        (cell.viewWithTag(3) as! UILabel).text = raxutils.epochToHumanReadableTimeAgo(epochTime: changelog["timestamp"] as! Double)
         (cell.viewWithTag(4) as! UILabel).text = changelog["status"] as? String
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let changelog:NSDictionary = changelogs[indexPath.row] as! NSDictionary
-        tableView.cellForRowAtIndexPath(indexPath)?.selected = false
-        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Fade)
-        raxutils.confirmDialog("Changelog Details\n\nCopy this info to clipboard?",
+        tableView.cellForRow(at: indexPath)?.isSelected = false
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.fade)
+        raxutils.confirmDialog(title: "Changelog Details\n\nCopy this info to clipboard?",
             message: String(stringInterpolationSegment: changelog), vc: self,
             cancelAction:{ (action:UIAlertAction!) -> Void in
                 return
             },
             okAction:{ (action:UIAlertAction!) -> Void in
-                UIPasteboard.generalPasteboard().string = String(stringInterpolationSegment: changelog)
+                UIPasteboard.general.string = String(stringInterpolationSegment: changelog)
             })
     }
     

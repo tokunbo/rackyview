@@ -6,13 +6,13 @@ class NoAlarmsViewController: UIViewController {
     
     var unknownEntities:NSArray!
    
-    override func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
+    @IBAction func actionDismiss() {
         GlobalState.instance.latestAlarmStates = nil
-        super.dismiss(animated: animated, completion: completion)
+        super.dismiss(animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        let selector = #selector(self.dismiss)
+        let selector = #selector(self.actionDismiss)
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)

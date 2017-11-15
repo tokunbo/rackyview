@@ -8,6 +8,10 @@ class MiscViewController: UIViewController {
     @IBOutlet var versionLabel:UILabel!
     var unknownEntities:NSArray!
     
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     func disableRememberPasswordButton() {
         let btn = self.view.viewWithTag(3) as! UIButton
         btn.setTitle("1 password saved", for: UIControlState.disabled)
@@ -19,7 +23,7 @@ class MiscViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MiscViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(MiscViewController.actionDismiss))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 1.0)
         self.navigationController?.navigationBar.isTranslucent = false
@@ -36,7 +40,6 @@ class MiscViewController: UIViewController {
             }
         }
     }
-    
 
     @IBAction func onButtonPress(button:UIButton) {
         if(button.tag == 1) {

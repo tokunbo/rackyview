@@ -56,8 +56,8 @@ class raxAPI {
         
         URLSession(configuration: URLSessionConfiguration.default)
         .dataTask(with: request as URLRequest, completionHandler: { (async_nsdata, async_response, async_error) -> Void in
-            nsdata = async_nsdata! as NSData
-            nserror = async_error! as NSError
+            nsdata = async_nsdata as NSData!
+            nserror = async_error as NSError!
             response = async_response
             semaphore.signal()
         }).resume()
@@ -364,56 +364,58 @@ class raxAPI {
             return nil
         }
         
-        for case let entity as AnyObject in jsonData!["values"] as! NSArray {
+        for case let immutable_entity as AnyObject in jsonData!["values"] as! NSArray {
             criticalAlarms.removeAllObjects()
             warningAlarms.removeAllObjects()
             okAlarms.removeAllObjects()
             unknownAlarms.removeAllObjects()
             allAlarmsFoundOnEntity.removeAllObjects()
             severity = ""
-            alarmstatelist = (entity as! NSDictionary).object(forKey: "latest_alarm_states") as! NSArray
+            alarmstatelist = (immutable_entity as! NSDictionary).object(forKey: "latest_alarm_states") as! NSArray
             if(alarmstatelist.count == 0) {
                 continue
             }
-            for case let event as AnyObject in alarmstatelist {
+            for immutable_event in alarmstatelist {
+                let event = (immutable_event as! NSDictionary).mutableCopy() as! NSMutableDictionary
                 severity += ":"
-                alarmState = (event.object(forKey: "state") as! String).lowercased()
+                alarmState = (event["state"] as! String).lowercased()
                 severity += alarmState
                 if(alarmState.range(of: "ok") != nil) {
-                    event.set(UIColor(red: 0, green: 0.5, blue: 0, alpha: 1), forKey: "UIColor")
+                    event["UIColor"] = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1)
                     okAlarms.add(event)
                     allOkAlarms.add(event)
                 } else if(alarmState.range(of: "warning") != nil) {
-                    event.set(UIColor.orange, forKey: "UIColor")
+                    event["UIColor"] = UIColor.orange
                     warningAlarms.add(event)
                     allWarningAlarms.add(event)
                 } else if(alarmState.range(of: "critical") != nil) {
-                    event.set(UIColor.red, forKey: "UIColor")
+                  event["UIColor"] = UIColor.red
                     allCriticalAlarms.add(event)
                     criticalAlarms.add(event)
                 } else {//This alarm is in a state that we don't know about.
-                    event.set(UIColor.blue, forKey: "UIColor")
+                    event["UIColor"] = UIColor.blue
                     unknownAlarms.add(event)
                     allUnknownAlarms.add(event)
                 }
                 allAlarmsFoundOnEntity.add(event)
             }
-            entity.set(raxutils.sortAlarmsBySeverityThenTime(in_alarms: allAlarmsFoundOnEntity), forKey:"allAlarms")
-            entity.set(criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "criticalAlarms")
-            entity.set(warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "warningAlarms")
-            entity.set(okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "okAlarms")
-            entity.set(unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult), forKey: "unknownAlarms")
+            let entity = (immutable_entity as! NSDictionary).mutableCopy() as! NSMutableDictionary
+            entity["allAlarms"] = raxutils.sortAlarmsBySeverityThenTime(in_alarms: allAlarmsFoundOnEntity)
+            entity["criticalAlarms"] = criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents)
+            entity["warningAlarms"] = warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents)
+            entity["okAlarms"] = okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents)
+            entity["unknownAlarms"] = unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents)
             if(unknownAlarms.count > 0 ) {
-                entity.setValue("????", forKey: "state")
+                entity["state"] = "????"
                 unknownEntities.add(entity)
             } else if(severity.range(of: ":critical") != nil) {
-                entity.setValue("CRIT", forKey: "state")
+                entity["state"] = "CRIT"
                 criticalEntities.add(entity)
             } else if(severity.range(of: ":warning") != nil) {
+                entity["state"] = "WARN"
                 warningEntities.add(entity)
-                entity.setValue("WARN", forKey: "state")
             } else {
-                entity.setValue("OK", forKey: "state")
+                entity["state"] = "OK"
                 okEntities.add(entity)
             }
             allEntities.add(entity)
@@ -422,10 +424,10 @@ class raxAPI {
         criticalEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: criticalEntities))
         warningEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: warningEntities))
         okEntities = NSMutableArray(array: raxutils.sortEntitiesAndTheirEvents(entities: okEntities))
-        allCriticalAlarms = NSMutableArray(array: allCriticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        allWarningAlarms = NSMutableArray(array: allWarningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        allOkAlarms = NSMutableArray(array: allOkAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        allUnknownAlarms = NSMutableArray(array: allUnknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
+        allCriticalAlarms = NSMutableArray(array: allCriticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        allWarningAlarms = NSMutableArray(array: allWarningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        allOkAlarms = NSMutableArray(array: allOkAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        allUnknownAlarms = NSMutableArray(array: allUnknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
         results["allEntities"] = raxutils.sortEntitiesBySeverityThenTime(in_entities: allEntities)
         results["unknownEntities"] = unknownEntities
         results["criticalEntities"] = criticalEntities
@@ -528,7 +530,7 @@ class raxAPI {
         if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil
         }
-        return try! JSONSerialization.jsonObject(with: nsdata as Data) as! NSMutableDictionary
+        return try! (JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary).mutableCopy() as! NSMutableDictionary
     }
     
     class func getNotificationPlan(np_id:String) -> NSDictionary! {

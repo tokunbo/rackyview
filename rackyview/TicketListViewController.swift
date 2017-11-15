@@ -12,7 +12,7 @@ class TicketListViewController: UITableViewController {
         (self.parent as! TicketsTabBarController).dismiss(animated: true)
     }
     
-    @objc func refresh() {
+    @IBAction func refresh() {
         self.tableView.isScrollEnabled = false //Scrolling while loading causes a crash apparently
         raxutils.setUIBusy(v: self.navigationController!.view, isBusy: true)
         OperationQueue().addOperation {

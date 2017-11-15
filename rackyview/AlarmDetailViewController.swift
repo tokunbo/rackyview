@@ -14,53 +14,53 @@ class AlarmDetailViewController: UIViewController {
         self.view.endEditing(true)
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.title = alarm["alarm_label"] as! NSString as String
         notificationPlanLabel = self.view.viewWithTag(1) as! UILabel
         alarmCriteriaTextView = self.view.viewWithTag(2) as! UITextView
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "details", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(AlarmDetailViewController.details))
-        raxutils.setUIBusy(self.parentViewController?.view, isBusy: true)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "details", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmDetailViewController.details))
+        raxutils.setUIBusy(v: self.parent?.view, isBusy: true)
         self.view.addGestureRecognizer( UITapGestureRecognizer(target: self, action: #selector(AlarmDetailViewController.dismissKeyboard)))
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent(_:)), name: UIKeyboardDidHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent), name: NSNotification.Name.UIKeyboardDidShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(AlarmDetailViewController.keyboardAppearanceEvent), name: NSNotification.Name.UIKeyboardDidHide, object: nil)
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        NSOperationQueue().addOperationWithBlock {
-            self.alarm = raxAPI.getAlarm(self.alarm["entity_id"] as! NSString as String, alarmID: self.alarm["alarm_id"] as! NSString as String)
+        OperationQueue().addOperation {
+            self.alarm = raxAPI.getAlarm(entityID: self.alarm["entity_id"] as! NSString as String, alarmID: self.alarm["alarm_id"] as! NSString as String)
             if self.alarm == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
-            let notificationplanDetails:NSDictionary! = raxAPI.getNotificationPlan(self.alarm["notification_plan_id"] as! NSString as String)
+            let notificationplanDetails:NSDictionary! = raxAPI.getNotificationPlan(np_id: self.alarm["notification_plan_id"] as! NSString as String)
             if notificationplanDetails == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
-            NSOperationQueue.mainQueue().addOperationWithBlock {
+            OperationQueue().addOperation {
                 self.notificationPlanLabel.text = "Notification Plan: "+((notificationplanDetails["label"] as! NSString) as String)
                 self.alarmCriteriaTextView.text = (self.alarm["criteria"] as! NSString) as String
-                raxutils.setUIBusy(nil, isBusy: false)
+                raxutils.setUIBusy(v: nil, isBusy: false)
             }
         }
     }
     
-    func details() {
+    @IBAction func details() {
         var entity:NSDictionary!
         var check:NSDictionary!
         var responsedata:String = ""
-        raxutils.setUIBusy(self.parentViewController?.view, isBusy: true, expectingSignificantLoadTime: true)
-        NSOperationQueue().addOperationWithBlock {
-            check = raxAPI.getCheck(self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String)
+        raxutils.setUIBusy(v: self.parent?.view, isBusy: true, expectingSignificantLoadTime: true)
+        OperationQueue().addOperation {
+            check = raxAPI.getCheck(entityid: self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String)
             if check == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
-            entity = raxAPI.getEntity(self.alarm["entity_id"] as! NSString as String)
+            entity = raxAPI.getEntity(entityID: self.alarm["entity_id"] as! NSString as String)
             if entity == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
             if (check != nil && entity != nil) {
@@ -72,96 +72,97 @@ class AlarmDetailViewController: UIViewController {
                 responsedata += self.title as NSString! as String!
                 responsedata += "\n---------------------------------\n"
                 responsedata += "\n\nEntity Details___________________\n\n"
-                responsedata += raxutils.dictionaryToJSONstring(entity)
+                responsedata += raxutils.dictionaryToJSONstring(dictionary: entity)
                 responsedata += "\n\nCheck Details____________________\n\n"
-                responsedata += raxutils.dictionaryToJSONstring(check)
+                responsedata += raxutils.dictionaryToJSONstring(dictionary: check)
                 responsedata += "\n\nAlarm Details____________________\n\n"
-                responsedata += raxutils.dictionaryToJSONstring(self.alarm)
-                raxutils.confirmDialog("Details of this alarm, its check and Entity.\nCopy this info to clipboard?", message: responsedata, vc: self,
+                responsedata += raxutils.dictionaryToJSONstring(dictionary: self.alarm)
+                raxutils.confirmDialog(title: "Details of this alarm, its check and Entity.\nCopy this info to clipboard?", message: responsedata, vc: self,
                     cancelAction:{ (action:UIAlertAction!) -> Void in
                         return
                     },
                     okAction:{ (action:UIAlertAction!) -> Void in
-                        UIPasteboard.generalPasteboard().string = responsedata
+                        UIPasteboard.general.string = responsedata
                     })
             }
-            raxutils.setUIBusy(nil, isBusy: false)
+            raxutils.setUIBusy(v: nil, isBusy: false)
         }
     }
     
     @IBAction func testAlarm() {
         self.view.endEditing(true)
-        raxutils.setUIBusy(self.parentViewController?.view, isBusy: true, expectingSignificantLoadTime: true)
-        alarm["criteria"] = (self.view.viewWithTag(2) as! UITextView).text.stringByReplacingOccurrencesOfString("\n", withString: " ")
-        NSOperationQueue().addOperationWithBlock {
+        raxutils.setUIBusy(v: self.parent?.view, isBusy: true, expectingSignificantLoadTime: true)
+        alarm["criteria"] = (self.view.viewWithTag(2) as! UITextView).text!.replacingOccurrences(of: "n", with: "").lengthOfBytes(using: String.Encoding.utf8)
+        OperationQueue().addOperation {
             var nsdata:NSData!
             var postdata:String!
             if(self.testalarmpostdata != nil) {
                 self.testalarmpostdata["criteria"] = self.alarm["criteria"] as! NSString
-                nsdata = try? NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions())
+                nsdata = try? JSONSerialization.data(withJSONObject: self.testalarmpostdata, options: JSONSerialization.WritingOptions()) as NSData!
                 if nsdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
-                postdata = (NSString(data: nsdata, encoding: NSUTF8StringEncoding) as String!)
+                postdata = (NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!)
                 if postdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
                 
-                postdata = postdata.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.alphanumericCharacterSet())!
+                postdata = postdata.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
                 
-                nsdata = raxAPI.test_check_or_alarm(self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
                 if nsdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
             } else {
-                let check = raxAPI.getCheck(self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String)
+                let check = raxAPI.getCheck(entityid: self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String) as NSDictionary!
                 if check == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
-                postdata = raxutils.dictionaryToJSONstring(check)
-                nsdata = raxAPI.test_check_or_alarm(self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "check")
+                postdata = raxutils.dictionaryToJSONstring(dictionary: check!)
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "check")
                 if nsdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
                 self.testalarmpostdata = NSMutableDictionary()
-                let checkdata:NSArray! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: [])) as! NSArray!
+                let checkdata:NSArray! = try? JSONSerialization.jsonObject(with: nsdata as Data, options: []) as! NSArray
                 if checkdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
+                
                 self.testalarmpostdata["criteria"] = (self.alarm["criteria"] as! NSString)
                 self.testalarmpostdata["check_data"] = checkdata
-                nsdata = try? NSJSONSerialization.dataWithJSONObject(self.testalarmpostdata, options: NSJSONWritingOptions())
+                nsdata = try? JSONSerialization.data(withJSONObject: self.testalarmpostdata, options: JSONSerialization.WritingOptions()) as NSData!
                 if nsdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
-                postdata = NSString(data: nsdata, encoding: NSUTF8StringEncoding) as String!
-                nsdata = raxAPI.test_check_or_alarm(self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
+                postdata = NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
                 if nsdata == nil {
-                    raxutils.reportGenericError(self)
+                    raxutils.reportGenericError(vc: self)
                     return
                 }
             }
-            let results:NSArray! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: NSJSONReadingOptions.MutableContainers)) as! NSArray!
+            let results:NSArray! =  try? JSONSerialization.jsonObject(with: nsdata as Data, options: []) as! NSArray
             if results == nil {
-                raxutils.reportGenericError(self)
+                raxutils.reportGenericError(vc: self)
                 return
             }
-            let mymessage:String = "state: "+((results[0]["state"] as! NSString) as String)+"\nstatus: "+((results[0]["status"] as! NSString) as String)
-            raxutils.alert("AlarmTest with Criteria resulted in: ", message: mymessage, vc: self, onDismiss: nil)
-            raxutils.setUIBusy(nil, isBusy: false)
+            let mymessage:String = "state: "+(((results[0] as! NSDictionary)["state"] as! NSString) as String)+"\nstatus: "+(((results[0] as! NSDictionary)["status"] as! NSString) as String)
+            raxutils.alert(title: "AlarmTest with Criteria resulted in: ", message: mymessage, vc: self, onDismiss: nil)
+            raxutils.setUIBusy(v: nil, isBusy: false)
         }
     }
     
-    func keyboardAppearanceEvent(notification:NSNotification) {
-        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue()
-        if(alarmCriteriaTextView.isFirstResponder()) {
+    @IBAction func keyboardAppearanceEvent(notification:NSNotification) {
+        let keyboardSize:CGRect! = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+        if(alarmCriteriaTextView.isFirstResponder) {
             alarmCriteriaTextView.contentInset.bottom += keyboardSize.height
             alarmCriteriaTextView.scrollIndicatorInsets.bottom += keyboardSize.height
             insetsChanged = true

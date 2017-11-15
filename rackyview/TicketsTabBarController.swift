@@ -5,11 +5,15 @@ import Foundation
 
 class TicketsTabBarController: UITabBarController {
     
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<<wait...>>", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TicketsTabBarController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "<<wait...>>", style: UIBarButtonItemStyle.plain, target: self, action: #selector(TicketsTabBarController.actionDismiss))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
         self.navigationItem.leftBarButtonItem?.isEnabled = false
         self.navigationController?.navigationBar.barTintColor = UIColor.gray

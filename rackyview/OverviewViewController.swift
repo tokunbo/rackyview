@@ -174,7 +174,7 @@ class OverviewViewController: UIViewController {
         self.present( UINavigationController(rootViewController: entitylistview), animated: true, completion: nil)
     }
     
-    @IBAction func onViewSelect(button:UIButton) {
+    @IBAction func onViewSelect(_ button:UIButton) {
         if(button.tag == 1 && criticalEntities.count > 0) {
             updateUI(viewingstate: "Critical",entities:criticalEntities, viewButtonColor:UIColor.red,alarmCount:allCriticalAlarms.count)
         } else if(button.tag == 2 && warningEntities.count > 0) {

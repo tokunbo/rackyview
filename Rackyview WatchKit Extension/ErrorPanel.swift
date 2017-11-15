@@ -7,8 +7,8 @@ class ErrorPanelInterfaceController:WKInterfaceController {
         self.dismiss()
     }
     
-    override func awake(witchContext: AnyObject?) {
-        super.awake(witContext: withContext)
+     override func awake(withContext context: Any?) {
+        super.awake(withContext: context)
     }
     
     override func willActivate() {

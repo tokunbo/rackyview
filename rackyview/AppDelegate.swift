@@ -57,11 +57,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
             } else {
                 las = raxAPI.latestAlarmStatesUsingSavedUsernameAndPassword()
             }
-            if las != nil && las.object(forKey: "latestAlarmStates") != nil {
+            if las != nil && las["latestAlarmStates"] != nil {
                 las = las["latestAlarmStates"] as! NSMutableDictionary
-                replydata["critCount"] = (las.object(forKey: "criticalEntities") as! NSArray).count as AnyObject
-                replydata["warnCount"] = (las.object(forKey: "warningEntities") as! NSArray).count as AnyObject
-                replydata["okCount"] = (las.object(forKey: "okEntities") as! NSArray).count as AnyObject
+                replydata["critCount"] = (las["criticalEntities"] as! NSArray).count as AnyObject
+                replydata["warnCount"] = (las["warningEntities"] as! NSArray).count as AnyObject
+                replydata["okCount"] = (las["okEntities"] as! NSArray).count as AnyObject
             } else {
                 replydata["error"] = "Problem getting data from host iOS device" as AnyObject
             }

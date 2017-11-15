@@ -9,12 +9,16 @@ class ProcessListViewController: UITableViewController {
     var sortAscend:Bool = true
     var sortSelector:String = "localizedCaseInsensitiveCompare:"
     
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.view.backgroundColor = UIColor.gray
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ProcessListViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ProcessListViewController.actionDismiss))
         self.navigationItem.leftBarButtonItem?.tintColor = UIColor.white
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "sort", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ProcessListViewController.sortProcesses))
         self.navigationItem.rightBarButtonItem?.tintColor = UIColor.white
@@ -31,7 +35,7 @@ class ProcessListViewController: UITableViewController {
         refresh()
     }
     
-    @objc func refresh() {
+    @IBAction func refresh() {
         raxutils.setUIBusy(v: self.navigationController?.view, isBusy: true)
         let pidsData:NSDictionary! = raxAPI.getAgentInfoByType(agentID: agentid, type: "processes")
         self.refreshControl?.endRefreshing()
@@ -59,7 +63,7 @@ class ProcessListViewController: UITableViewController {
         }
     }
     
-    @objc func sortProcesses() {
+    @IBAction func sortProcesses() {
         if processes == nil || processes.count == 0 {
             return
         }
