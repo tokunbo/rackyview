@@ -39,7 +39,7 @@ class AlarmDetailViewController: UIViewController {
                 raxutils.reportGenericError(vc: self)
                 return
             }
-            OperationQueue().addOperation {
+            OperationQueue.main.addOperation {
                 self.notificationPlanLabel.text = "Notification Plan: "+((notificationplanDetails["label"] as! NSString) as String)
                 self.alarmCriteriaTextView.text = (self.alarm["criteria"] as! NSString) as String
                 raxutils.setUIBusy(v: nil, isBusy: false)
@@ -92,12 +92,12 @@ class AlarmDetailViewController: UIViewController {
     @IBAction func testAlarm() {
         self.view.endEditing(true)
         raxutils.setUIBusy(v: self.parent?.view, isBusy: true, expectingSignificantLoadTime: true)
-        alarm["criteria"] = (self.view.viewWithTag(2) as! UITextView).text!.replacingOccurrences(of: "n", with: "").lengthOfBytes(using: String.Encoding.utf8)
+        self.alarm["criteria"] = (self.view.viewWithTag(2) as! UITextView).text!.replacingOccurrences(of: "\n", with: " ")
         OperationQueue().addOperation {
             var nsdata:NSData!
             var postdata:String!
             if(self.testalarmpostdata != nil) {
-                self.testalarmpostdata["criteria"] = self.alarm["criteria"] as! NSString
+                self.testalarmpostdata["criteria"] = self.alarm["criteria"] as! String
                 nsdata = try? JSONSerialization.data(withJSONObject: self.testalarmpostdata, options: JSONSerialization.WritingOptions()) as NSData!
                 if nsdata == nil {
                     raxutils.reportGenericError(vc: self)
@@ -108,24 +108,41 @@ class AlarmDetailViewController: UIViewController {
                     raxutils.reportGenericError(vc: self)
                     return
                 }
+                /*
+                 postdata =  postdata.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
+                 
+                 I guess this isn't needed anymore as it's now causing problems with the API.
+                 Commenting out for now but if complicated check syntax starts to fail again, it's probably beause of chars not being escaped
+                 for the JSON that's sent to the server.
+                 */
                 
-                postdata = postdata.addingPercentEncoding(withAllowedCharacters: .alphanumerics)!
-                
-                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! String, postdata: postdata, targetType: "alarm")
                 if nsdata == nil {
                     raxutils.reportGenericError(vc: self)
                     return
                 }
+                let tmpresponse = NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!
+                if(tmpresponse?.hasPrefix("ERROR:"))! {
+                    raxutils.alert(title: "Problem", message: tmpresponse!, vc: self, onDismiss: nil)
+                    raxutils.setUIBusy(v: nil, isBusy: false)
+                    return
+                }
             } else {
-                let check = raxAPI.getCheck(entityid: self.alarm["entity_id"] as! NSString as String, checkid: self.alarm["check_id"] as! NSString as String) as NSDictionary!
+                let check = raxAPI.getCheck(entityid: self.alarm["entity_id"] as! String, checkid: self.alarm["check_id"] as! NSString as String) as NSDictionary!
                 if check == nil {
                     raxutils.reportGenericError(vc: self)
                     return
                 }
                 postdata = raxutils.dictionaryToJSONstring(dictionary: check!)
-                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "check")
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! String, postdata: postdata, targetType: "check")
                 if nsdata == nil {
                     raxutils.reportGenericError(vc: self)
+                    return
+                }
+                var tmpresponse = NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!
+                if(tmpresponse?.hasPrefix("ERROR:"))! {
+                    raxutils.alert(title: "Problem", message: tmpresponse!, vc: self, onDismiss: nil)
+                    raxutils.setUIBusy(v: nil, isBusy: false)
                     return
                 }
                 self.testalarmpostdata = NSMutableDictionary()
@@ -135,7 +152,7 @@ class AlarmDetailViewController: UIViewController {
                     return
                 }
                 
-                self.testalarmpostdata["criteria"] = (self.alarm["criteria"] as! NSString)
+                self.testalarmpostdata["criteria"] = self.alarm["criteria"] as! String
                 self.testalarmpostdata["check_data"] = checkdata
                 nsdata = try? JSONSerialization.data(withJSONObject: self.testalarmpostdata, options: JSONSerialization.WritingOptions()) as NSData!
                 if nsdata == nil {
@@ -143,9 +160,15 @@ class AlarmDetailViewController: UIViewController {
                     return
                 }
                 postdata = NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!
-                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! NSString as String, postdata: postdata, targetType: "alarm")
+                nsdata = raxAPI.test_check_or_alarm(entityid: self.alarm["entity_id"] as! String, postdata: postdata, targetType: "alarm")
                 if nsdata == nil {
                     raxutils.reportGenericError(vc: self)
+                    return
+                }
+                tmpresponse = NSString(data: nsdata as Data, encoding: String.Encoding.utf8.rawValue) as String!
+                if(tmpresponse?.hasPrefix("ERROR:"))! {
+                    raxutils.alert(title: "Problem", message: tmpresponse!, vc: self, onDismiss: nil)
+                    raxutils.setUIBusy(v: nil, isBusy: false)
                     return
                 }
             }
@@ -154,7 +177,7 @@ class AlarmDetailViewController: UIViewController {
                 raxutils.reportGenericError(vc: self)
                 return
             }
-            let mymessage:String = "state: "+(((results[0] as! NSDictionary)["state"] as! NSString) as String)+"\nstatus: "+(((results[0] as! NSDictionary)["status"] as! NSString) as String)
+            let mymessage:String = "state: "+(((results[0] as! NSDictionary)["state"]) as! String)+"\nstatus: "+(((results[0] as! NSDictionary)["status"]) as! String)
             raxutils.alert(title: "AlarmTest with Criteria resulted in: ", message: mymessage, vc: self, onDismiss: nil)
             raxutils.setUIBusy(v: nil, isBusy: false)
         }

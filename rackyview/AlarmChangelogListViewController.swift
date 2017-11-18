@@ -14,8 +14,8 @@ class AlarmChangelogListViewController: UITableViewController {
     var alarmID:String!
     var changelogs:NSArray!
     
-    override func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        self.navigationController?.popViewController(animated: animated)
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -31,7 +31,7 @@ class AlarmChangelogListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.gray
         self.navigationController!.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController!.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmChangelogListViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmChangelogListViewController.actionDismiss))
         self.navigationController!.navigationBar.tintColor = UIColor.white
         self.navigationController!.navigationBar.barTintColor = UIColor.gray
         self.navigationController!.navigationBar.isTranslucent = false

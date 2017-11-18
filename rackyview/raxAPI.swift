@@ -557,8 +557,12 @@ class raxAPI {
         } catch _ as NSError {
            
         }
-        if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
-            nsdata = nil
+
+        if resp != nil && (resp as! HTTPURLResponse).statusCode != 200 {
+            var message = "ERROR: Something went wrong with this alarm(phase:\(targetType))"
+            message += "\nHTTP code \((resp as! HTTPURLResponse).statusCode)"
+            message += NSString(data: nsdata! as Data, encoding: String.Encoding.utf8.rawValue)! as String
+            nsdata = message.data(using: .utf8)! as NSData
         }
         return nsdata
     }

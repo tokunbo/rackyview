@@ -1,6 +1,8 @@
 import UIKit
 import XCTest
-//@testable import Rackyview
+
+
+@testable import Rackyview
 
 class rackyviewTests: XCTestCase {
     var isTestComplete:Bool = false
@@ -23,6 +25,7 @@ class rackyviewTests: XCTestCase {
     override func setUp() {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         super.setUp()
+       
         self.isTestComplete = false
     }
     
@@ -45,6 +48,10 @@ class rackyviewTests: XCTestCase {
         let password = raxutils.getPasswordFromKeychain()
         if(password != mySecretMessage) {
             XCTFail("Returned password: \(String(describing: password)), doesn't equal original: \(mySecretMessage)")
+        }
+        raxutils.deleteDataInKeychain()
+        if(raxutils.getDataFromKeychain() != nil) {
+            XCTFail("appData was found in the keychain even though we previously attempted to delete it.")
         }
         
     }

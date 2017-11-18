@@ -118,13 +118,16 @@ class ServerDetailViewController: UIViewController {
         let selectrebootType:()->() = {
             let message = "We can reboot soft, tell the OS to gracefully shutdown and restart.\n Or go hardcore, similar to just cutting the power for a moment.\n What do you wanna do?"
             let alert = UIAlertController(title: "Reboot method", message: message, preferredStyle: UIAlertControllerStyle.actionSheet)
-            alert.addAction(UIAlertAction(title: "Soft", style: UIAlertActionStyle.default, handler: { (action:UIAlertAction) -> Void in
+            alert.addAction(UIAlertAction(title: "Soft", style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction) -> Void in
                 reboottype = "SOFT"
                 askForConfirmationAgain()
             }))
-            alert.addAction(UIAlertAction(title: "Hard", style: UIAlertActionStyle.default, handler: { (action:UIAlertAction) -> Void in
+            alert.addAction(UIAlertAction(title: "Hard", style: UIAlertActionStyle.destructive, handler: { (action:UIAlertAction) -> Void in
                 reboottype = "HARD"
                 askForConfirmationAgain()
+            } ))
+            alert.addAction(UIAlertAction(title: "*** Don't Do Anything ***", style: UIAlertActionStyle.cancel, handler: { (action:UIAlertAction) -> Void in
+                return
             } ))
             self.present(alert, animated: true, completion: nil)
         }

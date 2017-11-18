@@ -24,7 +24,7 @@ class NoAlarmsViewController: UIViewController {
         self.title = "Rackyview Minimal Mode"
     }
     
-    @IBAction func btnPressed(button:UIButton) {
+    @IBAction func btnPressed(_ button:UIButton) {
         if button.tag == 1 {
             let miscviewcontroller = UIStoryboard(name:"Main",bundle:nil).instantiateViewController(withIdentifier: "MiscViewController") as! MiscViewController
             miscviewcontroller.unknownEntities = unknownEntities

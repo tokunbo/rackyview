@@ -6,15 +6,15 @@ import Foundation
 class ServerListViewController: UITableViewController {
     var servers:NSArray!
 
-   override func dismiss(animated: Bool, completion: (() -> Void)? = nil) {
-        self.dismiss(animated: animated, completion: completion)
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.view.backgroundColor = UIColor.black
         self.navigationController?.navigationBar.titleTextAttributes = [NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController?.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "↓ Hide", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ServerListViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "↓ Hide", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ServerListViewController.actionDismiss))
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "↻ Refresh", style: UIBarButtonItemStyle.plain, target: self, action: #selector(ServerListViewController.refresh))
         self.navigationController?.navigationBar.tintColor = UIColor.white
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 0.2, green: 0.2, blue: 0.5, alpha: 1)

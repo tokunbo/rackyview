@@ -33,10 +33,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         self.window!.rootViewController = navctrl
     }
     
-    private func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject : AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        print("This is the first method called by a starting app on iOS, like how 'int main(int argc, char** argv)' is the first method function called in a C program.")
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        loginview = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "LoginView") as! LoginViewController
+        self.loginview = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "LoginView") as! LoginViewController
         beginApp()
         if(WCSession.isSupported()) {
             let session = WCSession.default
@@ -152,7 +152,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         return coordinator
     }()
     
-    lazy var managedObjectContext: NSManagedObjectContext? = {
+    //The @objc attribute makes this accessible when it's cast to AnyObject. Remove it and the tests in XCTestCase will fail.
+    @objc lazy var managedObjectContext: NSManagedObjectContext? = {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         if coordinator == nil {

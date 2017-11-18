@@ -41,7 +41,7 @@ class MiscViewController: UIViewController {
         }
     }
 
-    @IBAction func onButtonPress(button:UIButton) {
+    @IBAction func onButtonPress(_ button:UIButton) {
         if(button.tag == 1) {
             let confirmLogout:()->() = {
                 raxutils.confirmDialog(title: "You really sure you wanna logout?", message: "You'll lose all your favorites and the knowledge of what ticktets have been read on this iOS device.\n\nReally logout?", vc: self,

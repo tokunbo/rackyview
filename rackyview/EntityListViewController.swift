@@ -109,11 +109,11 @@ class EntityListViewController: UITableViewController {
         var favAction = ""
         var bgColor:UIColor
         if(raxutils.entityHasBeenMarkedAsFavorite(entity: entity)) {
-            myTitle = "Remove\nfrom\nFavorites"
+            myTitle = "Favs\nDrop"
             favAction = "remove"
             bgColor = UIColor(red: 0.6, green: 0.3, blue: 0.3, alpha: 1)
         } else {
-            myTitle = "Add\nto\nFavorites"
+            myTitle = "Favs\nAdd"
             favAction = "add"
             bgColor = UIColor.blue
         }
@@ -155,8 +155,9 @@ class EntityListViewController: UITableViewController {
         alarmlistview.viewingstate = self.viewingstate
         self.navigationController?.navigationBar.barTintColor = self.highestSeverityFoundColor
         if entity["wasntFound"] != nil {
-            raxutils.alert(title: "Can't view alarms on this entity",message:"Either it was deleted or there are no valid alarms attached to it. Check the rackspace website.",
-                vc:self, onDismiss: nil)
+            raxutils.alert(title: "Can't view alarms on this entity",
+                           message:"Either it was deleted or there are no valid alarms attached to it. Check the rackspace website.",
+                           vc:self, onDismiss: nil)
             tableView.cellForRow(at: indexPath)?.isSelected = false
         } else {
             self.present(UINavigationController(rootViewController: alarmlistview), animated: true, completion: {

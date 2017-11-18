@@ -17,7 +17,7 @@ class TicketDetailsViewController: UIViewController {
         } else {
             btn.titleLabel?.text = "←"
         }
-        onCommentNavigationButtonClick(btn: btn)
+        onCommentNavigationButtonClick(btn)
     }
     
     @IBAction func dismissKeyboard() {
@@ -127,7 +127,7 @@ class TicketDetailsViewController: UIViewController {
         }
     }
     
-    @IBAction func onCommentNavigationButtonClick(btn: UIButton) {
+    @IBAction func onCommentNavigationButtonClick(_ btn: UIButton) {
         if(comments.count < 1) {
             return
         }

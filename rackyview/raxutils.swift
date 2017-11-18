@@ -272,7 +272,8 @@ class raxutils {
         let openTickets = customSettings["openTickets"] as! NSMutableDictionary
         let checkedTickets = NSMutableArray()
         for t in tickets {
-            currentTicket = t as! NSMutableDictionary
+            print("t is \(t) \n tickets is \(tickets) ")
+            currentTicket = (t as! NSDictionary).mutableCopy() as! NSMutableDictionary
             cachedTicket = openTickets[currentTicket["ticket-id"] as! String] as! NSMutableDictionary!
             if cachedTicket == nil {
                 currentTicket["hasUnreadComments"] = true
@@ -350,13 +351,14 @@ class raxutils {
         raxutils.saveUserdata(userdata: NSKeyedArchiver.archivedData(withRootObject: GlobalState.instance.userdata) as NSData)
     }
     
+   
+    
     class func getUserdata() -> NSData! {
-        var mocontext:NSManagedObjectContext!
-        mocontext = (UIApplication.shared.delegate as AnyObject).managedObjectContext
+        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as! AnyObject).managedObjectContext
         if mocontext == nil {
             return nil
         }
-        let res:NSArray! = try! mocontext!.fetch(NSFetchRequest(entityName: "AppData")) as NSArray
+        let res:NSArray! = try! mocontext.fetch(NSFetchRequest(entityName: "AppData")) as NSArray
         if res.count > 0 {
             return((res[0] as! NSManagedObject).value(forKey: "userdataNSDATA") as! NSData!)
         }
@@ -365,20 +367,28 @@ class raxutils {
     
     class func saveUserdata(userdata:NSData) {
         self.deleteUserdata()
-        var mocontext:NSManagedObjectContext!
-        mocontext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
-        let appdata:AnyObject! = NSEntityDescription.insertNewObject(forEntityName: "AppData", into: mocontext!)
+        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as! AnyObject).managedObjectContext
+        if mocontext == nil {
+            print("saveUserData() failed to get context")
+            return
+        }
+        
+        let appdata:AnyObject! = NSEntityDescription.insertNewObject(forEntityName: "AppData", into: mocontext)
         appdata.setValue(userdata, forKey: "userdataNSDATA")
         do {
-            try mocontext!.save()
+            try mocontext.save()
         } catch _ {
-            //TODO: Probably should do something if a save failed, rather than silently fail
+            print("saveUserData() failed to save")
         }
     }
     
     class func deleteUserdata() {
-        var mocontext:NSManagedObjectContext!
-        mocontext = (UIApplication.shared.delegate as! AppDelegate).managedObjectContext
+        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as AnyObject).managedObjectContext
+        
+        if mocontext == nil {
+            print("deleteUserData() failed to get context")
+            return
+        }
         
         for e in NSArray(array: try! mocontext!.fetch(NSFetchRequest(entityName: "AppData"))) {
             mocontext!.delete(e as! NSManagedObject)
@@ -386,6 +396,7 @@ class raxutils {
         do {
             try mocontext!.save()
         } catch _ {
+            print("deleteUserData() failed to override existing data with empty")
         }
     }
     
@@ -397,17 +408,14 @@ class raxutils {
         The value of this property is the same for apps that come from the same vendor running on the same device. 
         A different value is returned for apps on the same device that come from different vendors, and for apps on different devices regardless of vendor.
         ........and this is all going into the iOS Keychain after encryption.*/
-        let plaindata_ptr:UnsafePointer = UnsafePointer<UInt8>(plaindata.bytes.assumingMemoryBound(to: UInt8.self))
-        var key_ptr:UnsafePointer<UInt8>? = nil //TODO: Fix this
-        key.data(using: String.Encoding.utf8, allowLossyConversion: false)?.withUnsafeBytes {
-            key_ptr = $0.successor()
-        }
+        let plaindata_ptr = UnsafePointer<UInt8>(plaindata.bytes.assumingMemoryBound(to: UInt8.self))
+        let key_ptr:UnsafePointer<Int8> = (key as NSString).utf8String!
         let key_buf = UnsafeMutablePointer<UInt8>.allocate(capacity: key.lengthOfBytes(using: String.Encoding.utf8)+1)
         memset(key_buf, 0, key.lengthOfBytes(using: String.Encoding.utf8)+1)//C string needs to be null-terminated
         memcpy(key_buf, key_ptr, key.lengthOfBytes(using: String.Encoding.utf8))
-        let cipherdata_ptr:UnsafeMutablePointer<UInt8> = rackyEncrypt(plaindata_ptr, key_buf, Int32(plaindata.length), &cipherdata_length)
-        if (cipherdata_length > 0) {
-            data = NSData(bytesNoCopy: cipherdata_ptr, length: Int(cipherdata_length), freeWhenDone: true)
+        let cipherdata_ptr:UnsafeMutablePointer<UInt8>? = rackyEncrypt(plaindata_ptr, key_buf, Int32(plaindata.length), &cipherdata_length)
+        if (cipherdata_ptr != nil && cipherdata_length > 0) {
+            data = NSData(bytesNoCopy: cipherdata_ptr!, length: Int(cipherdata_length), freeWhenDone: true)
         }
         free(key_buf)
         return data
@@ -418,10 +426,7 @@ class raxutils {
         var plaindata_length:CInt = 0
         let key = UIDevice().identifierForVendor!.uuidString
         let cipherdata_ptr:UnsafePointer = UnsafePointer<UInt8>(cipherdata.bytes.assumingMemoryBound(to: UInt8.self))
-        var key_ptr:UnsafePointer<UInt8>? = nil //TODO: Fix this
-        key.data(using: String.Encoding.utf8, allowLossyConversion: false)?.withUnsafeBytes {
-            key_ptr = $0.successor()
-        }
+        let key_ptr:UnsafePointer<Int8> = (key as NSString).utf8String!
         let key_buf = UnsafeMutablePointer<UInt8>.allocate(capacity: key.lengthOfBytes(using: String.Encoding.utf8)+1)
         memset(key_buf, 0, key.lengthOfBytes(using: String.Encoding.utf8)+1)//C string needs to be null-terminated
         memcpy(key_buf, key_ptr, key.lengthOfBytes(using: String.Encoding.utf8))
@@ -561,12 +566,13 @@ class raxutils {
         let sortedAlarmEventList:NSMutableArray = NSMutableArray()
         let tmpEntityArray:NSMutableArray = NSMutableArray()
 
-        for e in entities {
+        for case var e as NSDictionary in entities {
+            e = e.mutableCopy() as! NSMutableDictionary
             sortedAlarmEventList.removeAllObjects()
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["criticalAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["warningAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["okAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
-            sortedAlarmEventList.addObjects(from: ((e as! NSDictionary)["unknownAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: (e["criticalAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: (e["warningAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: (e["okAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
+            sortedAlarmEventList.addObjects(from: (e["unknownAlarms"] as! NSArray).sortedArray(comparator: compareAlarmEvents))
             (e as AnyObject).set(sortedAlarmEventList.copy(), forKey: "latest_alarm_states")
             tmpEntityArray.add(e)
         }
@@ -590,11 +596,11 @@ class raxutils {
             } else {
                 unknownAlarms.add(alarm)
             }
-        }/*
-        outputArray.addObjects(from: unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))
-        outputArray.addObjects(from: okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents as! (Any, Any) -> ComparisonResult))*/
+        }
+        outputArray.addObjects(from: unknownAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        outputArray.addObjects(from: criticalAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        outputArray.addObjects(from: warningAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
+        outputArray.addObjects(from: okAlarms.sortedArray(comparator: raxutils.compareAlarmEvents))
         return outputArray.copy() as! NSArray
     }
     

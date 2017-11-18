@@ -23,8 +23,9 @@ class TicketListViewController: UITableViewController {
                 })
                 return
             }
-            let responsedata:NSDictionary! = try? JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
-            //let responsedata:NSDictionary! = (try? NSJSONSerialization.JSONObjectWithData(nsdata, options: //NSJSONReadingOptions.MutableContainers)) as! NSDictionary!
+            //let responsedata:NSDictionary! = try? JSONSerialization.jsonObject(with: nsdata as Data) as! NSDictionary
+            let responsedata:NSDictionary! = (try? JSONSerialization.jsonObject(with: nsdata as Data, options: JSONSerialization.ReadingOptions.mutableContainers)) as! NSDictionary!
+
             if(responsedata == nil || responsedata["tickets"] == nil) {
                 raxutils.alert(title: "Some kind of error",
                                message: "expired websessionid or unexpected data returned",
@@ -33,8 +34,8 @@ class TicketListViewController: UITableViewController {
                               })
                 return
             }
-            self.tickets.removeAllObjects()
-            self.tickets.add((responsedata["tickets"] as AnyObject).object(forKey: "ticket") as! NSArray)
+            self.tickets = ((responsedata["tickets"] as! NSDictionary)["ticket"] as! NSArray).mutableCopy() as! NSMutableArray
+            
             if self.title! as NSString as String == "Open Tickets" {
                 self.tickets = raxutils.syncTickets(tickets: self.tickets)
             }
@@ -80,7 +81,7 @@ class TicketListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (tickets.count == 0) {
+        if (tickets == nil || tickets.count == 0) {
             let emptyMessage:UILabel = UILabel(frame: CGRect(x: 0, y: 0,
                                                              width: self.view.bounds.size.width,
                                                              height: self.view.bounds.size.height))
@@ -124,7 +125,7 @@ class TicketListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "EntityListTableCell")!
+        let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "TicketListTableCell")!
         let ticket:NSDictionary = tickets[indexPath.row] as! NSDictionary
         (cell.viewWithTag(1) as! UILabel).text = (ticket["subject"] as! NSString) as String
         (cell.viewWithTag(2) as! UILabel).text = "Updated: "

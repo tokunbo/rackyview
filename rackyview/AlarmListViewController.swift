@@ -13,6 +13,10 @@ class AlarmListViewController: UITableViewController {
     var highestSeverityFoundColor:UIColor = UIColor.black
     var timer:Timer!
 
+    @IBAction func actionDismiss() {
+        super.dismiss(animated: true, completion: nil)
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         isStreaming = false
@@ -29,7 +33,7 @@ class AlarmListViewController: UITableViewController {
         self.view.backgroundColor = UIColor.gray
         self.navigationController!.navigationBar.titleTextAttributes = [NSAttributedStringKey.font: UIFont.systemFont(ofSize: 16), NSAttributedStringKey.foregroundColor: UIColor.white]
         self.navigationController!.setNavigationBarHidden(false, animated: true)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmListViewController.dismiss))
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "←Dismiss", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AlarmListViewController.actionDismiss))
         self.navigationController!.navigationBar.tintColor = UIColor.white
         self.navigationController!.navigationBar.barTintColor = UIColor.gray
         self.navigationController!.navigationBar.isTranslucent = false
@@ -114,11 +118,11 @@ class AlarmListViewController: UITableViewController {
         var favAction = ""
         var bgColor:UIColor
         if(raxutils.alarmHasBeenMarkedAsFavorite(alarm: alarm)) {
-            myTitle = "Remove\nfrom\nFavorites"
+            myTitle = "Favs\nDrop"
             favAction = "remove"
             bgColor = UIColor(red: 0.6, green: 0.3, blue: 0.3, alpha: 1)
         } else {
-            myTitle = "Add\nto\nFavorites"
+            myTitle = "Favs\nAdd"
             favAction = "add"
             bgColor = UIColor.blue
         }

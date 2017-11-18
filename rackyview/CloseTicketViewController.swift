@@ -43,7 +43,7 @@ class CloseTicketViewController:UIViewController{
         viewDefaultFrame = self.view.frame
     }
     
-    @IBAction func sliderMoved(sender: UISlider) {
+    @IBAction func sliderMoved(_ sender: UISlider) {
         let roundedValue = (Int)(sender.value)
         OperationQueue.main.addOperation {
             sender.setValue((Float)(roundedValue), animated: true)
@@ -54,7 +54,7 @@ class CloseTicketViewController:UIViewController{
     @IBAction func closeTicket() {
         let actuallyCloseTicket:()->() = {
             raxutils.setUIBusy(v: self.view, isBusy: true)
-            OperationQueue().addOperation {
+            OperationQueue.main.addOperation {
                 let responseCode:Int! = raxAPI.closeTicket(t_id: (self.ticket["ticket-id"] as! NSString) as String, rating: (Int)(self.slider.value), comment: self.reasonText.text)
                 if responseCode == nil {
                     raxutils.reportGenericError(vc: self)
