@@ -257,8 +257,16 @@ class raxutils {
     }
     
     class func logout(v:UIViewController) {
-        raxutils.deleteUserdata()
-        _ = raxutils.deleteDataInKeychain()
+        let retval = raxutils.deleteUserdata()
+        guard retval == 0 else {
+            raxutils.alert(title: "Delete data from managedObjectContext failed (error:\(retval))", message:"Please uninstall and reinstall app to clear everything out.\nSorry for the inconvenience.",vc:getOnscreenViewController(),onDismiss: nil)
+            return
+        }
+        let osstatus = raxutils.deleteDataInKeychain()
+        guard (osstatus == noErr || osstatus == errSecItemNotFound) else {
+            raxutils.alert(title: "Delete data from keychain failed (OSStatus:\(osstatus))", message:"Please uninstall and reinstall app to clear everything out.\nSorry for the inconvenience.",vc:getOnscreenViewController(),onDismiss: nil)
+            return
+        }
         GlobalState.reset()
         (UIApplication.shared.delegate as! AppDelegate).beginApp()
     }
@@ -354,7 +362,7 @@ class raxutils {
    
     
     class func getUserdata() -> NSData! {
-        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as! AnyObject).managedObjectContext
+        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as AnyObject).managedObjectContext
         if mocontext == nil {
             return nil
         }
@@ -366,8 +374,8 @@ class raxutils {
     }
     
     class func saveUserdata(userdata:NSData) {
-        self.deleteUserdata()
-        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as! AnyObject).managedObjectContext
+        _ = self.deleteUserdata()
+        let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as AnyObject).managedObjectContext
         if mocontext == nil {
             print("saveUserData() failed to get context")
             return
@@ -382,14 +390,12 @@ class raxutils {
         }
     }
     
-    class func deleteUserdata() {
+    class func deleteUserdata() -> UInt8 {
         let mocontext:NSManagedObjectContext! = (UIApplication.shared.delegate as AnyObject).managedObjectContext
-        
         if mocontext == nil {
             print("deleteUserData() failed to get context")
-            return
+            return 1
         }
-        
         for e in NSArray(array: try! mocontext!.fetch(NSFetchRequest(entityName: "AppData"))) {
             mocontext!.delete(e as! NSManagedObject)
         }
@@ -397,7 +403,9 @@ class raxutils {
             try mocontext!.save()
         } catch _ {
             print("deleteUserData() failed to override existing data with empty")
+            return 2
         }
+        return 0
     }
     
     class func encryptData(plaindata:NSData) -> NSData! {

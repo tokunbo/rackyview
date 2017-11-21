@@ -81,7 +81,7 @@ class TicketListViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (tickets == nil || tickets.count == 0) {
+        if (tickets.count == 0) {
             let emptyMessage:UILabel = UILabel(frame: CGRect(x: 0, y: 0,
                                                              width: self.view.bounds.size.width,
                                                              height: self.view.bounds.size.height))
