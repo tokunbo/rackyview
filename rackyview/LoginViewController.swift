@@ -29,7 +29,6 @@ class LoginViewController: UIViewController,URLSessionTaskDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-               
         if(passwordFromKeychain != nil && GlobalState.instance.userdata != nil) {
             //If a password is found in the keychain but userdata wasn't found in the appdata area, that means the user
             //must have removed & reinstalled the app without logging out. Because removing an app doesn't automatically

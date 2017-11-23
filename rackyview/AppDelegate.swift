@@ -8,15 +8,15 @@ import WatchConnectivity
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
-        
+        print("Session Active: \(activationState), Error: \(String(describing: error))")
     }
     
     func sessionDidBecomeInactive(_ session: WCSession) {
-        
+        print("Watch session inactive")
     }
     
     func sessionDidDeactivate(_ session: WCSession) {
-        
+        print("Watch session deactivated")
     }
     
     var window: UIWindow?
@@ -37,17 +37,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, WCSessionDelegate {
         print("This is the first method called by a starting app on iOS, like how 'int main(int argc, char** argv)' is the first method function called in a C program.")
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.loginview = UIStoryboard(name:"Main", bundle:nil).instantiateViewController(withIdentifier: "LoginView") as! LoginViewController
-        beginApp()
         if(WCSession.isSupported()) {
             let session = WCSession.default
             session.delegate = self
             session.activate()
+            print("session.activated on main iOS device")
+        } else {
+            print("main device could not do session.activate()")
         }
+        beginApp()
         return true
     }
 
-    private func session(session: WCSession, didReceiveMessage message: [String : AnyObject], replyHandler: @escaping ([String : AnyObject]) -> Void) {
+    func session(_ session: WCSession, didReceiveMessage message: [String : Any], replyHandler: @escaping ([String : Any]) -> Void) {
         DispatchQueue.global(qos: .background).async {
+            print("The watch is talking to me")
             let taskID = UIApplication.shared.beginBackgroundTask(expirationHandler: {})
             var replydata = [String: AnyObject]()
             var las:NSMutableDictionary!

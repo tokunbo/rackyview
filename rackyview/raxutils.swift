@@ -280,7 +280,6 @@ class raxutils {
         let openTickets = customSettings["openTickets"] as! NSMutableDictionary
         let checkedTickets = NSMutableArray()
         for t in tickets {
-            print("t is \(t) \n tickets is \(tickets) ")
             currentTicket = (t as! NSDictionary).mutableCopy() as! NSMutableDictionary
             cachedTicket = openTickets[currentTicket["ticket-id"] as! String] as! NSMutableDictionary!
             if cachedTicket == nil {

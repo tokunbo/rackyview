@@ -18,12 +18,17 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
     @IBOutlet var oklabel:WKInterfaceLabel!
     
     @IBAction func refresh() {
-        let myUserInfo = ["action":"latestAlarmStates"]
+        let myUserInfo:[String:Any] = ["action":"latestAlarmStates"]
+        self.critlabel.setText("Waiting for iOS login...")
+        self.warnlabel.setText("Waiting for iOS login...")
+        self.oklabel.setText("Waiting for iOS login...")
         self.critlabel.setText("loading...")
         self.warnlabel.setText("loading...")
         self.oklabel.setText("loading...")
+        print("watch sending request for data...")
         WCSession.default.sendMessage(myUserInfo,
             replyHandler: {(response:[String:Any]) -> Void in
+                print("iOS replied the watch with: \(response)")
                 DispatchQueue.main.sync {
                     if response.index(forKey: "error") != nil {
                         self.presentController(withName: "ErrorPanel", context: response)
@@ -54,7 +59,9 @@ class MainInterfaceController:WKInterfaceController, WCSessionDelegate {
     override func willActivate() {
         // This method is called when watch view controller is about to be visible to user
         super.willActivate()
+        print("watch:willActivate")
         if WCSession.isSupported() {
+            print("watch:wcsession.supported")
             let wcSession = WCSession.default
             wcSession.delegate = self
             wcSession.activate()

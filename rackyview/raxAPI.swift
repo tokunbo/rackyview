@@ -146,7 +146,7 @@ class raxAPI {
         do {
             nsdata = try self.sendSynchronousRequest(request: self._createRequest(method: "GET", url: url, reqbody: nil, qparams: nil, content_type: nil)!, returningResponse: &resp)
         } catch _ as NSError {
-            print("Error in getUserIdForUsername")
+            print("Error in getUserIdForUsername... strange")
         }
         if(resp == nil || (resp as! HTTPURLResponse).statusCode != 200 ) {
             return nil

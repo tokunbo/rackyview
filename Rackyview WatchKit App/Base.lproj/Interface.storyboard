@@ -1,8 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="AgC-eL-Hgc">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="13529" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="AgC-eL-Hgc">
+    <device id="watch38" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="8092"/>
+        <deployment identifier="watchOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13527"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="13507"/>
     </dependencies>
     <scenes>
         <!--Entities-->
@@ -18,7 +22,7 @@
                                     </connections>
                                 </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="7bL-gU-VDx">
-                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </label>
                             </items>
                         </group>
@@ -31,7 +35,7 @@
                                     </connections>
                                 </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000004" id="Tp9-aN-qUw">
-                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </label>
                             </items>
                         </group>
@@ -44,7 +48,7 @@
                                     </connections>
                                 </button>
                                 <label width="97" alignment="left" text="loading..." numberOfLines="2" minimumScaleFactor="0.20000000000000015" id="OSu-rW-3a2">
-                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="textColor" red="0.6075797033" green="0.60305734820000001" blue="0.58949028309999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </label>
                             </items>
                         </group>
@@ -69,7 +73,7 @@
                         <button alignment="left" id="7P1-KW-Dyu">
                             <group key="contentGroup" width="1" height="136" alignment="left" id="YxS-bR-vWt">
                                 <items>
-                                    <label height="139" alignment="left" text="You must be logged into the app or password must be already saved  &amp; *NO* twoFactorAuth" textAlignment="left" numberOfLines="10" id="hKq-d3-f7h">
+                                    <label height="139" alignment="left" text="&lt;ERROR MESSAGE HERE&gt;" textAlignment="left" numberOfLines="10" minimumScaleFactor="0.5" id="hKq-d3-f7h">
                                         <fontDescription key="font" style="UICTFontTextStyleSubhead"/>
                                     </label>
                                 </items>
@@ -79,9 +83,12 @@
                             </connections>
                         </button>
                     </items>
+                    <connections>
+                        <outlet property="errText" destination="hKq-d3-f7h" id="3rO-Ju-UrQ"/>
+                    </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="369" y="349"/>
+            <point key="canvasLocation" x="462" y="349"/>
         </scene>
         <!--Static Notification Interface Controller-->
         <scene sceneID="AEw-b0-oYE">
